@@ -1,0 +1,387 @@
+object Form1: TForm1
+  Left = 241
+  Height = 554
+  Top = 31
+  Width = 1050
+  Caption = 'Form1'
+  ClientHeight = 554
+  ClientWidth = 1050
+  DesignTimePPI = 120
+  OnCloseQuery = FormCloseQuery
+  OnCreate = FormCreate
+  object Splitter1: TSplitter
+    Cursor = crVSplit
+    Left = 0
+    Height = 6
+    Top = 52
+    Width = 1050
+    Align = alTop
+    ResizeAnchor = akTop
+  end
+  object MemoStatus: TMemo
+    Left = 0
+    Height = 104
+    Top = 450
+    Width = 1050
+    Align = alBottom
+    BorderStyle = bsNone
+    ScrollBars = ssAutoBoth
+    TabOrder = 1
+  end
+  object gbConexao1: TPanel
+    Left = 0
+    Height = 392
+    Top = 58
+    Width = 1050
+    Align = alClient
+    Caption = 'Teste de conexão e TIL'
+    ClientHeight = 392
+    ClientWidth = 1050
+    TabOrder = 2
+    object sbMenu1: TScrollBox
+      Left = 861
+      Height = 390
+      Top = 1
+      Width = 188
+      HorzScrollBar.Page = 155
+      VertScrollBar.Page = 160
+      Align = alRight
+      ClientHeight = 386
+      ClientWidth = 184
+      TabOrder = 0
+      object sbDB_Criar: TSpeedButton
+        Cursor = crHandPoint
+        Left = 0
+        Height = 30
+        Top = 0
+        Width = 184
+        Action = actDB_Criar
+        Align = alTop
+        Flat = True
+        OnMouseLeave = Sublinhado_Desligar
+        OnMouseMove = Sublinhado_Ligar
+      end
+      object sbDB_TransacaoIniciar: TSpeedButton
+        Cursor = crHandPoint
+        Left = 0
+        Height = 30
+        Top = 296
+        Width = 184
+        Action = actTrans1_Iniciar
+        Align = alBottom
+        Flat = True
+        OnMouseLeave = Sublinhado_Desligar
+        OnMouseMove = Sublinhado_Ligar
+      end
+      object sbDB_TransacaoCommit: TSpeedButton
+        Cursor = crHandPoint
+        Left = 0
+        Height = 30
+        Top = 326
+        Width = 184
+        Action = actTrans1_Commit
+        Align = alBottom
+        Flat = True
+        OnMouseLeave = Sublinhado_Desligar
+        OnMouseMove = Sublinhado_Ligar
+      end
+      object sbDB_TransacaoRollBack: TSpeedButton
+        Cursor = crHandPoint
+        Left = 0
+        Height = 30
+        Top = 356
+        Width = 184
+        Action = actTrans1_Rollback
+        Align = alBottom
+        Flat = True
+        OnMouseLeave = Sublinhado_Desligar
+        OnMouseMove = Sublinhado_Ligar
+      end
+      object sbDB_Conectar1: TSpeedButton
+        Cursor = crHandPoint
+        Left = 0
+        Height = 30
+        Top = 30
+        Width = 184
+        Action = actDB_Conectar1
+        Align = alTop
+        Flat = True
+        OnMouseLeave = Sublinhado_Desligar
+        OnMouseMove = Sublinhado_Ligar
+      end
+      object ComboBox_Con1: TComboBox
+        Left = 0
+        Height = 28
+        Top = 60
+        Width = 184
+        Align = alTop
+        ItemHeight = 20
+        Style = csDropDownList
+        TabOrder = 0
+      end
+      object NoWait_Con1: TCheckBox
+        Left = 0
+        Height = 24
+        Top = 88
+        Width = 184
+        Align = alTop
+        Caption = 'No wait(pessimista)'
+        TabOrder = 1
+      end
+      object rec_version_Con1: TCheckBox
+        Left = 0
+        Height = 24
+        Top = 112
+        Width = 184
+        Align = alTop
+        Caption = 'Rec version'
+        TabOrder = 2
+      end
+      object autocommit1: TCheckBox
+        Left = 0
+        Height = 24
+        Top = 136
+        Width = 184
+        Align = alTop
+        Caption = 'auto commit'
+        TabOrder = 3
+      end
+    end
+    object DBGridCon1: TGroupBox
+      Left = 1
+      Height = 390
+      Top = 1
+      Width = 860
+      Align = alClient
+      ClientHeight = 365
+      ClientWidth = 856
+      Color = clWindow
+      ParentBackground = False
+      ParentColor = False
+      TabOrder = 1
+      object Panel1: TPanel
+        Left = 0
+        Height = 24
+        Top = 0
+        Width = 856
+        Align = alTop
+        BevelOuter = bvNone
+        ClientHeight = 24
+        ClientWidth = 856
+        TabOrder = 0
+        object sbDB_TransacaoCommit3: TSpeedButton
+          Cursor = crHandPoint
+          Left = 0
+          Height = 24
+          Top = 0
+          Width = 96
+          Action = actIncluir
+          Align = alLeft
+          Flat = True
+          OnMouseLeave = Sublinhado_Desligar
+          OnMouseMove = Sublinhado_Ligar
+        end
+        object sbDB_TransacaoCommit4: TSpeedButton
+          Cursor = crHandPoint
+          Left = 96
+          Height = 24
+          Top = 0
+          Width = 104
+          Action = actEdit
+          Align = alLeft
+          Flat = True
+          OnMouseLeave = Sublinhado_Desligar
+          OnMouseMove = Sublinhado_Ligar
+        end
+        object sbDB_Post: TSpeedButton
+          Cursor = crHandPoint
+          Left = 200
+          Height = 24
+          Top = 0
+          Width = 184
+          Action = actPost
+          Align = alLeft
+          Flat = True
+          OnMouseLeave = Sublinhado_Desligar
+          OnMouseMove = Sublinhado_Ligar
+        end
+        object sbDB_Cancel: TSpeedButton
+          Cursor = crHandPoint
+          Left = 384
+          Height = 24
+          Top = 0
+          Width = 184
+          Action = actCancel
+          Align = alLeft
+          Flat = True
+          OnMouseLeave = Sublinhado_Desligar
+          OnMouseMove = Sublinhado_Ligar
+        end
+        object sbDB_TransacaoRefresh: TSpeedButton
+          Cursor = crHandPoint
+          Left = 748
+          Height = 24
+          Top = 0
+          Width = 108
+          Action = actRefresh
+          Align = alRight
+          Flat = True
+          OnMouseLeave = Sublinhado_Desligar
+          OnMouseMove = Sublinhado_Ligar
+        end
+      end
+      object DBGrid1: TDBGrid
+        Left = 0
+        Height = 341
+        Top = 24
+        Width = 856
+        Align = alClient
+        Color = clWindow
+        Columns = <>
+        DataSource = DS_ZQuery_Con1
+        TabOrder = 1
+      end
+    end
+  end
+  object GroupBox2: TGroupBox
+    Left = 0
+    Height = 52
+    Top = 0
+    Width = 1050
+    Align = alTop
+    Caption = 'select * from data where description like ...'
+    ClientHeight = 27
+    ClientWidth = 1046
+    TabOrder = 3
+    object cbox_with_lock: TCheckBox
+      Left = 881
+      Height = 27
+      Top = 0
+      Width = 83
+      Align = alRight
+      Caption = 'with lock'
+      TabOrder = 0
+    end
+    object cbox_for_update: TCheckBox
+      Left = 787
+      Height = 27
+      Top = 0
+      Width = 94
+      Align = alRight
+      Caption = 'for update'
+      TabOrder = 1
+    end
+    object edtSearch: TComboBox
+      Left = 4
+      Height = 28
+      Top = 0
+      Width = 779
+      Align = alClient
+      AutoComplete = True
+      AutoCompleteText = [cbactEnabled, cbactEndOfLineComplete, cbactSearchAscending]
+      BorderSpacing.Left = 4
+      BorderSpacing.Right = 4
+      ItemHeight = 20
+      Items.Strings = (
+        'A%'
+        'M%'
+      )
+      TabOrder = 2
+      TextHint = 'termo de pesquisa, use % se desejar'
+    end
+    object sb_search: TSpeedButton
+      Left = 964
+      Height = 27
+      Top = 0
+      Width = 82
+      Action = actSearch
+      Align = alRight
+      Flat = True
+    end
+  end
+  object ZConnection1: TZConnection
+    ControlsCodePage = cCP_UTF8
+    AutoEncodeStrings = True
+    ClientCodepage = 'ISO8859_1'
+    Properties.Strings = (
+      'AutoEncodeStrings=ON'
+      'codepage=ISO8859_1'
+    )
+    TransactIsolationLevel = tiReadCommitted
+    DesignConnection = True
+    AfterConnect = Conexao_Ligada
+    AfterDisconnect = Conexao_Desligada
+    AfterReconnect = Conexao_Refeita
+    OnCommit = ZConnection1Commit
+    OnRollback = Transacao_RollBack
+    OnStartTransaction = Transacao_Iniciada
+    Port = 0
+    Protocol = 'firebird'
+    Left = 375
+    Top = 155
+  end
+  object ActionList1: TActionList
+    Left = 535
+    Top = 350
+    object actDB_Criar: TAction
+      Caption = 'Criar DB e Conectar-se'
+      OnExecute = actDB_CriarExecute
+    end
+    object actDB_Conectar1: TAction
+      Caption = 'Conectar-se'
+      OnExecute = actDB_Conectar1Execute
+    end
+    object actTrans1_Iniciar: TAction
+      Caption = 'Iniciar transação'
+      OnExecute = actTrans1_IniciarExecute
+    end
+    object actTrans1_Commit: TAction
+      Caption = 'Commit'
+      OnExecute = actTrans1_CommitExecute
+    end
+    object actTrans1_Rollback: TAction
+      Caption = 'Rollback'
+      OnExecute = actTrans1_RollbackExecute
+    end
+    object actDB_Desconectar1: TAction
+      Caption = 'Desconectar'
+      OnExecute = actDB_Desconectar1Execute
+    end
+    object actEdit: TAction
+      Caption = 'Editar'
+      OnExecute = actEditExecute
+    end
+    object actPost: TAction
+      Caption = 'Confirmar(s/commit)'
+      OnExecute = actPostExecute
+    end
+    object actCancel: TAction
+      Caption = 'Cancelar(s/rollback)'
+      OnExecute = actCancelExecute
+    end
+    object actIncluir: TAction
+      Caption = 'Incluir'
+      OnExecute = actIncluirExecute
+    end
+    object actRefresh: TAction
+      Caption = 'Refresh'
+      OnExecute = actRefreshExecute
+    end
+    object actSearch: TAction
+      Caption = 'Pesquisar'
+      OnExecute = actSearchExecute
+    end
+  end
+  object ZQuery_Con1: TZQuery
+    Connection = ZConnection1
+    AfterOpen = ZQuery_Con1AfterOpen
+    Params = <>
+    Left = 135
+    Top = 20
+  end
+  object DS_ZQuery_Con1: TDataSource
+    DataSet = ZQuery_Con1
+    Left = 145
+    Top = 100
+  end
+end

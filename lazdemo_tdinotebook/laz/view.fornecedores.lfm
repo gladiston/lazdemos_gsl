@@ -1,0 +1,30 @@
+object fmFornecedores: TfmFornecedores
+  Left = 374
+  Height = 488
+  Top = 32
+  Width = 678
+  Caption = 'fmFornecedores'
+  ClientHeight = 488
+  ClientWidth = 678
+  OnCreate = FormCreate
+  object Panel1: TPanel
+    Left = 0
+    Height = 50
+    Top = 0
+    Width = 678
+    Align = alTop
+    Caption = 'Cadastro de fornecedores'
+    TabOrder = 0
+  end
+  object Memo1: TMemo
+    Left = 0
+    Height = 438
+    Top = 50
+    Width = 678
+    Align = alClient
+    Lines.Strings = (
+      'Memo1'
+    )
+    TabOrder = 1
+  end
+end

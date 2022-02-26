@@ -1,0 +1,43 @@
+object fmSupplyers: TfmSupplyers
+  Left = 256
+  Height = 504
+  Top = 31
+  Width = 567
+  Caption = 'fmSupplyers'
+  ClientHeight = 504
+  ClientWidth = 567
+  OnClose = FormClose
+  OnCreate = FormCreate
+  object Panel1: TPanel
+    Left = 0
+    Height = 50
+    Top = 0
+    Width = 567
+    Align = alTop
+    Caption = 'Cadastro de fornecedores'
+    ClientHeight = 50
+    ClientWidth = 567
+    TabOrder = 0
+    object BtnClose: TBitBtn
+      Left = 491
+      Height = 48
+      Top = 1
+      Width = 75
+      Align = alRight
+      Caption = 'Close'
+      OnClick = BtnCloseClick
+      TabOrder = 0
+    end
+  end
+  object Memo1: TMemo
+    Left = 0
+    Height = 454
+    Top = 50
+    Width = 567
+    Align = alClient
+    Lines.Strings = (
+      'Memo1'
+    )
+    TabOrder = 1
+  end
+end

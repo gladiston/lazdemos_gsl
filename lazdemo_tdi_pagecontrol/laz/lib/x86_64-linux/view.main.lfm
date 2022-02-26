@@ -1,0 +1,152 @@
+object fmMAIN: TfmMAIN
+  Left = 256
+  Height = 600
+  Top = 31
+  Width = 800
+  Caption = 'fmMAIN'
+  ClientHeight = 600
+  ClientWidth = 800
+  Color = clWhite
+  Constraints.MinHeight = 600
+  Constraints.MinWidth = 800
+  OnCreate = FormCreate
+  object PageControl1: TPageControl
+    Left = 0
+    Height = 600
+    Top = 0
+    Width = 800
+    ActivePage = TabSheet1
+    Align = alClient
+    TabIndex = 0
+    TabOrder = 0
+    object TabSheet1: TTabSheet
+      Caption = 'TabSheet1'
+      ClientHeight = 572
+      ClientWidth = 792
+      object Button1: TSpeedButton
+        Left = 0
+        Height = 64
+        Top = 0
+        Width = 792
+        Action = actCustumers
+        Align = alTop
+        Flat = True
+        Font.Height = -21
+        Images = ImageList1
+        ImageIndex = 0
+        Layout = blGlyphRight
+        Margin = 0
+        ParentFont = False
+      end
+      object Button2: TSpeedButton
+        Left = 0
+        Height = 64
+        Top = 64
+        Width = 792
+        Action = actSupplyers
+        Align = alTop
+        Flat = True
+        Font.Height = -21
+        Images = ImageList1
+        ImageIndex = 0
+        Layout = blGlyphRight
+        Margin = 0
+        ParentFont = False
+      end
+      object Button3: TSpeedButton
+        Left = 0
+        Height = 64
+        Top = 128
+        Width = 792
+        Action = actRepresentatives
+        Align = alTop
+        Flat = True
+        Font.Height = -21
+        Images = ImageList1
+        ImageIndex = 0
+        Layout = blGlyphRight
+        Margin = 0
+        ParentFont = False
+      end
+      object Button4: TSpeedButton
+        Left = 0
+        Height = 64
+        Top = 508
+        Width = 792
+        Action = actClose
+        Align = alBottom
+        Flat = True
+        Font.Height = -21
+        Images = ImageList1
+        ImageIndex = 1
+        Layout = blGlyphRight
+        Margin = 0
+        ParentFont = False
+      end
+    end
+  end
+  object ActionList1: TActionList
+    Images = ImageList1
+    Left = 176
+    Top = 76
+    object actCustumers: TAction
+      Caption = 'Custumers'
+      ImageIndex = 0
+      OnExecute = actCustumersExecute
+    end
+    object actSupplyers: TAction
+      Caption = 'Supplyers'
+      ImageIndex = 0
+      OnExecute = actSupplyersExecute
+    end
+    object actRepresentatives: TAction
+      Caption = 'Representatives'
+      ImageIndex = 0
+      OnExecute = actRepresentativesExecute
+    end
+    object actClose: TAction
+      Caption = 'Close'
+      ImageIndex = 1
+      OnExecute = actCloseExecute
+    end
+  end
+  object ImageList1: TImageList
+    Height = 64
+    Width = 64
+    Left = 304
+    Top = 240
+    Bitmap = {
+      4C7A020000004000000040000000BB0300000000000078DAED9DEF67A34110C7
+      F74FAFAA3AA7E25454DD8BA83A75EA9C53111555515155111151551511A722A2
+      22222A42AF8FEEBAC723797636BBFBEC8F9961DE259BFD7CB3CFEECCEC6EC298
+      153B6678EDE2C3DF3F7C8C90BDCED9854F10B13732EC9834686E60C7A0C1AD84
+      3D660DEE81EC316AD052648F4983CE96EC3168D0D5640F59839E21F650359819
+      E6270D4803D2E0BF8F4903D28034200DB88F4803D28034200DB8BF9006A4C187
+      FF250D48830035985BD060481A04A7C18234606FA4015B5AD060809CBF8F780E
+      18103BCAF50F33FB90D829F62776AA7F500D90D823651F133BB1133B1AF609B1
+      7B6F536237EAAF81B0BF123B4AF6C4BA88D94D6B1022BBB00E6276616DC4ECC2
+      5A88D985DD216617D644CC2EACC1F0DDFDCBDA1562766175C4ECC27E44C673C9
+      3EF7D563F21B8771BF0FDE27FE20F893D86127D39F0B24FC0F927EAD22E65F02
+      FAF52D62FE1AB06FAB48F977817D7B89947F0FD8B751A4FC75E4E37F05E85725
+      F2F54F76BE0B43FC939C133FC9F4E7DAE3F84725AF50B51D857A9B0BFEB70273
+      D2A987FCA582F3F2B947FCAECEE5F9B2FEB934D7FCB78EF97F3AE497C5298B82
+      C64BDB117F4552375CF79E274BE3605C30FF74CBE7D2A62D0BE4CFB3FE86F72C
+      34F99233672D8006327FD6E4CF8BCD0F7274D7DD1B10ED5C1638BF7615BFFBA5
+      A5B13FCCB475EA21FF630E7BC7C23AFFC511FFD1867D2F5B3152CB61ECB569FE
+      ABA65E73C6EC9E01D0AD15DBE057F1B2C6E7FF02B43FE77322D44F0AE45F69EA
+      EFFA9EB42EBF4EBC5762E1EFFF9D6BF05F47C0AF6B0BE4FC8CF8B7FEBD6DD7FC
+      26EF2DBE05C87F09E482D85E80FCFB92B63B8AF5D35E60FC2AF35AB3C0784885
+      FFC112FFEE9AD71F161413C9F80F792EBBB438F73D6AAC174F96F84F98DEB9A2
+      744E565618FB699F59DEFBD8C4FF64B93E9BB6AF92FEF5006D1C1BE417FF65D2
+      2EA8A6D407F411522B1C18E22F7A1FCB64ECA8CB7F662156CB3395737B907AF9
+      A9267F95A99D39D235D5336BCF16DA4CF3D753F36EF2FCDFF1582439CBD1609F
+      F73A84D715EB4C59BFD972BCFE31FC1CA4F9AF98BBF33D2663C9F32DF94BFC7B
+      DEE4734FF82175DE8987F97FD1BFFF14FBFD07599E548B9C3FF1EF923ECF0CF2
+      F7029D0F7DC87F6DFB414EBFDB08F8C5FED28CCFFD233E478E24F5C218F8A77C
+      7D5EF77FC36543E37FDF33E621A0A608A99141F8CF3DE286DE27FE6D68FDBFF3
+      88FDCAF0732A3B8B3060E1C4BBD0F51E9A474D3D6187FEC6EB91C1B879E9093B
+      B40E710F5C1B2B80B6AADC6B39B97B3D530B48FBB524876CF0DCBF297195FDD0
+      75F7DA9F79FDF691EB936BFF0076F9E3F5
+    }
+  end
+end

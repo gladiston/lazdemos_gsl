@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CONFIG>
+  <ProjectSession>
+    <Version Value="12"/>
+    <BuildModes Active="Default"/>
+    <Units>
+      <Unit>
+        <Filename Value="lazdemo_transacoes.lpr"/>
+        <IsPartOfProject Value="True"/>
+        <UsageCount Value="20"/>
+      </Unit>
+      <Unit>
+        <Filename Value="view.principal.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="Form1"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <IsVisibleTab Value="True"/>
+        <TopLine Value="254"/>
+        <CursorPos X="40" Y="277"/>
+        <UsageCount Value="20"/>
+        <Loaded Value="True"/>
+        <LoadedDesigner Value="True"/>
+      </Unit>
+    </Units>
+    <JumpHistory HistoryIndex="29">
+      <Position>
+        <Filename Value="view.principal.pas"/>
+        <Caret Line="91" Column="46" TopLine="70"/>
+      </Position>
+      <Position>
+        <Filename Value="view.principal.pas"/>
+        <Caret Line="119" Column="12" TopLine="97"/>
+      </Position>
+      <Position>
+        <Filename Value="view.principal.pas"/>
+        <Caret Line="168" Column="26" TopLine="146"/>
+      </Position>
+      <Position>
+        <Filename Value="view.principal.pas"/>
+        <Caret Line="170" Column="35" TopLine="148"/>
+      </Position>
+      <Position>
+        <Filename Value="view.principal.pas"/>
+        <Caret Line="185" Column="39" TopLine="164"/>
+      </Position>
+      <Position>
+        <Filename Value="view.principal.pas"/>
+        <Caret Line="203" Column="49" TopLine="182"/>
+      </Position>
+      <Position>
+        <Filename Value="view.principal.pas"/>
+        <Caret Line="399" Column="37" TopLine="377"/>
+      </Position>
+      <Position>
+        <Filename Value="view.principal.pas"/>
+        <Caret Line="504" Column="26" TopLine="482"/>
+      </Position>
+      <Position>
+        <Filename Value="view.principal.pas"/>
+        <Caret Line="85" Column="14" TopLine="73"/>
+      </Position>
+      <Position>
+        <Filename Value="view.principal.pas"/>
+        <Caret Line="91" Column="46" TopLine="73"/>
+      </Position>
+      <Position>
+        <Filename Value="view.principal.pas"/>
+        <Caret Line="119" Column="12" TopLine="97"/>
+      </Position>
+      <Position>
+        <Filename Value="view.principal.pas"/>
+        <Caret Line="168" Column="26" TopLine="146"/>
+      </Position>
+      <Position>
+        <Filename Value="view.principal.pas"/>
+        <Caret Line="170" Column="35" TopLine="148"/>
+      </Position>
+      <Position>
+        <Filename Value="view.principal.pas"/>
+        <Caret Line="185" Column="39" TopLine="164"/>
+      </Position>
+      <Position>
+        <Filename Value="view.principal.pas"/>
+        <Caret Line="196" Column="45" TopLine="182"/>
+      </Position>
+      <Position>
+        <Filename Value="view.principal.pas"/>
+        <Caret Line="237" Column="46" TopLine="226"/>
+      </Position>
+      <Position>
+        <Filename Value="view.principal.pas"/>
+      </Position>
+      <Position>
+        <Filename Value="view.principal.pas"/>
+        <Caret Line="220" Column="34" TopLine="200"/>
+      </Position>
+      <Position>
+        <Filename Value="view.principal.pas"/>
+        <Caret Line="221" Column="34" TopLine="200"/>
+      </Position>
+      <Position>
+        <Filename Value="view.principal.pas"/>
+        <Caret Line="233" Column="54" TopLine="212"/>
+      </Position>
+      <Position>
+        <Filename Value="view.principal.pas"/>
+        <Caret Line="234" Column="54" TopLine="213"/>
+      </Position>
+      <Position>
+        <Filename Value="view.principal.pas"/>
+        <Caret Line="235" Column="54" TopLine="214"/>
+      </Position>
+      <Position>
+        <Filename Value="view.principal.pas"/>
+        <Caret Line="236" Column="54" TopLine="215"/>
+      </Position>
+      <Position>
+        <Filename Value="view.principal.pas"/>
+        <Caret Line="237" Column="54" TopLine="216"/>
+      </Position>
+      <Position>
+        <Filename Value="view.principal.pas"/>
+        <Caret Line="238" Column="54" TopLine="217"/>
+      </Position>
+      <Position>
+        <Filename Value="view.principal.pas"/>
+        <Caret Line="240" Column="23" TopLine="219"/>
+      </Position>
+      <Position>
+        <Filename Value="view.principal.pas"/>
+        <Caret Line="544" Column="57" TopLine="522"/>
+      </Position>
+      <Position>
+        <Filename Value="view.principal.pas"/>
+        <Caret Line="551" Column="45" TopLine="529"/>
+      </Position>
+      <Position>
+        <Filename Value="view.principal.pas"/>
+        <Caret Line="216" TopLine="210"/>
+      </Position>
+      <Position>
+        <Filename Value="view.principal.pas"/>
+        <Caret Line="386" Column="28" TopLine="399"/>
+      </Position>
+    </JumpHistory>
+    <RunParams>
+      <FormatVersion Value="2"/>
+      <Modes ActiveMode=""/>
+    </RunParams>
+  </ProjectSession>
+</CONFIG>

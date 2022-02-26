@@ -92,7 +92,7 @@ type
     property MsgStatus:String read FMsgStatus write SetMsgStatus;
   end;
 const
-  FDB_FILE='test.fdb';
+  FDB_FILE='lazdemos_gsl.fdb';
   FDB_USERNAME='SYSDBA';
   FDB_PASSWORD='masterkey';
   FDB_PAGESIZE=16384;
@@ -116,7 +116,7 @@ uses ZDbcIntfs, ZCompatibility;
 procedure TForm1.FormCreate(Sender: TObject);
 begin
   Caption:='Teste de conexão e TIL';
-  FFDB_FileEx:=ExtractFilePath(ParamStr(0))+PathDelim+FDB_FILE;
+  FFDB_FileEx:='..'+PathDelim+'db'+PathDelim+FDB_FILE;
   // algumas opções devem estar desligadas no inicio
   MemoStatus.Clear;
   CheckButtons;
@@ -184,7 +184,7 @@ begin
       zConnection1.ControlsCodePage:=cCP_UTF8;
       zConnection1.Database:=FFDB_FileEx;
       zConnection1.Hostname:='';
-      zConnection1.LibraryLocation:='fbclient.dll';
+      zConnection1.LibraryLocation:='';    // fbclient.dll(win32) ou libfbclient.so(linux)
       zConnection1.LoginPrompt:=false;
       zConnection1.User:=FDB_USERNAME;
       zConnection1.Password:=FDB_PASSWORD;
@@ -211,50 +211,7 @@ begin
     except
     on e:exception do ErrorMsg:=e.Message;
     end;
-    if ErrorMsg=emptyStr then
-    begin
-      try
-        L.Clear;
-        L.Add('CREATE TABLE FRUTAS(');
-        L.Add('     codigo varchar(20),');
-        L.Add('     descricao varchar(30),');
-        L.Add('     status varchar(1));');
-        if not ZConnection1.InTransaction then
-          ZConnection1.StartTransaction;
-        ZConnection1.ExecuteDirect(L.Text);
-        ZConnection1.Commit;
-        MsgStatus:='Tabela frutas criada!';
-      except
-      on e:exception do
-         begin
-           ErrorMsg:=e.Message;
-           ZConnection1.Rollback;
-         end;
-      end;
-    end;
-    if ErrorMsg=emptyStr then
-    begin
-      try
-        if not ZConnection1.InTransaction then
-          ZConnection1.StartTransaction;
-        ZConnection1.ExecuteDirect('INSERT INTO FRUTAS (CODIGO, DESCRICAO, STATUS) VALUES (''cod_maracuja'', ''Maracujá'', ''A'');');
-        ZConnection1.ExecuteDirect('INSERT INTO FRUTAS (CODIGO, DESCRICAO, STATUS) VALUES (''cod_acai'', ''Açaí'', ''A'');');
-        ZConnection1.ExecuteDirect('INSERT INTO FRUTAS (CODIGO, DESCRICAO, STATUS) VALUES (''cod_avela'', ''Avelã'', ''A'');');
-        ZConnection1.ExecuteDirect('INSERT INTO FRUTAS (CODIGO, DESCRICAO, STATUS) VALUES (''cod_melao'', ''Melão'', ''A'');');
-        ZConnection1.ExecuteDirect('INSERT INTO FRUTAS (CODIGO, DESCRICAO, STATUS) VALUES (''cod_maca'', ''Maçã'', ''A'');');
-        ZConnection1.ExecuteDirect('INSERT INTO FRUTAS (CODIGO, DESCRICAO, STATUS) VALUES (''cod_mamao'', ''Mamão'', ''A'');');
-        ZConnection1.Commit;
-        MsgStatus:='Frutas adicionadas na tabela!';
-      except
-      on e:exception do
-         begin
-           ErrorMsg:=e.Message;
-           ZConnection1.Rollback;
-         end;
-      end;
-    end;
   end;
-
 
   if ErrorMsg=emptyStr then
     actDB_Conectar1Execute(Sender)
@@ -312,10 +269,13 @@ end;
 procedure TForm1.actPostExecute(Sender: TObject);
 begin
   try
-    ZQuery_Con1.Post;
-    ZQuery_Con1.Refresh;
-    actTrans1_Commit.Enabled:=true;
-    actTrans1_Rollback.Enabled:=true;
+    if (ZQuery_Con1.State in [dsEdit, dsInsert]) then
+    begin
+      ZQuery_Con1.Post;
+      ZQuery_Con1.Refresh;
+      actTrans1_Commit.Enabled:=true;
+      actTrans1_Rollback.Enabled:=true;
+    end;
   except
   on e:exception do MsgStatus:=e.message;
   end;
@@ -383,7 +343,10 @@ begin
 end;
 
 procedure TForm1.actDB_Conectar1Execute(Sender: TObject);
+var
+  L:TStringList;
 begin
+  L:=TStringList.Create;
   try
     if ZConnection1.Connected then
       ZConnection1.Disconnect;
@@ -398,7 +361,7 @@ begin
     ZConnection1.ControlsCodePage:=cCP_UTF8;
     ZConnection1.Database:=FFDB_FileEx;
     ZConnection1.Hostname:='';
-    ZConnection1.LibraryLocation:='fbclient.dll';
+    zConnection1.LibraryLocation:='';    // fbclient.dll(win32) ou libfbclient.so(linux)
     ZConnection1.LoginPrompt:=false;
     ZConnection1.User:=FDB_USERNAME;
     ZConnection1.Password:=FDB_PASSWORD;
@@ -425,10 +388,52 @@ begin
   except
   on e:exception do MsgStatus:=zConnection1.Name+': '+e.message;
   end;
+
+  if ZConnection1.Connected then
+  begin
+    // TODO: Check existence and dont recreate table
+    try
+      L.Clear;
+      L.Add('RECREATE TABLE FRUTAS(');
+      L.Add('     codigo varchar(20),');
+      L.Add('     descricao varchar(30),');
+      L.Add('     status varchar(1));');
+      if not ZConnection1.InTransaction then
+        ZConnection1.StartTransaction;
+      ZConnection1.ExecuteDirect(L.Text);
+      ZConnection1.Commit;
+      MsgStatus:='Tabela criada!';
+      try
+        if not ZConnection1.InTransaction then
+          ZConnection1.StartTransaction;
+        ZConnection1.ExecuteDirect('INSERT INTO FRUTAS (CODIGO, DESCRICAO, STATUS) VALUES (''cod_maracuja'', ''Maracujá'', ''A'');');
+        ZConnection1.ExecuteDirect('INSERT INTO FRUTAS (CODIGO, DESCRICAO, STATUS) VALUES (''cod_acai'', ''Açaí'', ''A'');');
+        ZConnection1.ExecuteDirect('INSERT INTO FRUTAS (CODIGO, DESCRICAO, STATUS) VALUES (''cod_avela'', ''Avelã'', ''A'');');
+        ZConnection1.ExecuteDirect('INSERT INTO FRUTAS (CODIGO, DESCRICAO, STATUS) VALUES (''cod_melao'', ''Melão'', ''A'');');
+        ZConnection1.ExecuteDirect('INSERT INTO FRUTAS (CODIGO, DESCRICAO, STATUS) VALUES (''cod_maca'', ''Maçã'', ''A'');');
+        ZConnection1.ExecuteDirect('INSERT INTO FRUTAS (CODIGO, DESCRICAO, STATUS) VALUES (''cod_mamao'', ''Mamão'', ''A'');');
+        ZConnection1.Commit;
+        MsgStatus:='Registros adicionadas na tabela!';
+      except
+      on e:exception do
+         begin
+           MsgStatus:=e.Message;
+           ZConnection1.Rollback;
+         end;
+      end;
+    except
+    on e:exception do
+       begin
+         MsgStatus:=e.Message;
+         ZConnection1.Rollback;
+       end;
+    end;
+  end;
+
   if ZConnection1.Connected then
     actSearchExecute(nil);
 
-
+  L.Free;
 end;
 
 procedure TForm1.actCancelExecute(Sender: TObject);
@@ -542,7 +547,7 @@ var
   S:String;
 begin
   edtSearch.Text:=Trim(edtSearch.Text);
-  S:=zConnection1.Name+': selecionado todas as frutas';
+  S:=zConnection1.Name+': pesquisando todos os registros';
   try
     if ZQuery_Con1.Active then
       ZQuery_Con1.Close;

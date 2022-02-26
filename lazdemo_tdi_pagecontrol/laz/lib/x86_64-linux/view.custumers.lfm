@@ -1,0 +1,43 @@
+object fmCustumers: TfmCustumers
+  Left = 256
+  Height = 462
+  Top = 31
+  Width = 565
+  Caption = 'fmCustumers'
+  ClientHeight = 462
+  ClientWidth = 565
+  OnClose = FormClose
+  OnCreate = FormCreate
+  object Panel1: TPanel
+    Left = 0
+    Height = 50
+    Top = 0
+    Width = 565
+    Align = alTop
+    Caption = 'Cadastro de clientes'
+    ClientHeight = 50
+    ClientWidth = 565
+    TabOrder = 0
+    object BtnClose: TBitBtn
+      Left = 489
+      Height = 48
+      Top = 1
+      Width = 75
+      Align = alRight
+      Caption = 'Close'
+      OnClick = BtnCloseClick
+      TabOrder = 0
+    end
+  end
+  object Memo1: TMemo
+    Left = 0
+    Height = 412
+    Top = 50
+    Width = 565
+    Align = alClient
+    Lines.Strings = (
+      'Memo1'
+    )
+    TabOrder = 1
+  end
+end

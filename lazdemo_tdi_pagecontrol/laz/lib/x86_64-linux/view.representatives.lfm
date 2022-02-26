@@ -1,0 +1,43 @@
+object fmRepresentatives: TfmRepresentatives
+  Left = 256
+  Height = 475
+  Top = 31
+  Width = 584
+  Caption = 'fmRepresentatives'
+  ClientHeight = 475
+  ClientWidth = 584
+  OnClose = FormClose
+  OnCreate = FormCreate
+  object Panel1: TPanel
+    Left = 0
+    Height = 50
+    Top = 0
+    Width = 584
+    Align = alTop
+    Caption = 'Cadastro de representantes'
+    ClientHeight = 50
+    ClientWidth = 584
+    TabOrder = 0
+    object BtnClose: TBitBtn
+      Left = 508
+      Height = 48
+      Top = 1
+      Width = 75
+      Align = alRight
+      Caption = 'Close'
+      OnClick = BtnCloseClick
+      TabOrder = 0
+    end
+  end
+  object Memo1: TMemo
+    Left = 0
+    Height = 425
+    Top = 50
+    Width = 584
+    Align = alClient
+    Lines.Strings = (
+      'Memo1'
+    )
+    TabOrder = 1
+  end
+end

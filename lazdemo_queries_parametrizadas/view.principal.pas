@@ -87,7 +87,7 @@ type
     property MsgStatus:String read FMsgStatus write SetMsgStatus;
   end;
 const
-  FDB_FILE='test.fdb';
+  FDB_FILE='lazdemos_gsl.fdb';
   FDB_USERNAME='SYSDBA';
   FDB_PASSWORD='masterkey';
   FDB_PAGESIZE=16384;
@@ -115,7 +115,7 @@ uses
 procedure TForm1.FormCreate(Sender: TObject);
 begin
   Caption:='Teste de conexão e TIL';
-  FFDB_FileEx:=ExtractFilePath(ParamStr(0))+PathDelim+FDB_FILE;
+  FFDB_FileEx:='..'+PathDelim+'db'+PathDelim+FDB_FILE;
   // algumas opções devem estar desligadas no inicio
   MemoStatus.Clear;
   CheckButtons;
@@ -183,7 +183,7 @@ begin
       zConnection1.ControlsCodePage:=cCP_UTF8;
       zConnection1.Database:=FFDB_FileEx;
       zConnection1.Hostname:='';
-      zConnection1.LibraryLocation:='fbclient.dll';
+      zConnection1.LibraryLocation:='';    // fbclient.dll(win32) ou libfbclient.so(linux)
       zConnection1.LoginPrompt:=false;
       zConnection1.User:=FDB_USERNAME;
       zConnection1.Password:=FDB_PASSWORD;
@@ -209,26 +209,6 @@ begin
       MsgStatus:='banco criado!';
     except
     on e:exception do ErrorMsg:=e.Message;
-    end;
-    if ErrorMsg=emptyStr then
-    begin
-      try
-        L.Clear;
-        L.Add('CREATE TABLE TEST_PREPARE(');
-        L.Add('     codigo integer primary key,');     // sem pk a inserção é mais rapida
-        L.Add('     descricao varchar(30));');
-        if not ZConnection1.InTransaction then
-          ZConnection1.StartTransaction;
-        ZConnection1.ExecuteDirect(L.Text);
-        ZConnection1.Commit;
-        MsgStatus:='Tabela criada!';
-      except
-      on e:exception do
-         begin
-           ErrorMsg:=e.Message;
-           ZConnection1.Rollback;
-         end;
-      end;
     end;
   end;
 
@@ -389,7 +369,10 @@ begin
 end;
 
 procedure TForm1.actDB_Conectar1Execute(Sender: TObject);
+var
+  L:TStringList;
 begin
+  L:=TStringList.Create;
   try
     if ZConnection1.Connected then
       ZConnection1.Disconnect;
@@ -404,7 +387,7 @@ begin
     ZConnection1.ControlsCodePage:=cCP_UTF8;
     ZConnection1.Database:=FFDB_FileEx;
     ZConnection1.Hostname:='';
-    ZConnection1.LibraryLocation:='fbclient.dll';
+    zConnection1.LibraryLocation:='';    // fbclient.dll(win32) ou libfbclient.so(linux)
     ZConnection1.LoginPrompt:=false;
     ZConnection1.User:=FDB_USERNAME;
     ZConnection1.Password:=FDB_PASSWORD;
@@ -427,10 +410,32 @@ begin
   except
   on e:exception do MsgStatus:=zConnection1.Name+': '+e.message;
   end;
+  if ZConnection1.Connected  then
+  begin
+    // todo: test existence of table and not recreate
+    try
+      L.Clear;
+      L.Add('RECREATE TABLE TEST_PREPARE(');
+      L.Add('     codigo integer primary key,');     // sem pk a inserção é mais rapida
+      L.Add('     descricao varchar(30));');
+      if not ZConnection1.InTransaction then
+        ZConnection1.StartTransaction;
+      ZConnection1.ExecuteDirect(L.Text);
+      ZConnection1.Commit;
+      MsgStatus:='Tabela criada!';
+    except
+    on e:exception do
+       begin
+         MsgStatus:=e.Message;
+         ZConnection1.Rollback;
+       end;
+    end;
+  end;
+
   if ZConnection1.Connected then
     actSearchExecute(nil);
 
-
+  L.Free;
 end;
 
 procedure TForm1.Transacao_Iniciada(Sender: TObject);
@@ -495,7 +500,6 @@ begin
   if FileExists(FFDB_FileEx) then
     actDB_Criar.Visible:=false;
 
-  // #1
   actTrans1_Iniciar.Enabled:=false;
   actTrans1_Commit.Enabled:=false;
   actTrans1_Rollback.Enabled:=false;

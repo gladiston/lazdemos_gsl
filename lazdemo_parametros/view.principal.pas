@@ -6,6 +6,15 @@ unit view.principal;
   exemplificado neste artigo:
   https://gladiston.net.br/lidando-com-parametros-de-entrada-em-seu-aplicativo/
   https://wiki.freepascal.org/Command_line_parameters_and_environment_variables
+
+  // Para este exemplo funcionar direito vá em
+  // Project|Project Options|Compiler Options|Config and Target|Win32 gui aplication (-WG)
+  // que normalmente esta ligada e desmarque-a, caso contrário,
+  // as mensagens serão mostradas num ShowMessage.
+  // Também vá em Run|Parameters e como paremetro informe:
+  // verbose import=entrada.log export=saida.csv
+  // esters arquivos podem existir ou não, são apenas para exemplos, se eles
+  // existirem o sistema reage de uma forma, caso contrário de outra.
 }
 
 {$mode objfpc}{$H+}

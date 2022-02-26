@@ -1,0 +1,78 @@
+object fmPrincipal: TfmPrincipal
+  Left = 680
+  Height = 1085
+  Top = 37
+  Width = 1385
+  Caption = 'fmPrincipal'
+  ClientHeight = 1085
+  ClientWidth = 1385
+  DesignTimePPI = 144
+  Menu = MainMenu1
+  OnCreate = FormCreate
+  object TDINoteBook1: TTDINoteBook
+    Left = 0
+    Height = 1085
+    Top = 0
+    Width = 1385
+    Align = alClient
+    TabOrder = 0
+    MainMenu = MainMenu1
+    TDIActions.TabsMenu.Caption = 'Tabs'
+    TDIActions.TabsMenu.ImageIndex = -1
+    TDIActions.TabsMenu.Visible = True
+    TDIActions.CloseTab.Caption = 'Close Tab'
+    TDIActions.CloseTab.ImageIndex = -1
+    TDIActions.CloseTab.Visible = True
+    TDIActions.CloseAllTabs.Caption = 'Close All Tabs'
+    TDIActions.CloseAllTabs.ImageIndex = -1
+    TDIActions.CloseAllTabs.Visible = True
+    TDIActions.NextTab.Caption = 'Next Tab'
+    TDIActions.NextTab.ImageIndex = -1
+    TDIActions.NextTab.Visible = False
+    TDIActions.PreviousTab.Caption = 'Previous Tab'
+    TDIActions.PreviousTab.ImageIndex = -1
+    TDIActions.PreviousTab.Visible = False
+  end
+  object ActionList1: TActionList
+    Left = 372
+    Top = 188
+    object actClientes: TAction
+      Caption = 'Cadastro de clientes'
+      OnExecute = actClientesExecute
+    end
+    object actFornecedores: TAction
+      Caption = 'Cadastro de fornecedores'
+      OnExecute = actFornecedoresExecute
+    end
+    object actRepresentantes: TAction
+      Caption = 'Cadastro de Representantes'
+      OnExecute = actRepresentantesExecute
+    end
+    object actMostrarTabs: TAction
+      Caption = 'Mostrar tabs?'
+      OnExecute = actMostrarTabsExecute
+    end
+  end
+  object MainMenu1: TMainMenu
+    Left = 142
+    Top = 70
+    object MenuItem1: TMenuItem
+      Caption = 'Cadastros'
+      object MenuItem2: TMenuItem
+        Action = actClientes
+      end
+      object MenuItem3: TMenuItem
+        Action = actFornecedores
+      end
+      object MenuItem4: TMenuItem
+        Action = actRepresentantes
+      end
+    end
+    object MenuItem5: TMenuItem
+      Caption = 'Exibir as Tabs?'
+      object MenuItem6: TMenuItem
+        Action = actMostrarTabs
+      end
+    end
+  end
+end

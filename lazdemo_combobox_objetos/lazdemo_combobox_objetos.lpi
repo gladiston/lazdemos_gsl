@@ -46,7 +46,7 @@
   <CompilerOptions>
     <Version Value="11"/>
     <Target>
-      <Filename Value="../bin/lazdemo_combobox_objetos"/>
+      <Filename Value="../bin/lazdemo_combobox_objetos.exe"/>
     </Target>
     <SearchPaths>
       <IncludeFiles Value="$(ProjOutDir)"/>

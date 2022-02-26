@@ -45,7 +45,7 @@
   <CompilerOptions>
     <Version Value="11"/>
     <Target>
-      <Filename Value="lazdemo_splitter"/>
+      <Filename Value="../bin/lazdemo_splitter.exe"/>
     </Target>
     <SearchPaths>
       <IncludeFiles Value="$(ProjOutDir)"/>

@@ -68,7 +68,7 @@
     <Version Value="11"/>
     <PathDelim Value="\"/>
     <Target>
-      <Filename Value="..\..\bin\lazdemo_tdi_pagecontrol"/>
+      <Filename Value="..\..\bin\lazdemo_tdi_pagecontrol.exe"/>
     </Target>
     <SearchPaths>
       <IncludeFiles Value="$(ProjOutDir)"/>

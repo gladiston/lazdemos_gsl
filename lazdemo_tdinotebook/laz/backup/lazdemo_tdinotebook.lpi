@@ -69,7 +69,7 @@
     <Version Value="11"/>
     <PathDelim Value="\"/>
     <Target>
-      <Filename Value="../../bin/lazdemo_tdinotebook.exe"/>
+      <Filename Value="..\..\bin\lazdemo_tdinotebook"/>
     </Target>
     <SearchPaths>
       <IncludeFiles Value="$(ProjOutDir)"/>

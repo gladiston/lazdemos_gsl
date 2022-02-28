@@ -1,59 +1,64 @@
 object Form1: TForm1
   Left = 241
-  Height = 443
+  Height = 555
   Top = 31
-  Width = 840
+  Width = 1027
   Caption = 'Form1'
-  ClientHeight = 443
-  ClientWidth = 840
+  ClientHeight = 555
+  ClientWidth = 1027
+  Color = clWhite
+  Font.Height = -13
+  Font.Name = 'Segoe UI'
   OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
+  Position = poDefault
   object Splitter1: TSplitter
     Cursor = crVSplit
     Left = 0
     Height = 5
     Top = 42
-    Width = 840
+    Width = 1027
     Align = alTop
     ResizeAnchor = akTop
   end
   object MemoStatus: TMemo
     Left = 0
     Height = 128
-    Top = 315
-    Width = 840
+    Top = 427
+    Width = 1027
     Align = alBottom
     BorderStyle = bsNone
+    ReadOnly = True
     ScrollBars = ssAutoBoth
     TabOrder = 1
   end
   object gbConexao1: TPanel
     Left = 0
-    Height = 268
+    Height = 380
     Top = 47
-    Width = 840
+    Width = 1027
     Align = alClient
     Caption = 'Teste de conexão e TIL'
-    ClientHeight = 268
-    ClientWidth = 840
+    ClientHeight = 380
+    ClientWidth = 1027
     TabOrder = 2
     object sbMenu1: TScrollBox
-      Left = 689
-      Height = 266
+      Left = 812
+      Height = 378
       Top = 1
-      Width = 150
-      HorzScrollBar.Page = 148
-      VertScrollBar.Page = 108
+      Width = 214
+      HorzScrollBar.Page = 136
+      VertScrollBar.Page = 106
       Align = alRight
-      ClientHeight = 251
-      ClientWidth = 148
+      ClientHeight = 376
+      ClientWidth = 212
       TabOrder = 0
       object sbDB_Criar: TSpeedButton
         Cursor = crHandPoint
         Left = 0
         Height = 24
         Top = 0
-        Width = 149
+        Width = 212
         Action = actDB_Criar
         Align = alTop
         Flat = True
@@ -64,8 +69,8 @@ object Form1: TForm1
         Cursor = crHandPoint
         Left = 0
         Height = 24
-        Top = 179
-        Width = 149
+        Top = 304
+        Width = 212
         Action = actTrans1_Iniciar
         Align = alBottom
         Flat = True
@@ -76,8 +81,8 @@ object Form1: TForm1
         Cursor = crHandPoint
         Left = 0
         Height = 24
-        Top = 203
-        Width = 149
+        Top = 328
+        Width = 212
         Action = actTrans1_Commit
         Align = alBottom
         Flat = True
@@ -88,8 +93,8 @@ object Form1: TForm1
         Cursor = crHandPoint
         Left = 0
         Height = 24
-        Top = 227
-        Width = 149
+        Top = 352
+        Width = 212
         Action = actTrans1_Rollback
         Align = alBottom
         Flat = True
@@ -101,7 +106,7 @@ object Form1: TForm1
         Left = 0
         Height = 24
         Top = 24
-        Width = 149
+        Width = 212
         Action = actDB_Conectar1
         Align = alTop
         Flat = True
@@ -110,9 +115,9 @@ object Form1: TForm1
       end
       object ComboBox_Con1: TComboBox
         Left = 0
-        Height = 36
+        Height = 35
         Top = 48
-        Width = 149
+        Width = 212
         Align = alTop
         ItemHeight = 0
         Style = csDropDownList
@@ -120,9 +125,9 @@ object Form1: TForm1
       end
       object autocommit1: TCheckBox
         Left = 0
-        Height = 24
-        Top = 84
-        Width = 149
+        Height = 23
+        Top = 83
+        Width = 212
         Align = alTop
         Caption = 'auto commit'
         TabOrder = 1
@@ -130,21 +135,21 @@ object Form1: TForm1
     end
     object DBGridCon1: TGroupBox
       Left = 1
-      Height = 266
+      Height = 378
       Top = 1
-      Width = 688
+      Width = 811
       Align = alClient
-      ClientHeight = 264
-      ClientWidth = 686
+      ClientHeight = 376
+      ClientWidth = 809
       Color = clWindow
       ParentBackground = False
       ParentColor = False
       TabOrder = 1
       object DBGrid1: TDBGrid
         Left = 0
-        Height = 264
+        Height = 376
         Top = 0
-        Width = 686
+        Width = 809
         Align = alClient
         Color = clWindow
         Columns = <>
@@ -157,57 +162,52 @@ object Form1: TForm1
     Left = 0
     Height = 42
     Top = 0
-    Width = 840
+    Width = 1027
     Align = alTop
     Caption = 'Tests'
-    ClientHeight = 21
-    ClientWidth = 838
+    ClientHeight = 22
+    ClientWidth = 1025
     TabOrder = 3
     object sb_search: TSpeedButton
-      Left = 772
-      Height = 21
+      Left = 959
+      Height = 22
       Top = 0
       Width = 66
       Action = actSearch
       Align = alRight
       Caption = 'Mostrar'
       Flat = True
+      OnMouseLeave = Sublinhado_Desligar
+      OnMouseMove = Sublinhado_Ligar
     end
     object SpeedButton1: TSpeedButton
       Left = 0
-      Height = 21
+      Height = 22
       Top = 0
       Width = 122
       Action = actInsert_Prepare
       Align = alLeft
-      OnMouseLeave = Sublinhado_Desligar
-      OnMouseMove = Sublinhado_Ligar
-    end
-    object SpeedButton2: TSpeedButton
-      Left = 122
-      Height = 21
-      Top = 0
-      Width = 122
-      Action = actInsert_WPrepare
-      Align = alLeft
+      Caption = 'Inserir registros'
+      Flat = True
       OnMouseLeave = Sublinhado_Desligar
       OnMouseMove = Sublinhado_Ligar
     end
     object SpeedButton3: TSpeedButton
-      Left = 244
-      Height = 21
+      Left = 122
+      Height = 22
       Top = 0
       Width = 122
       Action = actDelete_ALL
       Align = alLeft
+      Flat = True
       OnMouseLeave = Sublinhado_Desligar
       OnMouseMove = Sublinhado_Ligar
     end
     object cboxParamCheck: TCheckBox
-      Left = 667
-      Height = 21
+      Left = 863
+      Height = 22
       Top = 0
-      Width = 105
+      Width = 96
       Align = alRight
       Caption = 'ParamCheck'
       TabOrder = 0
@@ -271,7 +271,6 @@ object Form1: TForm1
     end
     object actInsert_WPrepare: TAction
       Caption = 'Inserir s/ Prepare'
-      OnExecute = actInsert_WPrepareExecute
     end
     object actDelete_ALL: TAction
       Caption = 'Apagar tudo'
@@ -282,8 +281,8 @@ object Form1: TForm1
     Connection = ZConnection1
     AfterOpen = ZQuery_Con1AfterOpen
     Params = <>
-    Left = 108
-    Top = 16
+    Left = 156
+    Top = 108
   end
   object DS_ZQuery_Con1: TDataSource
     DataSet = ZQuery_Con1

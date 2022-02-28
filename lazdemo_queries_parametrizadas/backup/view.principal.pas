@@ -42,7 +42,6 @@ type
     sbMenu1: TScrollBox;
     sb_search: TSpeedButton;
     SpeedButton1: TSpeedButton;
-    SpeedButton2: TSpeedButton;
     SpeedButton3: TSpeedButton;
     Splitter1: TSplitter;
     ZConnection1: TZConnection;
@@ -52,7 +51,6 @@ type
     procedure actDB_Desconectar1Execute(Sender: TObject);
     procedure actDelete_ALLExecute(Sender: TObject);
     procedure actInsert_PrepareExecute(Sender: TObject);
-    procedure actInsert_WPrepareExecute(Sender: TObject);
     procedure actSearchExecute(Sender: TObject);
     procedure actTrans1_CommitExecute(Sender: TObject);
     procedure actTrans1_IniciarExecute(Sender: TObject);
@@ -250,57 +248,38 @@ var
   S:String;
   iMilToPrepare:Integer;
   iMilToComplete:Integer;
+  bPrepare:Boolean;
 begin
   // inserir x registros com prepare
   ErrorMsg:=emptyStr;
+  bPrepare:=false;
+  iTotal:=10000;
   if not cboxParamCheck.Checked then
-    ErrorMsg:='ParamCheck precisa estar ligado para prosseguir.';
+    cboxParamCheck.Checked:=true;
 
   if ErrorMsg=emptyStr then
   begin
-    S:=InputBox('Quantos registros?', 'Registros', '10000');
+    S:=InputBox('Inserir quantos registros?', 'Inserir quantos registros?', IntToStr(iTotal));
     if not TryStrToInt(S, iTotal) then
       ErrorMsg:='Quantidade invalida';
   end;
+
   if ErrorMsg=emptyStr then
   begin
-    ErrorMsg:=Insert_Data(
-      iTotal, //ATotal: Cardinal;
-      true, //APrepare: Boolean;
-      iMilToPrepare, // out ATimeToPrepare:TDateTime;
-      iMilToComplete); //out ATimeTotal:TDateTime);
-    if ErrorMsg=emptyStr then
-    begin
-      S:='Performance: '+sLineBreak;
-      S:=S+'  Preparação: '+IntToStr(iMilToPrepare)+' milisegundos'+sLineBreak;
-      S:=S+'  Conclusão:  '+IntToStr(iMilToComplete)+' milisegundos'+sLineBreak;
-      MsgStatus:=S;
-      OpenMyData(false, false);
-      DBGrid1.DataSource.DataSet.Last;
+    case QuestionDlg(
+      'Com preparação na execução',
+      'Preparação na execução agilizará queries repetitivas e parametrizadas', mtInformation, [mrYes, 'Sim, preparar', mrNo, 'Não, sem preparar', 'IsDefault'], '') of
+        mrYes: bPrepare:=true;
+        mrNo: bPrepare:=false;
+        mrCancel: ErrorMsg:='OOperação canelada pelo usuário.';
     end;
   end;
 
-  if ErrorMsg<>emptyStr then
-    MsgStatus:=ErrorMsg;
-end;
-
-procedure TForm1.actInsert_WPrepareExecute(Sender: TObject);
-var
-  ErrorMsg:String;
-  iTotal:Integer;
-  S:String;
-  iMilToPrepare:Integer;
-  iMilToComplete:Integer;
-begin
-  // inserir x registros com prepare
-  S:=InputBox('Quantos registros?', 'Registros', '10000');
-  if not TryStrToInt(S, iTotal) then
-    ErrorMsg:='Quantidade invalida';
   if ErrorMsg=emptyStr then
   begin
     ErrorMsg:=Insert_Data(
       iTotal, //ATotal: Cardinal;
-      false, //APrepare: Boolean;
+      bPrepare, //APrepare: Boolean;
       iMilToPrepare, // out ATimeToPrepare:TDateTime;
       iMilToComplete); //out ATimeTotal:TDateTime);
     if ErrorMsg=emptyStr then
@@ -312,7 +291,6 @@ begin
       OpenMyData(false, false);
       DBGrid1.DataSource.DataSet.Last;
     end;
-
   end;
 
   if ErrorMsg<>emptyStr then
@@ -328,9 +306,13 @@ procedure TForm1.actTrans1_CommitExecute(Sender: TObject);
 begin
   if ZConnection1.Connected then
   begin
-    //if ZConnection1.InTransaction then
+    try
       ZConnection1.Commit;
+      sbDB_TransacaoIniciar.Font.Style:=Font.Style-[fsBold];
       ZQuery_Con1.Refresh;
+    except
+    on e:exception do MsgStatus:=zConnection1.Name+': '+e.message;
+    end;
   end;
   CheckButtons;
 end;
@@ -340,7 +322,14 @@ begin
   if ZConnection1.Connected then
   begin
     if not ZConnection1.InTransaction then
-      ZConnection1.StartTransaction;
+    begin
+      try
+        ZConnection1.StartTransaction;
+        sbDB_TransacaoIniciar.Font.Style:=Font.Style+[fsBold];
+      except
+      on e:exception do MsgStatus:=zConnection1.Name+': '+e.message;
+      end;
+    end;
   end;
   CheckButtons;
   if ZConnection1.Connected then
@@ -355,9 +344,13 @@ procedure TForm1.actTrans1_RollbackExecute(Sender: TObject);
 begin
   if ZConnection1.Connected then
   begin
-    //if ZConnection1.InTransaction then
+    try
       ZConnection1.Rollback;
+      sbDB_TransacaoIniciar.Font.Style:=Font.Style-[fsBold];
       ZQuery_Con1.Refresh;
+    except
+    on e:exception do MsgStatus:=zConnection1.Name+': '+e.message;
+    end;
   end;
 end;
 
@@ -370,47 +363,76 @@ end;
 
 procedure TForm1.actDB_Conectar1Execute(Sender: TObject);
 var
+  bIsDirect:Boolean;
+  ErrorMsg:String;
   L:TStringList;
 begin
+  ErrorMsg:=emptyStr;
+  bIsDirect:=true;
   L:=TStringList.Create;
-  try
-    if ZConnection1.Connected then
-      ZConnection1.Disconnect;
-
-    ZConnection1.AutoCommit:=(autocommit1.Checked);
-    //ZConnection1.AutoEncodeStrings:=false; // ela é inoqua
-    ZConnection1.Catalog:=''; // voce usa postgre?
-    ZConnection1.Protocol:='firebird';
-    ZConnection1.ClientCodePage:=FDB_CHARSET; //'ISO8859_1';
-    // A constante cCP_UTF8 precisa da unit ZCompatibility no uses
-    // as constantes cCP_UTF16 e cGET_ACP não são usados no Lazarus.
-    ZConnection1.ControlsCodePage:=cCP_UTF8;
-    ZConnection1.Database:=FFDB_FileEx;
-    ZConnection1.Hostname:='';
-    zConnection1.LibraryLocation:='';    // fbclient.dll(win32) ou libfbclient.so(linux)
-    ZConnection1.LoginPrompt:=false;
-    ZConnection1.User:=FDB_USERNAME;
-    ZConnection1.Password:=FDB_PASSWORD;
-    //ZConnection1.Port:=3050;
-    // As constantes dentro de TransactIsolationLevel
-    // estão dentro da unit ZDbcIntfs
-    if SameText(ComboBox_Con1.Text, TIL_READ_COMMITED) then
-      ZConnection1.TransactIsolationLevel:=tiReadCommitted;
-    if SameText(ComboBox_Con1.Text, TIL_READ_UNCOMMITED) then
-      ZConnection1.TransactIsolationLevel:=tiReadUnCommitted;
-    if SameText(ComboBox_Con1.Text, TIL_REPEATABLE_READ) then
-      ZConnection1.TransactIsolationLevel:=tiRepeatableRead;
-    if SameText(ComboBox_Con1.Text, TIL_SERIALIZABLE) then
-      ZConnection1.TransactIsolationLevel:=tiSerializable;
-    ZConnection1.Properties.Clear;
-    ZConnection1.ReadOnly:=false;
-    ZConnection1.SQLHourGlass:=true;
-    ZConnection1.UseMetadata:=true;
-    ZConnection1.Connected:=true;
-  except
-  on e:exception do MsgStatus:=zConnection1.Name+': '+e.message;
+  if ErrorMsg=emptyStr then
+  begin
+    case QuestionDlg(
+      'Conexão embarcada?',
+      'Conexão embarcada é monousuario e mais rapida, '+
+      'Conexão cliente/servidor precisará de um alias '+FDB_FILE+'='+FFDB_FileEx+
+      ' no arquivo databases.conf e a a senha de '+FDB_USERNAME+
+      ' deve ser "'+FDB_PASSWORD+'". Qual sua opção:',
+      mtInformation, [mrNo, 'Nao, cliente/servidor', mrYes, 'Sim, embarcada', 'IsDefault'], '') of
+        mrYes: bIsDirect:=true;
+        mrNo: bIsDirect:=false;
+        mrCancel: ErrorMsg:='OOperação canelada pelo usuário.';
+    end;
   end;
-  if ZConnection1.Connected  then
+  if ErrorMsg=emptyStr then
+  begin
+    try
+      if ZConnection1.Connected then
+        ZConnection1.Disconnect;
+
+      ZConnection1.AutoCommit:=(autocommit1.Checked);
+      //ZConnection1.AutoEncodeStrings:=false; // ela é inoqua
+      ZConnection1.Catalog:=''; // voce usa postgre?
+      ZConnection1.Protocol:='firebird';
+      ZConnection1.ClientCodePage:=FDB_CHARSET; //'ISO8859_1';
+      // A constante cCP_UTF8 precisa da unit ZCompatibility no uses
+      // as constantes cCP_UTF16 e cGET_ACP não são usados no Lazarus.
+      ZConnection1.ControlsCodePage:=cCP_UTF8;
+      if bIsDirect then
+      begin
+        ZConnection1.Hostname:='';
+        ZConnection1.Database:=FFDB_FileEx;
+      end
+      else
+      begin
+        ZConnection1.Hostname:='localhost';
+        ZConnection1.Database:=FDB_FILE;
+      end;
+      zConnection1.LibraryLocation:='';    // fbclient.dll(win32) ou libfbclient.so(linux)
+      ZConnection1.LoginPrompt:=false;
+      ZConnection1.User:=FDB_USERNAME;
+      ZConnection1.Password:=FDB_PASSWORD;
+      //ZConnection1.Port:=3050;
+      // As constantes dentro de TransactIsolationLevel
+      // estão dentro da unit ZDbcIntfs
+      if SameText(ComboBox_Con1.Text, TIL_READ_COMMITED) then
+        ZConnection1.TransactIsolationLevel:=tiReadCommitted;
+      if SameText(ComboBox_Con1.Text, TIL_READ_UNCOMMITED) then
+        ZConnection1.TransactIsolationLevel:=tiReadUnCommitted;
+      if SameText(ComboBox_Con1.Text, TIL_REPEATABLE_READ) then
+        ZConnection1.TransactIsolationLevel:=tiRepeatableRead;
+      if SameText(ComboBox_Con1.Text, TIL_SERIALIZABLE) then
+        ZConnection1.TransactIsolationLevel:=tiSerializable;
+      ZConnection1.Properties.Clear;
+      ZConnection1.ReadOnly:=false;
+      ZConnection1.SQLHourGlass:=true;
+      ZConnection1.UseMetadata:=true;
+      ZConnection1.Connected:=true;
+    except
+    on e:exception do ErrorMsg:=zConnection1.Name+': '+e.message;
+    end;
+  end;
+  if (ErrorMsg=emptyStr) and (ZConnection1.Connected) then
   begin
     // todo: test existence of table and not recreate
     try
@@ -426,14 +448,21 @@ begin
     except
     on e:exception do
        begin
-         MsgStatus:=e.Message;
+         ErrorMsg:=e.Message;
          ZConnection1.Rollback;
        end;
     end;
   end;
 
-  if ZConnection1.Connected then
-    actSearchExecute(nil);
+  if (ErrorMsg=emptyStr) then
+  begin
+    if (ZConnection1.Connected) then
+      actSearchExecute(nil);
+  end
+  else
+  begin
+     MsgStatus:=ErrorMsg;
+  end;
 
   L.Free;
 end;
@@ -488,6 +517,8 @@ begin
   if FMsgStatus=AValue then Exit;
   FMsgStatus:=AValue;
   MemoStatus.Lines.Add(FMsgStatus);
+  //MemoStatus.SelStart:=Length(MemoStatus.Lines.Text);
+  MemoStatus.VertScrollBar.Position:=Pred(MemoStatus.Lines.Count);
 end;
 
 procedure TForm1.CheckButtons;
@@ -500,7 +531,6 @@ begin
   if FileExists(FFDB_FileEx) then
     actDB_Criar.Visible:=false;
 
-  // #1
   actTrans1_Iniciar.Enabled:=false;
   actTrans1_Commit.Enabled:=false;
   actTrans1_Rollback.Enabled:=false;

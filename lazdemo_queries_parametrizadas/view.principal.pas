@@ -259,21 +259,34 @@ begin
 
   if ErrorMsg=emptyStr then
   begin
-    S:=InputBox('Inserir quantos registros?', 'Inserir quantos registros?', IntToStr(iTotal));
-    if not TryStrToInt(S, iTotal) then
-      ErrorMsg:='Quantidade invalida';
+    S:=IntToStr(iTotal);
+    if InputQuery(
+      'Inserir quantos registros?',
+      'Inserir quantos registros?', S) then
+    begin
+      if not TryStrToInt(S, iTotal) then
+        ErrorMsg:='Quantidade invalida';
+    end
+    else
+    begin
+      ErrorMsg:='Operação canelada pelo usuário.';
+    end;
   end;
 
   if ErrorMsg=emptyStr then
   begin
     case QuestionDlg(
-      'Com preparação na execução',
-      'Preparação na execução agilizará queries repetitivas e parametrizadas', mtInformation, [mrYes, 'Sim, preparar', mrNo, 'Não, sem preparar', 'IsDefault'], '') of
+      'Com preparação na execução?',
+      'Preparação na execução agilizará queries repetitivas e parametrizadas. '+
+      'Qual a sua opção:',
+      mtInformation, [mrNo, 'Não, sem preparar', mrYes, 'Sim, preparar', 'IsDefault'], '') of
         mrYes: bPrepare:=true;
         mrNo: bPrepare:=false;
-        mrCancel: ErrorMsg:='OOperação canelada pelo usuário.';
+      else
+        ErrorMsg:='Operação canelada pelo usuário.';
     end;
   end;
+
 
   if ErrorMsg=emptyStr then
   begin
@@ -381,7 +394,8 @@ begin
       mtInformation, [mrNo, 'Nao, cliente/servidor', mrYes, 'Sim, embarcada', 'IsDefault'], '') of
         mrYes: bIsDirect:=true;
         mrNo: bIsDirect:=false;
-        mrCancel: ErrorMsg:='OOperação canelada pelo usuário.';
+      else
+        ErrorMsg:='Operação canelada pelo usuário.';
     end;
   end;
   if ErrorMsg=emptyStr then
@@ -401,11 +415,13 @@ begin
       if bIsDirect then
       begin
         ZConnection1.Hostname:='';
+        ZConnection1.Port:=0;
         ZConnection1.Database:=FFDB_FileEx;
       end
       else
       begin
         ZConnection1.Hostname:='localhost';
+        ZConnection1.Port:=3050;
         ZConnection1.Database:=FDB_FILE;
       end;
       zConnection1.LibraryLocation:='';    // fbclient.dll(win32) ou libfbclient.so(linux)

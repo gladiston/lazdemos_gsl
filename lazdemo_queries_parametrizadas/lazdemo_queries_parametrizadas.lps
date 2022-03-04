@@ -7,7 +7,7 @@
       <Unit>
         <Filename Value="lazdemo_queries_parametrizadas.lpr"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="30"/>
+        <UsageCount Value="33"/>
       </Unit>
       <Unit>
         <Filename Value="view.principal.pas"/>
@@ -17,8 +17,8 @@
         <ResourceBaseClass Value="Form"/>
         <IsVisibleTab Value="True"/>
         <TopLine Value="452"/>
-        <CursorPos X="21" Y="463"/>
-        <UsageCount Value="30"/>
+        <CursorPos X="21" Y="468"/>
+        <UsageCount Value="33"/>
         <Bookmarks Count="2">
           <Item0 X="42" Y="427" ID="9"/>
           <Item1 X="12" Y="269" ID="8"/>

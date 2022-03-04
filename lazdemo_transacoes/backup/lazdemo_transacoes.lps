@@ -7,7 +7,7 @@
       <Unit>
         <Filename Value="lazdemo_transacoes.lpr"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="21"/>
+        <UsageCount Value="23"/>
       </Unit>
       <Unit>
         <Filename Value="view.principal.pas"/>
@@ -16,142 +16,152 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <IsVisibleTab Value="True"/>
-        <TopLine Value="350"/>
-        <CursorPos X="21" Y="357"/>
-        <UsageCount Value="21"/>
+        <TopLine Value="279"/>
+        <CursorPos X="35" Y="285"/>
+        <UsageCount Value="23"/>
+        <Bookmarks Count="1">
+          <Item0 Y="634" ID="9"/>
+        </Bookmarks>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="../../../lazarus/lazarus-2.2/configs/onlinepackagemanager/packages/zeosdbo/src/dbc/ZDbcInterbase6Utils.pas"/>
-        <EditorIndex Value="1"/>
+        <EditorIndex Value="-1"/>
         <TopLine Value="862"/>
         <CursorPos Y="905"/>
+        <UsageCount Value="11"/>
+        <DefaultSyntaxHighlighter Value="Delphi"/>
+      </Unit>
+      <Unit>
+        <Filename Value="../../../lazarus/lazarus-2.2/configs/onlinepackagemanager/packages/zeosdbo/src/dbc/ZDbcUtils.pas"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="397"/>
+        <CursorPos X="47" Y="415"/>
         <UsageCount Value="10"/>
-        <Loaded Value="True"/>
         <DefaultSyntaxHighlighter Value="Delphi"/>
       </Unit>
     </Units>
     <JumpHistory HistoryIndex="29">
       <Position>
         <Filename Value="view.principal.pas"/>
-        <Caret Line="58" Column="25" TopLine="34"/>
+        <Caret Line="284" Column="9" TopLine="255"/>
       </Position>
       <Position>
         <Filename Value="view.principal.pas"/>
-        <Caret Line="583" Column="51" TopLine="573"/>
+        <Caret Line="510" Column="7" TopLine="509"/>
       </Position>
       <Position>
         <Filename Value="view.principal.pas"/>
-        <Caret Line="89" Column="65" TopLine="89"/>
+        <Caret Line="275" TopLine="273"/>
       </Position>
       <Position>
         <Filename Value="view.principal.pas"/>
-        <Caret Line="583" Column="32" TopLine="575"/>
+        <Caret Line="531" Column="25" TopLine="152"/>
       </Position>
       <Position>
         <Filename Value="view.principal.pas"/>
-        <Caret Line="450" Column="22" TopLine="433"/>
+        <Caret Line="375" Column="41" TopLine="360"/>
       </Position>
       <Position>
         <Filename Value="view.principal.pas"/>
-        <Caret Line="573" Column="15" TopLine="562"/>
+        <Caret Line="250" TopLine="239"/>
       </Position>
       <Position>
         <Filename Value="view.principal.pas"/>
-        <Caret Line="602" TopLine="587"/>
+        <Caret Line="318" Column="11" TopLine="196"/>
       </Position>
       <Position>
         <Filename Value="view.principal.pas"/>
-        <Caret Line="223" Column="19" TopLine="199"/>
+        <Caret Line="347" Column="18" TopLine="347"/>
       </Position>
       <Position>
         <Filename Value="view.principal.pas"/>
-        <Caret Line="470" Column="57" TopLine="443"/>
+        <Caret Line="314" Column="7" TopLine="307"/>
       </Position>
       <Position>
         <Filename Value="view.principal.pas"/>
-        <Caret Line="615" Column="48" TopLine="591"/>
+        <Caret Line="345" Column="38" TopLine="338"/>
       </Position>
       <Position>
         <Filename Value="view.principal.pas"/>
-        <Caret Line="432" TopLine="423"/>
+        <Caret Line="309" TopLine="307"/>
       </Position>
       <Position>
         <Filename Value="view.principal.pas"/>
-        <Caret Line="641" TopLine="626"/>
+        <Caret Line="350" Column="25" TopLine="338"/>
       </Position>
       <Position>
         <Filename Value="view.principal.pas"/>
-        <Caret Line="642" TopLine="626"/>
+        <Caret Line="283" Column="38" TopLine="274"/>
       </Position>
       <Position>
         <Filename Value="view.principal.pas"/>
-        <Caret Line="643" TopLine="626"/>
+        <Caret Line="522" Column="3" TopLine="520"/>
       </Position>
       <Position>
         <Filename Value="view.principal.pas"/>
-        <Caret Line="644" TopLine="626"/>
+        <Caret Line="283" Column="7" TopLine="274"/>
       </Position>
       <Position>
         <Filename Value="view.principal.pas"/>
-        <Caret Line="645" TopLine="626"/>
+        <Caret Line="522" Column="3" TopLine="520"/>
       </Position>
       <Position>
         <Filename Value="view.principal.pas"/>
-        <Caret Line="648" TopLine="635"/>
+        <Caret Line="276" TopLine="274"/>
       </Position>
       <Position>
         <Filename Value="view.principal.pas"/>
-        <Caret Line="649" TopLine="635"/>
+        <Caret Line="529" Column="7" TopLine="520"/>
       </Position>
       <Position>
         <Filename Value="view.principal.pas"/>
-        <Caret Line="651" TopLine="635"/>
+        <Caret Line="285" Column="30" TopLine="274"/>
       </Position>
       <Position>
         <Filename Value="view.principal.pas"/>
-        <Caret Line="652" TopLine="635"/>
+        <Caret Line="250" Column="7" TopLine="239"/>
       </Position>
       <Position>
         <Filename Value="view.principal.pas"/>
-        <Caret Line="654" TopLine="635"/>
+        <Caret Line="268" Column="39" TopLine="257"/>
       </Position>
       <Position>
         <Filename Value="view.principal.pas"/>
-        <Caret Line="655" TopLine="635"/>
+        <Caret Line="241" Column="3" TopLine="239"/>
       </Position>
       <Position>
         <Filename Value="view.principal.pas"/>
-        <Caret Line="656" TopLine="635"/>
+        <Caret Line="277" Column="3" TopLine="275"/>
       </Position>
       <Position>
         <Filename Value="view.principal.pas"/>
-        <Caret Line="657" TopLine="635"/>
+        <Caret Line="532" Column="9" TopLine="522"/>
       </Position>
       <Position>
         <Filename Value="view.principal.pas"/>
-        <Caret Line="658" TopLine="635"/>
+        <Caret Line="291" Column="35" TopLine="275"/>
       </Position>
       <Position>
         <Filename Value="view.principal.pas"/>
-        <Caret Line="659" TopLine="635"/>
+        <Caret Line="269" Column="110" TopLine="245"/>
       </Position>
       <Position>
         <Filename Value="view.principal.pas"/>
-        <Caret Line="666" TopLine="641"/>
+        <Caret Line="247" Column="29" TopLine="234"/>
       </Position>
       <Position>
         <Filename Value="view.principal.pas"/>
-        <Caret Line="667" TopLine="642"/>
+        <Caret Line="116" Column="11" TopLine="99"/>
       </Position>
       <Position>
         <Filename Value="view.principal.pas"/>
-        <Caret Line="432" Column="68" TopLine="421"/>
+        <Caret Line="536" Column="7" TopLine="526"/>
       </Position>
       <Position>
         <Filename Value="view.principal.pas"/>
-        <Caret Line="435" Column="64" TopLine="427"/>
+        <Caret Line="528" Column="3" TopLine="526"/>
       </Position>
     </JumpHistory>
     <RunParams>
@@ -159,15 +169,4 @@
       <Modes ActiveMode=""/>
     </RunParams>
   </ProjectSession>
-  <Debugging>
-    <BreakPoints>
-      <Item>
-        <Kind Value="bpkSource"/>
-        <WatchScope Value="wpsLocal"/>
-        <WatchKind Value="wpkWrite"/>
-        <Source Value="view.principal.pas"/>
-        <Line Value="432"/>
-      </Item>
-    </BreakPoints>
-  </Debugging>
 </CONFIG>

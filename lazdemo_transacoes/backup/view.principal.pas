@@ -46,8 +46,8 @@ type
     sbDB_Criar: TSpeedButton;
     sbDB_Post: TSpeedButton;
     sbDB_TransacaoCommit: TSpeedButton;
-    sbDB_TransacaoCommit3: TSpeedButton;
-    sbDB_TransacaoCommit4: TSpeedButton;
+    sbDB_Append: TSpeedButton;
+    sbDB_Edit: TSpeedButton;
     sbDB_TransacaoIniciar: TSpeedButton;
     sbDB_TransacaoRefresh: TSpeedButton;
     sbDB_TransacaoRollBack: TSpeedButton;
@@ -68,6 +68,7 @@ type
     procedure actTrans1_CommitExecute(Sender: TObject);
     procedure actTrans1_IniciarExecute(Sender: TObject);
     procedure actTrans1_RollbackExecute(Sender: TObject);
+    procedure DS_ZQuery_Con1StateChange(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
     procedure FormCreate(Sender: TObject);
     procedure Sublinhado_Desligar(Sender: TObject);
@@ -109,7 +110,10 @@ var
   Form1: TForm1;
 
 implementation
-uses ZDbcIntfs, ZCompatibility;
+uses
+  ZDbcIntfs,
+  ZCompatibility,
+  StrUtils;
 {$R *.lfm}
 
 { TForm1 }
@@ -246,6 +250,7 @@ begin
       actRefresh.Enabled:=false;
       actTrans1_Commit.Enabled:=false;
       actTrans1_Rollback.Enabled:=false;
+      MsgStatus:='Em modo de edição com transação '+IfThen(ZConnection1.InTransaction,'ativa','inativa');
     except
     on e:exception do MsgStatus:=e.message;
     end;
@@ -263,6 +268,8 @@ begin
       actRefresh.Enabled:=false;
       actTrans1_Commit.Enabled:=false;
       actTrans1_Rollback.Enabled:=false;
+      MsgStatus:='Em modo de inclusão';
+      MsgStatus:='Em modo de edição com transação '+IfThen(ZConnection1.InTransaction,'ativa','inativa');
     except
     on e:exception do MsgStatus:=e.message;
     end;
@@ -271,16 +278,18 @@ end;
 
 procedure TForm1.actPostExecute(Sender: TObject);
 begin
-  try
-    if (ZQuery_Con1.State in [dsEdit, dsInsert]) then
-    begin
+  if (ZQuery_Con1.State in [dsEdit, dsInsert]) then
+  begin
+    try
       ZQuery_Con1.Post;
       ZQuery_Con1.Refresh;
       actTrans1_Commit.Enabled:=true;
       actTrans1_Rollback.Enabled:=true;
+      MsgStatus:='Edição confirmada';
+      //CheckButtons;
+    except
+    on e:exception do MsgStatus:=e.message;
     end;
-  except
-  on e:exception do MsgStatus:=e.message;
   end;
 end;
 
@@ -305,9 +314,13 @@ procedure TForm1.actTrans1_CommitExecute(Sender: TObject);
 begin
   if ZConnection1.Connected then
   begin
-    //if ZConnection1.InTransaction then
+    try
       ZConnection1.Commit;
       ZQuery_Con1.Refresh;
+      DS_ZQuery_Con1StateChange(nil);
+    except
+    on e:exception do MsgStatus:=e.message;
+    end;
   end;
   CheckButtons;
 end;
@@ -332,10 +345,26 @@ procedure TForm1.actTrans1_RollbackExecute(Sender: TObject);
 begin
   if ZConnection1.Connected then
   begin
-    //if ZConnection1.InTransaction then
+    try
       ZConnection1.Rollback;
       ZQuery_Con1.Refresh;
+      DS_ZQuery_Con1StateChange(nil);
+    except
+    on e:exception do MsgStatus:=e.message;
+    end;
   end;
+  CheckButtons;
+end;
+
+procedure TForm1.DS_ZQuery_Con1StateChange(Sender: TObject);
+begin
+  actPost.Enabled:=(DS_ZQuery_Con1.State in [dsInsert, dsEdit]);
+  actCancel.Enabled:=actPost.Enabled;
+  sbDB_Post.Font.Style:=Font.Style-[fsBold, fsUnderline];
+  sbDB_Cancel.Font.Style:=Font.Style-[fsBold, fsUnderline];
+
+  sbDB_Append.Font.Style:=Font.Style-[fsBold, fsUnderline];
+  sbDB_Edit.Font.Style:=Font.Style-[fsBold, fsUnderline];
 end;
 
 procedure TForm1.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -354,17 +383,17 @@ var
 begin
   ErrorMsg:=emptyStr;
   bIsDirect:=true;
-  bNeedToCreateTable:=false;
+  bTableExists:=true;
   L:=TStringList.Create;
   if ErrorMsg=emptyStr then
   begin
     case QuestionDlg(
-      'Conexão embarcada?',
+      'Conexão embarcada ou cliente/servidor?',
       'Conexão embarcada é monousuario e mais rapida, '+
       'Conexão cliente/servidor precisará de um alias '+FDB_FILE+'='+FFDB_FileEx+
       ' no arquivo databases.conf e a a senha de '+FDB_USERNAME+
       ' deve ser "'+FDB_PASSWORD+'". Qual sua opção:',
-      mtInformation, [mrNo, 'Nao, cliente/servidor', mrYes, 'Sim, embarcada', 'IsDefault'], '') of
+      mtInformation, [mrNo, 'Cliente/servidor', mrYes, 'Embarcada', 'IsDefault'], '') of
         mrYes: bIsDirect:=true;
         mrNo: bIsDirect:=false;
       else
@@ -496,12 +525,18 @@ end;
 
 procedure TForm1.actCancelExecute(Sender: TObject);
 begin
-  try
-    ZQuery_Con1.Cancel;
-    ZQuery_Con1.Refresh;
-    CheckButtons;
-  except
-  on e:exception do MsgStatus:=e.message;
+  if (ZQuery_Con1.State in [dsEdit, dsInsert]) then
+  begin
+    try
+      ZQuery_Con1.Cancel;
+      ZQuery_Con1.Refresh;
+      actTrans1_Commit.Enabled:=true;
+      actTrans1_Rollback.Enabled:=true;
+      MsgStatus:='Edição cancelada';
+      //CheckButtons;
+    except
+    on e:exception do MsgStatus:=e.message;
+    end;
   end;
 end;
 
@@ -590,14 +625,13 @@ begin
   actIncluir.Enabled:= (ZConnection1.Connected);
   actEdit.Enabled:= (ZConnection1.Connected);
   actRefresh.Enabled:=(ZConnection1.Connected);
-  actPost.Enabled:= (ZConnection1.Connected);
-  actCancel.Enabled:= (ZConnection1.Connected);
 
   if ZConnection1.Connected then
     sbDB_Conectar1.Action:=actDB_Desconectar1
   else
     sbDB_Conectar1.Action:=actDB_Conectar1;
 
+  DS_ZQuery_Con1StateChange(nil);
 end;
 
 procedure TForm1.OpenMyData(AForUpdate, AWithLock: Boolean);

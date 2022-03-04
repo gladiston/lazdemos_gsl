@@ -7,7 +7,7 @@
       <Unit>
         <Filename Value="lazdemo_transacoes.lpr"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="23"/>
+        <UsageCount Value="25"/>
       </Unit>
       <Unit>
         <Filename Value="view.principal.pas"/>
@@ -16,9 +16,9 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <IsVisibleTab Value="True"/>
-        <TopLine Value="279"/>
-        <CursorPos X="35" Y="285"/>
-        <UsageCount Value="23"/>
+        <TopLine Value="498"/>
+        <CursorPos X="39" Y="467"/>
+        <UsageCount Value="25"/>
         <Bookmarks Count="1">
           <Item0 Y="634" ID="9"/>
         </Bookmarks>

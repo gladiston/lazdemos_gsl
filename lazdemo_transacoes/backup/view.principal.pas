@@ -286,7 +286,7 @@ begin
       actTrans1_Commit.Enabled:=true;
       actTrans1_Rollback.Enabled:=true;
       MsgStatus:='Edição confirmada';
-      //CheckButtons;
+      CheckButtons;
     except
     on e:exception do MsgStatus:=e.message;
     end;
@@ -533,7 +533,7 @@ begin
       actTrans1_Commit.Enabled:=true;
       actTrans1_Rollback.Enabled:=true;
       MsgStatus:='Edição cancelada';
-      //CheckButtons;
+      CheckButtons;
     except
     on e:exception do MsgStatus:=e.message;
     end;

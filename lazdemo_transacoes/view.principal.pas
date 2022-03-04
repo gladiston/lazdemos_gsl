@@ -465,7 +465,7 @@ begin
   begin
     try
       L.Clear;
-      L.Add('CREATE TABLE TEST_TIL(');
+      L.Add('RECREATE TABLE TEST_TIL(');
       L.Add('     codigo integer primary key,');     // sem pk a inserção é mais rapida
       L.Add('     descricao varchar(30),');
       L.Add('     status char(1));');

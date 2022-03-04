@@ -16,46 +16,18 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <IsVisibleTab Value="True"/>
-        <TopLine Value="424"/>
-        <CursorPos X="27" Y="418"/>
+        <TopLine Value="452"/>
+        <CursorPos X="44" Y="459"/>
         <UsageCount Value="30"/>
         <Bookmarks Count="2">
-          <Item0 X="42" Y="423" ID="9"/>
-          <Item1 X="12" Y="267" ID="8"/>
+          <Item0 X="42" Y="427" ID="9"/>
+          <Item1 X="12" Y="269" ID="8"/>
         </Bookmarks>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
       </Unit>
     </Units>
-    <JumpHistory HistoryIndex="29">
-      <Position>
-        <Filename Value="view.principal.pas"/>
-        <Caret Line="435" TopLine="431"/>
-      </Position>
-      <Position>
-        <Filename Value="view.principal.pas"/>
-        <Caret Line="436" TopLine="431"/>
-      </Position>
-      <Position>
-        <Filename Value="view.principal.pas"/>
-        <Caret Line="438" TopLine="431"/>
-      </Position>
-      <Position>
-        <Filename Value="view.principal.pas"/>
-        <Caret Line="440" TopLine="431"/>
-      </Position>
-      <Position>
-        <Filename Value="view.principal.pas"/>
-        <Caret Line="442" TopLine="431"/>
-      </Position>
-      <Position>
-        <Filename Value="view.principal.pas"/>
-        <Caret Line="443" TopLine="431"/>
-      </Position>
-      <Position>
-        <Filename Value="view.principal.pas"/>
-        <Caret Line="444" TopLine="431"/>
-      </Position>
+    <JumpHistory HistoryIndex="28">
       <Position>
         <Filename Value="view.principal.pas"/>
         <Caret Line="445" TopLine="441"/>
@@ -118,10 +90,6 @@
       </Position>
       <Position>
         <Filename Value="view.principal.pas"/>
-        <Caret Line="407" Column="24" TopLine="410"/>
-      </Position>
-      <Position>
-        <Filename Value="view.principal.pas"/>
         <Caret Line="423" TopLine="418"/>
       </Position>
       <Position>
@@ -147,6 +115,34 @@
       <Position>
         <Filename Value="view.principal.pas"/>
         <Caret Line="430" TopLine="419"/>
+      </Position>
+      <Position>
+        <Filename Value="view.principal.pas"/>
+        <Caret Line="415" TopLine="410"/>
+      </Position>
+      <Position>
+        <Filename Value="view.principal.pas"/>
+        <Caret Line="429" Column="25" TopLine="417"/>
+      </Position>
+      <Position>
+        <Filename Value="view.principal.pas"/>
+        <Caret Line="424" TopLine="417"/>
+      </Position>
+      <Position>
+        <Filename Value="view.principal.pas"/>
+        <Caret Line="425" TopLine="417"/>
+      </Position>
+      <Position>
+        <Filename Value="view.principal.pas"/>
+        <Caret Line="388" Column="17" TopLine="374"/>
+      </Position>
+      <Position>
+        <Filename Value="view.principal.pas"/>
+        <Caret Line="742" Column="11" TopLine="718"/>
+      </Position>
+      <Position>
+        <Filename Value="view.principal.pas"/>
+        <Caret Line="462" Column="19" TopLine="449"/>
       </Position>
     </JumpHistory>
     <RunParams>

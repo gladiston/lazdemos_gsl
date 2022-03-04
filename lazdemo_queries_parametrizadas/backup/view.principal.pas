@@ -78,6 +78,7 @@ type
       APrepare: Boolean;
       out AMilToPrepare:Integer;
       out AMilToComplete:Integer): String;
+    function SQL_TableExists(ATableName: String; out AExist: Boolean): String;
     function Truncate_Table: String;
   public
   published
@@ -215,6 +216,7 @@ begin
     actDB_Conectar1Execute(Sender)
   else
     MsgStatus:=ErrorMsg;
+
   FreeAndNil(L);
 end;
 
@@ -377,11 +379,13 @@ end;
 procedure TForm1.actDB_Conectar1Execute(Sender: TObject);
 var
   bIsDirect:Boolean;
+  bTableExists:Boolean;
   ErrorMsg:String;
   L:TStringList;
 begin
   ErrorMsg:=emptyStr;
   bIsDirect:=true;
+  bTableExists:=true;
   L:=TStringList.Create;
   if ErrorMsg=emptyStr then
   begin
@@ -415,11 +419,13 @@ begin
       if bIsDirect then
       begin
         ZConnection1.Hostname:='';
+        ZConnection1.Port:=0;
         ZConnection1.Database:=FFDB_FileEx;
       end
       else
       begin
         ZConnection1.Hostname:='localhost';
+        ZConnection1.Port:=3050;
         ZConnection1.Database:=FDB_FILE;
       end;
       zConnection1.LibraryLocation:='';    // fbclient.dll(win32) ou libfbclient.so(linux)
@@ -446,12 +452,19 @@ begin
     on e:exception do ErrorMsg:=zConnection1.Name+': '+e.message;
     end;
   end;
+
   if (ErrorMsg=emptyStr) and (ZConnection1.Connected) then
+  begin
+    // Check existence and dont recreate table
+    ErrorMsg:=SQL_TableExists('FRUTAS', bTableExists);
+  end;
+
+  if (ErrorMsg=emptyStr) and (ZConnection1.Connected) and (not bTableExists) then
   begin
     // todo: test existence of table and not recreate
     try
       L.Clear;
-      L.Add('RECREATE TABLE TEST_PREPARE(');
+      L.Add('CREATE TABLE TEST_PREPARE(');
       L.Add('     codigo integer primary key,');     // sem pk a inserção é mais rapida
       L.Add('     descricao varchar(30));');
       if not ZConnection1.InTransaction then
@@ -735,6 +748,38 @@ begin
     q1.Close;
   q1.Free;
 end;
+
+function TForm1.SQL_TableExists(ATableName: String; out AExist:Boolean): String;
+var
+  q1:TZQuery;
+begin
+   Result:=emptyStr;
+   AExist:=false;
+   ATableName:=Trim(ATableName);
+   if not zConnection1.Connected then
+     Result:='Função SQL_TableExists: Banco de dados esta desconectado';
+
+   q1:=TZQuery.Create(Self);
+   if Result=emptyStr then
+   begin
+     try
+       if q1.Active then
+         q1.Close;
+       q1.Connection:=ZConnection1;
+       q1.SQL.Clear;
+       q1.SQL.Add('select RDB$RELATION_NAME FROM RDB$RELATIONS');
+       q1.SQL.Add('where (RDB$RELATION_NAME = '+QuotedStr(ATableName)+')');
+       q1.Open;
+       if not q1.IsEmpty then
+         AExist:=true;
+     except
+     on e:exception do MsgStatus:=zConnection1.Name+': '+e.message+sLineBreak+q1.SQL.Text;
+     end;
+
+   end;
+   q1.Free;
+end;
+
 
 end.
 

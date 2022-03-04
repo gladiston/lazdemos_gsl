@@ -86,6 +86,7 @@ type
     procedure SetMsgStatus(AValue: String);
     procedure CheckButtons;
     procedure OpenMyData(AForUpdate, AWithLock:Boolean);
+    function SQL_TableExists(ATableName:String; out AExist:Boolean):String;
   public
   published
     property FDB_FileEx:String read FFDB_FileEx;
@@ -213,10 +214,12 @@ begin
     end;
   end;
 
+
   if ErrorMsg=emptyStr then
     actDB_Conectar1Execute(Sender)
   else
     MsgStatus:=ErrorMsg;
+
   FreeAndNil(L);
 end;
 
@@ -344,74 +347,128 @@ end;
 
 procedure TForm1.actDB_Conectar1Execute(Sender: TObject);
 var
+  bIsDirect:Boolean;
+  bTableExists:Boolean;
+  ErrorMsg:String;
   L:TStringList;
 begin
+  ErrorMsg:=emptyStr;
+  bIsDirect:=true;
+  bTableExists:=true;
   L:=TStringList.Create;
-  try
-    if ZConnection1.Connected then
-      ZConnection1.Disconnect;
+  if ErrorMsg=emptyStr then
+  begin
+    case QuestionDlg(
+      'Conexão embarcada?',
+      'Conexão embarcada é monousuario e mais rapida, '+
+      'Conexão cliente/servidor precisará de um alias '+FDB_FILE+'='+FFDB_FileEx+
+      ' no arquivo databases.conf e a a senha de '+FDB_USERNAME+
+      ' deve ser "'+FDB_PASSWORD+'". Qual sua opção:',
+      mtInformation, [mrNo, 'Nao, cliente/servidor', mrYes, 'Sim, embarcada', 'IsDefault'], '') of
+        mrYes: bIsDirect:=true;
+        mrNo: bIsDirect:=false;
+      else
+        ErrorMsg:='Operação canelada pelo usuário.';
+    end;
+  end;
+  if ErrorMsg=emptyStr then
+  begin
+    try
+      if ZConnection1.Connected then
+        ZConnection1.Disconnect;
 
-    ZConnection1.AutoCommit:=(autocommit1.Checked);
-    //ZConnection1.AutoEncodeStrings:=false; // ela é inoqua
-    ZConnection1.Catalog:=''; // voce usa postgre?
-    ZConnection1.Protocol:='firebird';
-    ZConnection1.ClientCodePage:=FDB_CHARSET; //'ISO8859_1';
-    // A constante cCP_UTF8 precisa da unit ZCompatibility no uses
-    // as constantes cCP_UTF16 e cGET_ACP não são usados no Lazarus.
-    ZConnection1.ControlsCodePage:=cCP_UTF8;
-    ZConnection1.Database:=FFDB_FileEx;
-    ZConnection1.Hostname:='';
-    zConnection1.LibraryLocation:='';    // fbclient.dll(win32) ou libfbclient.so(linux)
-    ZConnection1.LoginPrompt:=false;
-    ZConnection1.User:=FDB_USERNAME;
-    ZConnection1.Password:=FDB_PASSWORD;
-    //ZConnection1.Port:=3050;
-    // As constantes dentro de TransactIsolationLevel
-    // estão dentro da unit ZDbcIntfs
-    if SameText(ComboBox_Con1.Text, TIL_READ_COMMITED) then
-      ZConnection1.TransactIsolationLevel:=tiReadCommitted;
-    if SameText(ComboBox_Con1.Text, TIL_READ_UNCOMMITED) then
-      ZConnection1.TransactIsolationLevel:=tiReadUnCommitted;
-    if SameText(ComboBox_Con1.Text, TIL_REPEATABLE_READ) then
-      ZConnection1.TransactIsolationLevel:=tiRepeatableRead;
-    if SameText(ComboBox_Con1.Text, TIL_SERIALIZABLE) then
-      ZConnection1.TransactIsolationLevel:=tiSerializable;
-    ZConnection1.Properties.Clear;
-    if rec_version_Con1.Checked then
-      ZConnection1.Properties.Add('isc_tpb_rec_version');
-    if NoWait_Con1.Checked then
-      ZConnection1.Properties.Add('isc_tpb_nowait');
-    ZConnection1.ReadOnly:=false;
-    ZConnection1.SQLHourGlass:=true;
-    ZConnection1.UseMetadata:=true;
-    ZConnection1.Connected:=true;
-  except
-  on e:exception do MsgStatus:=zConnection1.Name+': '+e.message;
+      ZConnection1.AutoCommit:=(autocommit1.Checked);
+      //ZConnection1.AutoEncodeStrings:=false; // ela é inoqua
+      ZConnection1.Catalog:=''; // voce usa postgre?
+      ZConnection1.Protocol:='firebird';
+      ZConnection1.ClientCodePage:=FDB_CHARSET; //'ISO8859_1';
+      // A constante cCP_UTF8 precisa da unit ZCompatibility no uses
+      // as constantes cCP_UTF16 e cGET_ACP não são usados no Lazarus.
+      ZConnection1.ControlsCodePage:=cCP_UTF8;
+      if bIsDirect then
+      begin
+        ZConnection1.Hostname:='';
+        ZConnection1.Port:=0;
+        ZConnection1.Database:=FFDB_FileEx;
+      end
+      else
+      begin
+        ZConnection1.Hostname:='localhost';
+        ZConnection1.Port:=3050;
+        ZConnection1.Database:=FDB_FILE;
+      end;
+      zConnection1.LibraryLocation:='';    // fbclient.dll(win32) ou libfbclient.so(linux)
+      ZConnection1.LoginPrompt:=false;
+      ZConnection1.User:=FDB_USERNAME;
+      ZConnection1.Password:=FDB_PASSWORD;
+      //ZConnection1.Port:=3050;
+      // As constantes dentro de TransactIsolationLevel
+      // estão dentro da unit ZDbcIntfs
+      if SameText(ComboBox_Con1.Text, TIL_READ_COMMITED) then
+        ZConnection1.TransactIsolationLevel:=tiReadCommitted;
+      if SameText(ComboBox_Con1.Text, TIL_READ_UNCOMMITED) then
+        ZConnection1.TransactIsolationLevel:=tiReadUnCommitted;
+      if SameText(ComboBox_Con1.Text, TIL_REPEATABLE_READ) then
+        ZConnection1.TransactIsolationLevel:=tiRepeatableRead;
+      if SameText(ComboBox_Con1.Text, TIL_SERIALIZABLE) then
+        ZConnection1.TransactIsolationLevel:=tiSerializable;
+      ZConnection1.Properties.Clear;
+      if rec_version_Con1.Checked then
+        ZConnection1.Properties.Add('isc_tpb_rec_version');
+      if NoWait_Con1.Checked then
+        ZConnection1.Properties.Add('isc_tpb_nowait');
+      ZConnection1.ReadOnly:=false;
+      ZConnection1.SQLHourGlass:=true;
+      ZConnection1.UseMetadata:=true;
+      ZConnection1.Connected:=true;
+    except
+    on e:exception do ErrorMsg:=zConnection1.Name+': '+e.message;
+    end;
   end;
 
-  if ZConnection1.Connected then
+  if (ErrorMsg=emptyStr) and (ZConnection1.Connected) then
   begin
-    // TODO: Check existence and dont recreate table
+    // Check existence and dont recreate table
+    ErrorMsg:=(SQL_TableExists('TEST_TIL', bTableExists));
+  end;
+
+  if (ErrorMsg=emptyStr) and (ZConnection1.Connected) and (not bTableExists) then
+  begin
     try
       L.Clear;
-      L.Add('RECREATE TABLE FRUTAS(');
-      L.Add('     codigo varchar(20),');
+      L.Add('CREATE TABLE TEST_TIL(');
+      L.Add('     codigo integer primary key,');     // sem pk a inserção é mais rapida
       L.Add('     descricao varchar(30),');
-      L.Add('     status varchar(1));');
+      L.Add('     status char(1));');
       if not ZConnection1.InTransaction then
         ZConnection1.StartTransaction;
       ZConnection1.ExecuteDirect(L.Text);
       ZConnection1.Commit;
       MsgStatus:='Tabela criada!';
+    except
+    on e:exception do
+       begin
+         ErrorMsg:=e.Message;
+         ZConnection1.Rollback;
+       end;
+    end;
+    if (ErrorMsg=emptyStr) then
+    begin
       try
         if not ZConnection1.InTransaction then
           ZConnection1.StartTransaction;
-        ZConnection1.ExecuteDirect('INSERT INTO FRUTAS (CODIGO, DESCRICAO, STATUS) VALUES (''cod_maracuja'', ''Maracujá'', ''A'');');
-        ZConnection1.ExecuteDirect('INSERT INTO FRUTAS (CODIGO, DESCRICAO, STATUS) VALUES (''cod_acai'', ''Açaí'', ''A'');');
-        ZConnection1.ExecuteDirect('INSERT INTO FRUTAS (CODIGO, DESCRICAO, STATUS) VALUES (''cod_avela'', ''Avelã'', ''A'');');
-        ZConnection1.ExecuteDirect('INSERT INTO FRUTAS (CODIGO, DESCRICAO, STATUS) VALUES (''cod_melao'', ''Melão'', ''A'');');
-        ZConnection1.ExecuteDirect('INSERT INTO FRUTAS (CODIGO, DESCRICAO, STATUS) VALUES (''cod_maca'', ''Maçã'', ''A'');');
-        ZConnection1.ExecuteDirect('INSERT INTO FRUTAS (CODIGO, DESCRICAO, STATUS) VALUES (''cod_mamao'', ''Mamão'', ''A'');');
+        ZConnection1.ExecuteDirect('INSERT INTO TEST_TIL (CODIGO, DESCRICAO, STATUS) VALUES (1, ''Açaí'', ''A'');');
+        ZConnection1.ExecuteDirect('INSERT INTO TEST_TIL (CODIGO, DESCRICAO, STATUS) VALUES (2, ''Avelã'', ''A'');');
+
+        ZConnection1.ExecuteDirect('INSERT INTO TEST_TIL (CODIGO, DESCRICAO, STATUS) VALUES (3, ''Maracujá'', ''A'');');
+        ZConnection1.ExecuteDirect('INSERT INTO TEST_TIL (CODIGO, DESCRICAO, STATUS) VALUES (4, ''Melão'', ''A'');');
+        ZConnection1.ExecuteDirect('INSERT INTO TEST_TIL (CODIGO, DESCRICAO, STATUS) VALUES (5, ''Maçã'', ''A'');');
+        ZConnection1.ExecuteDirect('INSERT INTO TEST_TIL (CODIGO, DESCRICAO, STATUS) VALUES (6, ''Mamão'', ''A'');');
+
+        ZConnection1.ExecuteDirect('INSERT INTO TEST_TIL (CODIGO, DESCRICAO, STATUS) VALUES (7, ''Laranja'', ''A'');');
+        ZConnection1.ExecuteDirect('INSERT INTO TEST_TIL (CODIGO, DESCRICAO, STATUS) VALUES (8, ''Limão'', ''A'');');
+        ZConnection1.ExecuteDirect('INSERT INTO TEST_TIL (CODIGO, DESCRICAO, STATUS) VALUES (9, ''Lichia'', ''A'');');
+
         ZConnection1.Commit;
         MsgStatus:='Registros adicionadas na tabela!';
       except
@@ -421,17 +478,18 @@ begin
            ZConnection1.Rollback;
          end;
       end;
-    except
-    on e:exception do
-       begin
-         MsgStatus:=e.Message;
-         ZConnection1.Rollback;
-       end;
     end;
   end;
 
-  if ZConnection1.Connected then
-    actSearchExecute(nil);
+  if (ErrorMsg=emptyStr) then
+  begin
+    if (ZConnection1.Connected) then
+      actSearchExecute(nil);
+  end
+  else
+  begin
+     MsgStatus:=ErrorMsg;
+  end;
 
   L.Free;
 end;
@@ -554,7 +612,7 @@ begin
     DS_ZQuery_Con1.AutoEdit:=false;
     ZQuery_Con1.Connection:=ZConnection1;
     ZQuery_Con1.SQL.Clear;
-    ZQuery_Con1.SQL.Add('select * from FRUTAS');
+    ZQuery_Con1.SQL.Add('select * from TEST_TIL');
     ZQuery_Con1.SQL.Add('where (true)');
     if edtSearch.Text<>emptyStr then
       ZQuery_Con1.SQL.Add('and descricao like '+QuotedStr(edtSearch.Text));
@@ -575,6 +633,37 @@ begin
   on e:exception do MsgStatus:=zConnection1.Name+': '+e.message+sLineBreak+ZQuery_Con1.SQL.Text;
   end;
 
+end;
+
+function TForm1.SQL_TableExists(ATableName: String; out AExist:Boolean): String;
+var
+  q1:TZQuery;
+begin
+   Result:=emptyStr;
+   AExist:=false;
+   ATableName:=Trim(ATableName);
+   if not zConnection1.Connected then
+     Result:='Função SQL_TableExists: Banco de dados esta desconectado';
+
+   q1:=TZQuery.Create(Self);
+   if Result=emptyStr then
+   begin
+     try
+       if q1.Active then
+         q1.Close;
+       q1.Connection:=ZConnection1;
+       q1.SQL.Clear;
+       q1.SQL.Add('select RDB$RELATION_NAME FROM RDB$RELATIONS');
+       q1.SQL.Add('where (RDB$RELATION_NAME = '+QuotedStr(ATableName)+')');
+       q1.Open;
+       if not q1.IsEmpty then
+         AExist:=true;
+     except
+     on e:exception do MsgStatus:=zConnection1.Name+': '+e.message+sLineBreak+q1.SQL.Text;
+     end;
+
+   end;
+   q1.Free;
 end;
 
 end.

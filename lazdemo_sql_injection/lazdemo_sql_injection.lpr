@@ -1,4 +1,4 @@
-program lazdemo_transacoes;
+program lazdemo_sql_injection;
 
 {$mode objfpc}{$H+}
 

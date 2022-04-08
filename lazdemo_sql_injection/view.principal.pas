@@ -26,14 +26,23 @@ type
     actTrans1_Iniciar: TAction;
     ActionList1: TActionList;
     autocommit1: TCheckBox;
-    cboxParamCheck: TCheckBox;
+    btnAlterar: TBitBtn;
+    btnAlterar1: TBitBtn;
     ComboBox_Con1: TComboBox;
     DBGrid1: TDBGrid;
     DBGridCon1: TGroupBox;
     DS_ZQuery_Con1: TDataSource;
+    edtCodigo: TDBEdit;
+    edtDescricao_Atual: TDBEdit;
+    edtDescricao_Nova: TComboBox;
     gbConexao1: TPanel;
-    GroupBox2: TGroupBox;
+    gb_test: TGroupBox;
+    Label1: TLabel;
+    Label2: TLabel;
+    Label3: TLabel;
+    Label4: TLabel;
     MemoStatus: TMemo;
+    pnlAceitar: TPanel;
     sbDB_Conectar1: TSpeedButton;
     sbDB_Criar: TSpeedButton;
     sbDB_TransacaoCommit: TSpeedButton;
@@ -41,20 +50,24 @@ type
     sbDB_TransacaoRollBack: TSpeedButton;
     sbMenu1: TScrollBox;
     sb_search: TSpeedButton;
-    SpeedButton1: TSpeedButton;
     SpeedButton3: TSpeedButton;
     Splitter1: TSplitter;
     ZConnection1: TZConnection;
     ZQuery_Con1: TZQuery;
+    ZQuery_Con1CODIGO: TLongintField;
+    ZQuery_Con1DESCRICAO: TStringField;
+    ZQuery_Con1STATUS: TStringField;
     procedure actDB_Conectar1Execute(Sender: TObject);
     procedure actDB_CriarExecute(Sender: TObject);
     procedure actDB_Desconectar1Execute(Sender: TObject);
     procedure actDelete_ALLExecute(Sender: TObject);
-    procedure actInsert_PrepareExecute(Sender: TObject);
     procedure actSearchExecute(Sender: TObject);
     procedure actTrans1_CommitExecute(Sender: TObject);
     procedure actTrans1_IniciarExecute(Sender: TObject);
     procedure actTrans1_RollbackExecute(Sender: TObject);
+    procedure btnAlterar1Click(Sender: TObject);
+    procedure btnAlterarClick(Sender: TObject);
+    procedure edtDescricao_NovaChange(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
     procedure FormCreate(Sender: TObject);
     procedure Sublinhado_Desligar(Sender: TObject);
@@ -67,20 +80,16 @@ type
     procedure Conexao_Refeita(Sender: TObject);
     procedure ZConnection1Commit(Sender: TObject);
     procedure ZQuery_Con1AfterOpen(DataSet: TDataSet);
+    procedure ZQuery_Con1AfterScroll(DataSet: TDataSet);
   private
     FMsgStatus: String;
     FFDB_FileEx:String;
     procedure SetMsgStatus(AValue: String);
     procedure CheckButtons;
     procedure OpenMyData(AForUpdate, AWithLock:Boolean);
-    function Insert_Data(
-      ATotal: Cardinal;
-      APrepare: Boolean;
-      out AMilToPrepare:Integer;
-      out AMilToComplete:Integer): String;
-    function SQL_TableCount: Cardinal;
     function SQL_TableExists(ATableName: String; out AExist: Boolean): String;
     function Truncate_Table: String;
+    function SQL_TableCount:Cardinal;
   public
   published
     property FDB_FileEx:String read FFDB_FileEx;
@@ -88,6 +97,7 @@ type
   end;
 const
   FDB_FILE='lazdemos_gsl.fdb';
+  FDB_TABLE='TEST_SQLINJECTION';
   FDB_USERNAME='SYSDBA';
   FDB_PASSWORD='masterkey';
   FDB_PAGESIZE=16384;
@@ -110,34 +120,13 @@ uses
   DateUtils;
 {$R *.lfm}
 
-function TfmPrincipal.SQL_TableCount: Cardinal;
-var
-  q1:TZQuery;
-begin
-  Result:=0;
-  if not zConnection1.Connected then
-    Exit;
-  q1:=TZQuery.Create(Self);
-  try
-    if q1.Active then
-      q1.Close;
-    q1.Connection:=ZConnection1;
-    q1.SQL.Clear;
-    q1.SQL.Add('select count(*) as ncount from '+FDB_TABLE);
-    q1.Open;
-    if not q1.IsEmpty then
-      Result:=q1.FieldbyName('ncount').AsInteger;
-  except
-  on e:exception do MsgStatus:=zConnection1.Name+': '+e.message+sLineBreak+q1.SQL.Text;
-  end;
-  q1.Free;
-end;
-
 { TfmPrincipal }
 
 procedure TfmPrincipal.FormCreate(Sender: TObject);
 begin
-  Caption:='Teste de conexão e TIL';
+  Caption:='Teste de SQL Injection';
+  Width:=800;
+  Height:=600;
   FFDB_FileEx:='..'+PathDelim+'db'+PathDelim+FDB_FILE;
   // algumas opções devem estar desligadas no inicio
   MemoStatus.Clear;
@@ -267,75 +256,6 @@ begin
     MsgStatus:=ErrorMsg;
 end;
 
-procedure TfmPrincipal.actInsert_PrepareExecute(Sender: TObject);
-var
-  ErrorMsg:String;
-  iTotal:Integer;
-  S:String;
-  iMilToPrepare:Integer;
-  iMilToComplete:Integer;
-  bPrepare:Boolean;
-begin
-  // inserir x registros com prepare
-  ErrorMsg:=emptyStr;
-  bPrepare:=false;
-  iTotal:=10000;
-  if not cboxParamCheck.Checked then
-    cboxParamCheck.Checked:=true;
-
-  if ErrorMsg=emptyStr then
-  begin
-    S:=IntToStr(iTotal);
-    if InputQuery(
-      'Inserir quantos registros?',
-      'Inserir quantos registros?', S) then
-    begin
-      if not TryStrToInt(S, iTotal) then
-        ErrorMsg:='Quantidade invalida';
-    end
-    else
-    begin
-      ErrorMsg:='Operação canelada pelo usuário.';
-    end;
-  end;
-
-  if ErrorMsg=emptyStr then
-  begin
-    case QuestionDlg(
-      'Com preparação na execução?',
-      'Preparação na execução agilizará queries repetitivas e parametrizadas. '+
-      'Qual a sua opção:',
-      mtInformation, [mrNo, 'Não, sem preparar', mrYes, 'Sim, preparar', 'IsDefault'], '') of
-        mrYes: bPrepare:=true;
-        mrNo: bPrepare:=false;
-      else
-        ErrorMsg:='Operação canelada pelo usuário.';
-    end;
-  end;
-
-
-  if ErrorMsg=emptyStr then
-  begin
-    ErrorMsg:=Insert_Data(
-      iTotal, //ATotal: Cardinal;
-      bPrepare, //APrepare: Boolean;
-      iMilToPrepare, // out ATimeToPrepare:TDateTime;
-      iMilToComplete); //out ATimeTotal:TDateTime);
-    if ErrorMsg=emptyStr then
-    begin
-      S:='Performance: '+sLineBreak;
-      S:=S+'  Preparação: '+IntToStr(iMilToPrepare)+' milisegundos'+sLineBreak;
-      S:=S+'  Conclusão:  '+IntToStr(iMilToComplete)+' milisegundos'+sLineBreak;
-      MsgStatus:=S;
-      OpenMyData(false, false);
-      DBGrid1.DataSource.DataSet.Last;
-    end;
-  end;
-
-  if ErrorMsg<>emptyStr then
-    MsgStatus:=ErrorMsg;
-end;
-
 procedure TfmPrincipal.actSearchExecute(Sender: TObject);
 begin
   OpenMyData(false, false);
@@ -393,6 +313,61 @@ begin
   end;
 end;
 
+procedure TfmPrincipal.btnAlterar1Click(Sender: TObject);
+var
+  q1:TZQuery;
+begin
+  q1:=TZQuery.Create(Self);
+  q1.Connection:=ZConnection1;
+  try
+    q1.SQL.Add('UPDATE '+FDB_TABLE+' SET ');
+    q1.SQL.Add('  DESCRICAO=:P_DESCRICAO');
+    q1.SQL.Add('WHERE CODIGO=:P_CODIGO');
+    q1.ParamByName('P_DESCRICAO').AsString:=edtDescricao_Nova.Text;
+    q1.ParamByName('P_CODIGO').AsString:=edtCodigo.Text;
+    if not q1.Prepared then
+    begin
+      q1.Prepare;
+      MemoStatus.Lines.Add('Query precisou ser preparada');
+    end;
+    q1.ExecSQL;
+    MemoStatus.Lines.Add('Veja o resultado da query parametrizada que você executou:');
+    MemoStatus.Lines.Add(q1.SQL.Text);
+    OpenMyData(false, false);
+  except
+  on e:exception do MsgStatus:=zConnection1.Name+': '+e.message;
+  end;
+  q1.Free;
+
+end;
+
+procedure TfmPrincipal.btnAlterarClick(Sender: TObject);
+var
+  q1:TZQuery;
+begin
+  q1:=TZQuery.Create(Self);
+  q1.Connection:=ZConnection1;
+  try
+    q1.SQL.Text:=
+      'UPDATE '+FDB_TABLE+' SET '+
+      '  DESCRICAO='''+edtDescricao_Nova.Text+''' '+
+      'WHERE CODIGO='+edtCodigo.Text;
+    q1.ExecSQL;
+    MemoStatus.Lines.Add('Veja o resultado da query literal que você executou:');
+    MemoStatus.Lines.Add(q1.SQL.Text);
+    OpenMyData(false, false);
+  except
+  on e:exception do MsgStatus:=zConnection1.Name+': '+e.message;
+  end;
+  q1.Free;
+
+end;
+
+procedure TfmPrincipal.edtDescricao_NovaChange(Sender: TObject);
+begin
+  MemoStatus.Clear;
+end;
+
 procedure TfmPrincipal.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
 begin
   CanClose:=true;
@@ -405,11 +380,13 @@ var
   bIsDirect:Boolean;
   bTableExists:Boolean;
   ErrorMsg:String;
+  iRecCount:Cardinal;
   L:TStringList;
 begin
   ErrorMsg:=emptyStr;
   bIsDirect:=true;
   bTableExists:=true;
+  iRecCount:=0;
   L:=TStringList.Create;
   if ErrorMsg=emptyStr then
   begin
@@ -480,7 +457,7 @@ begin
   if (ErrorMsg=emptyStr) and (ZConnection1.Connected) then
   begin
     // Check existence and dont recreate table
-    ErrorMsg:=SQL_TableExists('TEST_PREPARE', bTableExists);
+    ErrorMsg:=SQL_TableExists(FDB_TABLE, bTableExists);
   end;
 
   if (ErrorMsg=emptyStr) and (ZConnection1.Connected) and (not bTableExists) then
@@ -488,9 +465,10 @@ begin
     // todo: test existence of table and not recreate
     try
       L.Clear;
-      L.Add('CREATE TABLE TEST_PREPARE(');
+      L.Add('CREATE TABLE '+FDB_TABLE+'(');
       L.Add('     codigo integer primary key,');     // sem pk a inserção é mais rapida
-      L.Add('     descricao varchar(30));');
+      L.Add('     descricao varchar(30),');
+      L.Add('     status char(1));');
       if not ZConnection1.InTransaction then
         ZConnection1.StartTransaction;
       ZConnection1.ExecuteDirect(L.Text);
@@ -502,6 +480,39 @@ begin
          ErrorMsg:=e.Message;
          ZConnection1.Rollback;
        end;
+    end;
+  end;
+
+  if (ErrorMsg=emptyStr) and (bTableExists) then
+  begin
+    iRecCount:=SQL_TableCount;
+    if iRecCount=0 then
+    begin
+      try
+        if not ZConnection1.InTransaction then
+          ZConnection1.StartTransaction;
+        ZConnection1.ExecuteDirect('INSERT INTO '+FDB_TABLE+' (CODIGO, DESCRICAO, STATUS) VALUES (1, ''Açaí'', ''A'');');
+        ZConnection1.ExecuteDirect('INSERT INTO '+FDB_TABLE+' (CODIGO, DESCRICAO, STATUS) VALUES (2, ''Avelã'', ''A'');');
+
+        ZConnection1.ExecuteDirect('INSERT INTO '+FDB_TABLE+' (CODIGO, DESCRICAO, STATUS) VALUES (3, ''Maracujá'', ''A'');');
+        ZConnection1.ExecuteDirect('INSERT INTO '+FDB_TABLE+' (CODIGO, DESCRICAO, STATUS) VALUES (4, ''Melão'', ''A'');');
+        ZConnection1.ExecuteDirect('INSERT INTO '+FDB_TABLE+' (CODIGO, DESCRICAO, STATUS) VALUES (5, ''Maçã'', ''A'');');
+        ZConnection1.ExecuteDirect('INSERT INTO '+FDB_TABLE+' (CODIGO, DESCRICAO, STATUS) VALUES (6, ''Mamão'', ''A'');');
+
+        ZConnection1.ExecuteDirect('INSERT INTO '+FDB_TABLE+' (CODIGO, DESCRICAO, STATUS) VALUES (7, ''Laranja'', ''A'');');
+        ZConnection1.ExecuteDirect('INSERT INTO '+FDB_TABLE+' (CODIGO, DESCRICAO, STATUS) VALUES (8, ''Limão'', ''A'');');
+        ZConnection1.ExecuteDirect('INSERT INTO '+FDB_TABLE+' (CODIGO, DESCRICAO, STATUS) VALUES (9, ''Lichia'', ''A'');');
+
+        ZConnection1.Commit;
+        MsgStatus:='Registros adicionadas na tabela!';
+      except
+      on e:exception do
+         begin
+           MsgStatus:=e.Message;
+           ZConnection1.Rollback;
+         end;
+      end;
+
     end;
   end;
 
@@ -532,8 +543,6 @@ begin
 end;
 
 procedure TfmPrincipal.Conexao_Ligada(Sender: TObject);
-var
-  S:String;
 begin
   MsgStatus:=TZConnection(Sender).Name+': conectado';
   CheckButtons;
@@ -561,6 +570,19 @@ end;
 procedure TfmPrincipal.ZQuery_Con1AfterOpen(DataSet: TDataSet);
 begin
   DBGridCon1.Visible:=ZQuery_Con1.Active;
+end;
+
+procedure TfmPrincipal.ZQuery_Con1AfterScroll(DataSet: TDataSet);
+var
+  S:String;
+begin
+  S:=Dataset.FieldbyName('descricao').AsString;
+  edtDescricao_Nova.Items.Clear;
+  if edtDescricao_Nova.Items.IndexOf(S)<0 then
+  begin
+    edtDescricao_Nova.Items.Add(S);
+    edtDescricao_Nova.Items.Add('''--'+S);  // forçando o SQL Injection
+  end;
 end;
 
 procedure TfmPrincipal.SetMsgStatus(AValue: String);
@@ -602,9 +624,10 @@ begin
   actInsert_Prepare.Enabled:= (ZConnection1.Connected);
   actInsert_WPrepare.Enabled:= (ZConnection1.Connected);
   actSearch.Enabled:= (ZConnection1.Connected);
-  cboxParamCheck.Enabled:= (ZConnection1.Connected);
+
 
   actDelete_ALL.Enabled:= (ZConnection1.Connected);
+  gb_test.Visible:=(ZConnection1.Connected);
 
   if ZConnection1.Connected then
     sbDB_Conectar1.Action:=actDB_Desconectar1
@@ -624,7 +647,7 @@ begin
     DS_ZQuery_Con1.AutoEdit:=false;
     ZQuery_Con1.Connection:=ZConnection1;
     ZQuery_Con1.SQL.Clear;
-    ZQuery_Con1.SQL.Add('select * from TEST_PREPARE');
+    ZQuery_Con1.SQL.Add('select * from '+FDB_TABLE);
     ZQuery_Con1.SQL.Add('where (true)');
     if AForUpdate then
     begin
@@ -644,114 +667,6 @@ begin
 
 end;
 
-function TfmPrincipal.Insert_Data(
-  ATotal: Cardinal;
-  APrepare: Boolean;
-  out AMilToPrepare:Integer;
-  out AMilToComplete:Integer): String;
-var
-  i:Cardinal;
-  RECNO_START:Cardinal;
-  iFinish:Cardinal;
-  iCur_Time:TDateTime;
-  iLoop:Integer;
-  bCheckWhenPrepared:Boolean;
-  q1:TZQuery;
-begin
-  Result:=emptyStr;
-  AMilToPrepare:=0;
-  AMilToComplete:=0;
-  iCur_Time:=0;
-  RECNO_START:=0;
-  bCheckWhenPrepared:=(not APrepare);
-  iLoop:=0;
-
-  q1:=TZQuery.Create(Self);
-  q1.Connection:=ZConnection1;
-
-  // procura o ultimo
-  q1.sql.Clear;
-  q1.sql.add('SELECT MAX(codigo) as LAST_RECNO FROM TEST_PREPARE;');
-  try
-    q1.Open;
-    if not q1.IsEmpty then
-      RECNO_START:=q1.fieldbyname('LAST_RECNO').AsInteger+1;
-  except
-  on e:exception do Result:=e.message;
-  end;
-  if q1.active then
-    q1.close;
-  q1.ParamCheck:=cboxParamCheck.Checked;
-  iCur_Time:=now;
-  if Result=emptyStr then
-  begin
-    try
-      if q1.ParamCheck then
-      begin
-        q1.sql.Clear;
-        q1.sql.add('INSERT INTO TEST_PREPARE(codigo, descricao)');
-        q1.sql.add('VALUES (:p_codigo, :p_descricao);');
-        if APrepare then
-        begin
-          if not q1.Prepared then
-          begin
-            // notará que o Firebird também prepara automaticamente
-            // caso esqueça de fazer isso, além disso, o prepare não é
-            // exclusivo da sua conexão, query repetida reaproveitará
-            // a preparação já executada antes
-            q1.Prepare;
-            MsgStatus:='Query Preparada!';
-            AMilToPrepare:=MilliSecondsBetween(iCur_Time, now);
-          end;
-        end;
-      end;
-    except
-    on e:exception do Result:=e.message;
-    end;
-  end;
-  if Result=emptyStr then
-  begin
-    iCur_Time:=now;
-    iLoop:=0;
-    i:=RECNO_START;
-    iFinish:=Pred(RECNO_START+ATotal);
-    repeat
-      Inc(iLoop);
-      if (bCheckWhenPrepared) and (q1.Prepared) then
-      begin
-        MsgStatus:='Foi automaticamente preparada no loop# '+IntToStr(iLoop)+' pelo banco.';
-        bCheckWhenPrepared:=false;
-      end;
-      if q1.ParamCheck then
-      begin
-        q1.ParambyName('p_codigo').Value:=i;
-        q1.ParambyName('p_descricao').Value:='descricao #'+IntToStr(i);
-      end
-      else
-      begin
-        q1.sql.clear;
-        q1.sql.add('INSERT INTO TEST_PREPARE(codigo, descricao)');
-        q1.sql.add('VALUES ('+IntToStr(i)+', '+QuotedStr('descricao #'+IntToStr(i))+');');
-      end;
-      try
-        q1.ExecSQL;
-      except
-      on e:exception do Result:=e.message;
-      end;
-      Inc(i);
-    until (Result<>emptyStr) or (i>iFinish);
-    AMilToComplete:=MilliSecondsBetween(iCur_Time, now);
-    // se não despreparar, o recurso ainda estará em uso no servidor
-    // mas a liberação não é imediata, se houver uma execução e a mesma
-    // ainda estiver na memória, o mesmo será reutilizado
-    if q1.Prepared then
-      q1.Unprepare;
-  end;
-  if q1.Active then
-    q1.Close;
-  q1.Free;
-end;
-
 function TfmPrincipal.Truncate_Table: String;
 var
   q1:TZQuery;
@@ -762,7 +677,7 @@ begin
 
   // find last one
   q1.sql.Clear;
-  q1.sql.add('DELETE FROM TEST_PREPARE;');
+  q1.sql.add('DELETE FROM TEST_SQLINJECTION;');
   try
     q1.ExecSQL;
   except
@@ -770,6 +685,29 @@ begin
   end;
   if q1.Active then
     q1.Close;
+  q1.Free;
+end;
+
+function TfmPrincipal.SQL_TableCount: Cardinal;
+var
+  q1:TZQuery;
+begin
+  Result:=0;
+  if not zConnection1.Connected then
+    Exit;
+  q1:=TZQuery.Create(Self);
+  try
+    if q1.Active then
+      q1.Close;
+    q1.Connection:=ZConnection1;
+    q1.SQL.Clear;
+    q1.SQL.Add('select count(*) as ncount from '+FDB_TABLE);
+    q1.Open;
+    if not q1.IsEmpty then
+      Result:=q1.FieldbyName('ncount').AsInteger;
+  except
+  on e:exception do MsgStatus:=zConnection1.Name+': '+e.message+sLineBreak+q1.SQL.Text;
+  end;
   q1.Free;
 end;
 

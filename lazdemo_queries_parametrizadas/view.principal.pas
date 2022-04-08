@@ -11,9 +11,9 @@ uses
 
 type
 
-  { TForm1 }
+  { TfmPrincipal }
 
-  TForm1 = class(TForm)
+  TfmPrincipal = class(TForm)
     actDB_Criar: TAction;
     actDB_Conectar1: TAction;
     actDB_Desconectar1: TAction;
@@ -78,6 +78,7 @@ type
       APrepare: Boolean;
       out AMilToPrepare:Integer;
       out AMilToComplete:Integer): String;
+    function SQL_TableCount: Cardinal;
     function SQL_TableExists(ATableName: String; out AExist: Boolean): String;
     function Truncate_Table: String;
   public
@@ -87,6 +88,7 @@ type
   end;
 const
   FDB_FILE='lazdemos_gsl.fdb';
+  FDB_TABLE='TEST_PREPARE';
   FDB_USERNAME='SYSDBA';
   FDB_PASSWORD='masterkey';
   FDB_PAGESIZE=16384;
@@ -99,7 +101,7 @@ const
 
 
 var
-  Form1: TForm1;
+  fmPrincipal: TfmPrincipal;
 
 
 implementation
@@ -109,9 +111,32 @@ uses
   DateUtils;
 {$R *.lfm}
 
-{ TForm1 }
+function TfmPrincipal.SQL_TableCount: Cardinal;
+var
+  q1:TZQuery;
+begin
+  Result:=0;
+  if not zConnection1.Connected then
+    Exit;
+  q1:=TZQuery.Create(Self);
+  try
+    if q1.Active then
+      q1.Close;
+    q1.Connection:=ZConnection1;
+    q1.SQL.Clear;
+    q1.SQL.Add('select count(*) as ncount from '+FDB_TABLE);
+    q1.Open;
+    if not q1.IsEmpty then
+      Result:=q1.FieldbyName('ncount').AsInteger;
+  except
+  on e:exception do MsgStatus:=zConnection1.Name+': '+e.message+sLineBreak+q1.SQL.Text;
+  end;
+  q1.Free;
+end;
 
-procedure TForm1.FormCreate(Sender: TObject);
+{ TfmPrincipal }
+
+procedure TfmPrincipal.FormCreate(Sender: TObject);
 begin
   Caption:='Teste de conexão e TIL';
   FFDB_FileEx:='..'+PathDelim+'db'+PathDelim+FDB_FILE;
@@ -127,7 +152,7 @@ begin
   DBGridCon1.Visible:=false;
 end;
 
-procedure TForm1.Sublinhado_Desligar(Sender: TObject);
+procedure TfmPrincipal.Sublinhado_Desligar(Sender: TObject);
 begin
   // ligar sublinhado
   if (Sender is TSpeedButton) then
@@ -139,7 +164,7 @@ begin
   end;
 end;
 
-procedure TForm1.Sublinhado_Ligar(Sender: TObject; Shift: TShiftState; X,
+procedure TfmPrincipal.Sublinhado_Ligar(Sender: TObject; Shift: TShiftState; X,
   Y: Integer);
 begin
   // ligar sublinhado
@@ -152,7 +177,7 @@ begin
   end;
 end;
 
-procedure TForm1.actDB_CriarExecute(Sender: TObject);
+procedure TfmPrincipal.actDB_CriarExecute(Sender: TObject);
 var
   L:TStringList;
   ErrorMsg:String;
@@ -220,7 +245,7 @@ begin
   FreeAndNil(L);
 end;
 
-procedure TForm1.actDB_Desconectar1Execute(Sender: TObject);
+procedure TfmPrincipal.actDB_Desconectar1Execute(Sender: TObject);
 begin
   try
     if zConnection1.Connected then
@@ -232,7 +257,7 @@ begin
   CheckButtons;
 end;
 
-procedure TForm1.actDelete_ALLExecute(Sender: TObject);
+procedure TfmPrincipal.actDelete_ALLExecute(Sender: TObject);
 var
   ErrorMsg:String;
 begin
@@ -243,7 +268,7 @@ begin
     MsgStatus:=ErrorMsg;
 end;
 
-procedure TForm1.actInsert_PrepareExecute(Sender: TObject);
+procedure TfmPrincipal.actInsert_PrepareExecute(Sender: TObject);
 var
   ErrorMsg:String;
   iTotal:Integer;
@@ -312,12 +337,12 @@ begin
     MsgStatus:=ErrorMsg;
 end;
 
-procedure TForm1.actSearchExecute(Sender: TObject);
+procedure TfmPrincipal.actSearchExecute(Sender: TObject);
 begin
   OpenMyData(false, false);
 end;
 
-procedure TForm1.actTrans1_CommitExecute(Sender: TObject);
+procedure TfmPrincipal.actTrans1_CommitExecute(Sender: TObject);
 begin
   if ZConnection1.Connected then
   begin
@@ -332,7 +357,7 @@ begin
   CheckButtons;
 end;
 
-procedure TForm1.actTrans1_IniciarExecute(Sender: TObject);
+procedure TfmPrincipal.actTrans1_IniciarExecute(Sender: TObject);
 begin
   if ZConnection1.Connected then
   begin
@@ -355,7 +380,7 @@ begin
 
 end;
 
-procedure TForm1.actTrans1_RollbackExecute(Sender: TObject);
+procedure TfmPrincipal.actTrans1_RollbackExecute(Sender: TObject);
 begin
   if ZConnection1.Connected then
   begin
@@ -369,14 +394,14 @@ begin
   end;
 end;
 
-procedure TForm1.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
+procedure TfmPrincipal.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
 begin
   CanClose:=true;
   actDB_Desconectar1Execute(Sender);
 
 end;
 
-procedure TForm1.actDB_Conectar1Execute(Sender: TObject);
+procedure TfmPrincipal.actDB_Conectar1Execute(Sender: TObject);
 var
   bIsDirect:Boolean;
   bTableExists:Boolean;
@@ -456,7 +481,7 @@ begin
   if (ErrorMsg=emptyStr) and (ZConnection1.Connected) then
   begin
     // Check existence and dont recreate table
-    ErrorMsg:=SQL_TableExists('TEST_PREPARE', bTableExists);
+    ErrorMsg:=SQL_TableExists(FDB_TABLE, bTableExists);
   end;
 
   if (ErrorMsg=emptyStr) and (ZConnection1.Connected) and (not bTableExists) then
@@ -464,7 +489,7 @@ begin
     // todo: test existence of table and not recreate
     try
       L.Clear;
-      L.Add('CREATE TABLE TEST_PREPARE(');
+      L.Add('CREATE TABLE '+FDB_TABLE+'(');
       L.Add('     codigo integer primary key,');     // sem pk a inserção é mais rapida
       L.Add('     descricao varchar(30));');
       if not ZConnection1.InTransaction then
@@ -494,20 +519,20 @@ begin
   L.Free;
 end;
 
-procedure TForm1.Transacao_Iniciada(Sender: TObject);
+procedure TfmPrincipal.Transacao_Iniciada(Sender: TObject);
 begin
   // quando uma transação é iniciada então ligo a opção de commit e rollback
   CheckButtons;
   MsgStatus:=TZConnection(Sender).Name+': Transação iniciada';
 end;
 
-procedure TForm1.Transacao_RollBack(Sender: TObject);
+procedure TfmPrincipal.Transacao_RollBack(Sender: TObject);
 begin
   CheckButtons;
   MsgStatus:=TZConnection(Sender).Name+': RollBack';
 end;
 
-procedure TForm1.Conexao_Ligada(Sender: TObject);
+procedure TfmPrincipal.Conexao_Ligada(Sender: TObject);
 var
   S:String;
 begin
@@ -516,30 +541,30 @@ begin
 
 end;
 
-procedure TForm1.Conexao_Desligada(Sender: TObject);
+procedure TfmPrincipal.Conexao_Desligada(Sender: TObject);
 begin
   CheckButtons;
   MsgStatus:=TZConnection(Sender).Name+': desconectado';
 end;
 
-procedure TForm1.Conexao_Refeita(Sender: TObject);
+procedure TfmPrincipal.Conexao_Refeita(Sender: TObject);
 begin
   CheckButtons;
   MsgStatus:=TZConnection(Sender).Name+': reconectado';
 end;
 
-procedure TForm1.ZConnection1Commit(Sender: TObject);
+procedure TfmPrincipal.ZConnection1Commit(Sender: TObject);
 begin
   CheckButtons;
   MsgStatus:='Transação '+TZConnection(Sender).Name+': Commit';
 end;
 
-procedure TForm1.ZQuery_Con1AfterOpen(DataSet: TDataSet);
+procedure TfmPrincipal.ZQuery_Con1AfterOpen(DataSet: TDataSet);
 begin
   DBGridCon1.Visible:=ZQuery_Con1.Active;
 end;
 
-procedure TForm1.SetMsgStatus(AValue: String);
+procedure TfmPrincipal.SetMsgStatus(AValue: String);
 begin
   if FMsgStatus=AValue then Exit;
   FMsgStatus:=AValue;
@@ -548,7 +573,7 @@ begin
   MemoStatus.VertScrollBar.Position:=Pred(MemoStatus.Lines.Count);
 end;
 
-procedure TForm1.CheckButtons;
+procedure TfmPrincipal.CheckButtons;
 begin
   if (ZConnection1.Connected) then
     actDB_Criar.Visible:=false
@@ -589,7 +614,7 @@ begin
 
 end;
 
-procedure TForm1.OpenMyData(AForUpdate, AWithLock: Boolean);
+procedure TfmPrincipal.OpenMyData(AForUpdate, AWithLock: Boolean);
 var
   S:String;
 begin
@@ -600,7 +625,7 @@ begin
     DS_ZQuery_Con1.AutoEdit:=false;
     ZQuery_Con1.Connection:=ZConnection1;
     ZQuery_Con1.SQL.Clear;
-    ZQuery_Con1.SQL.Add('select * from TEST_PREPARE');
+    ZQuery_Con1.SQL.Add('select * from '+FDB_TABLE);
     ZQuery_Con1.SQL.Add('where (true)');
     if AForUpdate then
     begin
@@ -620,7 +645,7 @@ begin
 
 end;
 
-function TForm1.Insert_Data(
+function TfmPrincipal.Insert_Data(
   ATotal: Cardinal;
   APrepare: Boolean;
   out AMilToPrepare:Integer;
@@ -647,7 +672,7 @@ begin
 
   // procura o ultimo
   q1.sql.Clear;
-  q1.sql.add('SELECT MAX(codigo) as LAST_RECNO FROM TEST_PREPARE;');
+  q1.sql.add('SELECT MAX(codigo) as LAST_RECNO FROM '+FDB_TABLE+';');
   try
     q1.Open;
     if not q1.IsEmpty then
@@ -665,7 +690,7 @@ begin
       if q1.ParamCheck then
       begin
         q1.sql.Clear;
-        q1.sql.add('INSERT INTO TEST_PREPARE(codigo, descricao)');
+        q1.sql.add('INSERT INTO '+FDB_TABLE+'(codigo, descricao)');
         q1.sql.add('VALUES (:p_codigo, :p_descricao);');
         if APrepare then
         begin
@@ -706,7 +731,7 @@ begin
       else
       begin
         q1.sql.clear;
-        q1.sql.add('INSERT INTO TEST_PREPARE(codigo, descricao)');
+        q1.sql.add('INSERT INTO '+FDB_TABLE+'(codigo, descricao)');
         q1.sql.add('VALUES ('+IntToStr(i)+', '+QuotedStr('descricao #'+IntToStr(i))+');');
       end;
       try
@@ -728,7 +753,7 @@ begin
   q1.Free;
 end;
 
-function TForm1.Truncate_Table: String;
+function TfmPrincipal.Truncate_Table: String;
 var
   q1:TZQuery;
 begin
@@ -738,7 +763,7 @@ begin
 
   // find last one
   q1.sql.Clear;
-  q1.sql.add('DELETE FROM TEST_PREPARE;');
+  q1.sql.add('DELETE FROM '+FDB_TABLE+';');
   try
     q1.ExecSQL;
   except
@@ -749,7 +774,7 @@ begin
   q1.Free;
 end;
 
-function TForm1.SQL_TableExists(ATableName: String; out AExist:Boolean): String;
+function TfmPrincipal.SQL_TableExists(ATableName: String; out AExist:Boolean): String;
 var
   q1:TZQuery;
 begin

@@ -1,9 +1,9 @@
-object Form1: TForm1
+object fmPrincipal: TfmPrincipal
   Left = 241
   Height = 555
   Top = 31
   Width = 1027
-  Caption = 'Form1'
+  Caption = 'fmPrincipal'
   ClientHeight = 555
   ClientWidth = 1027
   Color = clWhite
@@ -12,7 +12,6 @@ object Form1: TForm1
   OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
   Position = poDefault
-  LCLVersion = '2.2.0.4'
   object Splitter1: TSplitter
     Cursor = crVSplit
     Left = 0
@@ -48,18 +47,18 @@ object Form1: TForm1
       Height = 378
       Top = 1
       Width = 214
-      HorzScrollBar.Page = 136
-      VertScrollBar.Page = 106
+      HorzScrollBar.Page = 137
+      VertScrollBar.Page = 94
       Align = alRight
-      ClientHeight = 376
-      ClientWidth = 212
+      ClientHeight = 374
+      ClientWidth = 210
       TabOrder = 0
       object sbDB_Criar: TSpeedButton
         Cursor = crHandPoint
         Left = 0
         Height = 24
         Top = 0
-        Width = 212
+        Width = 210
         Action = actDB_Criar
         Align = alTop
         Flat = True
@@ -70,8 +69,8 @@ object Form1: TForm1
         Cursor = crHandPoint
         Left = 0
         Height = 24
-        Top = 304
-        Width = 212
+        Top = 302
+        Width = 210
         Action = actTrans1_Iniciar
         Align = alBottom
         Flat = True
@@ -82,8 +81,8 @@ object Form1: TForm1
         Cursor = crHandPoint
         Left = 0
         Height = 24
-        Top = 328
-        Width = 212
+        Top = 326
+        Width = 210
         Action = actTrans1_Commit
         Align = alBottom
         Flat = True
@@ -94,8 +93,8 @@ object Form1: TForm1
         Cursor = crHandPoint
         Left = 0
         Height = 24
-        Top = 352
-        Width = 212
+        Top = 350
+        Width = 210
         Action = actTrans1_Rollback
         Align = alBottom
         Flat = True
@@ -107,7 +106,7 @@ object Form1: TForm1
         Left = 0
         Height = 24
         Top = 24
-        Width = 212
+        Width = 210
         Action = actDB_Conectar1
         Align = alTop
         Flat = True
@@ -116,19 +115,19 @@ object Form1: TForm1
       end
       object ComboBox_Con1: TComboBox
         Left = 0
-        Height = 35
+        Height = 25
         Top = 48
-        Width = 212
+        Width = 210
         Align = alTop
-        ItemHeight = 0
+        ItemHeight = 17
         Style = csDropDownList
         TabOrder = 0
       end
       object autocommit1: TCheckBox
         Left = 0
-        Height = 23
-        Top = 83
-        Width = 212
+        Height = 21
+        Top = 73
+        Width = 210
         Align = alTop
         Caption = 'auto commit'
         TabOrder = 1
@@ -140,17 +139,17 @@ object Form1: TForm1
       Top = 1
       Width = 811
       Align = alClient
-      ClientHeight = 357
-      ClientWidth = 809
+      ClientHeight = 356
+      ClientWidth = 807
       Color = clWindow
       ParentBackground = False
       ParentColor = False
       TabOrder = 1
       object DBGrid1: TDBGrid
         Left = 0
-        Height = 376
+        Height = 356
         Top = 0
-        Width = 809
+        Width = 807
         Align = alClient
         Color = clWindow
         Columns = <>
@@ -166,12 +165,12 @@ object Form1: TForm1
     Width = 1027
     Align = alTop
     Caption = 'Tests'
-    ClientHeight = 21
-    ClientWidth = 1025
+    ClientHeight = 20
+    ClientWidth = 1023
     TabOrder = 3
     object sb_search: TSpeedButton
-      Left = 959
-      Height = 22
+      Left = 957
+      Height = 20
       Top = 0
       Width = 66
       Action = actSearch
@@ -183,7 +182,7 @@ object Form1: TForm1
     end
     object SpeedButton1: TSpeedButton
       Left = 0
-      Height = 22
+      Height = 20
       Top = 0
       Width = 122
       Action = actInsert_Prepare
@@ -195,7 +194,7 @@ object Form1: TForm1
     end
     object SpeedButton3: TSpeedButton
       Left = 122
-      Height = 22
+      Height = 20
       Top = 0
       Width = 122
       Action = actDelete_ALL
@@ -205,10 +204,10 @@ object Form1: TForm1
       OnMouseMove = Sublinhado_Ligar
     end
     object cboxParamCheck: TCheckBox
-      Left = 863
-      Height = 22
+      Left = 866
+      Height = 20
       Top = 0
-      Width = 96
+      Width = 91
       Align = alRight
       Caption = 'ParamCheck'
       TabOrder = 0

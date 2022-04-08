@@ -5,7 +5,7 @@
     <PathDelim Value="\"/>
     <General>
       <SessionStorage Value="InProjectDir"/>
-      <Title Value="lazdemo_queries_parametrizadas"/>
+      <Title Value="lazdemo_sql_injection"/>
       <Scaled Value="True"/>
       <ResourceType Value="res"/>
       <UseXPManifest Value="True"/>
@@ -26,7 +26,7 @@
     </RunParams>
     <RequiredPackages>
       <Item>
-        <PackageName Value="zcore"/>
+        <PackageName Value="FCL"/>
       </Item>
       <Item>
         <PackageName Value="zcomponent"/>
@@ -37,7 +37,7 @@
     </RequiredPackages>
     <Units>
       <Unit>
-        <Filename Value="lazdemo_queries_parametrizadas.lpr"/>
+        <Filename Value="lazdemo_sql_injection.lpr"/>
         <IsPartOfProject Value="True"/>
       </Unit>
       <Unit>
@@ -53,7 +53,7 @@
     <Version Value="11"/>
     <PathDelim Value="\"/>
     <Target>
-      <Filename Value="..\bin\lazdemo_queries_parametrizadas.exe"/>
+      <Filename Value="..\bin\lazdemo_sql_injection.exe"/>
     </Target>
     <SearchPaths>
       <IncludeFiles Value="$(ProjOutDir)"/>

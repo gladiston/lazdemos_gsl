@@ -1,0 +1,419 @@
+object fmPrincipal: TfmPrincipal
+  Left = 241
+  Height = 555
+  Top = 31
+  Width = 1027
+  Caption = 'fmPrincipal'
+  ClientHeight = 555
+  ClientWidth = 1027
+  Color = clWhite
+  Font.Height = -13
+  Font.Name = 'Segoe UI'
+  OnCloseQuery = FormCloseQuery
+  OnCreate = FormCreate
+  OnShow = FormShow
+  Position = poDefault
+  object Splitter1: TSplitter
+    Cursor = crVSplit
+    Left = 0
+    Height = 5
+    Top = 107
+    Width = 1027
+    Align = alTop
+    ResizeAnchor = akTop
+  end
+  object MemoStatus: TMemo
+    Left = 0
+    Height = 128
+    Top = 427
+    Width = 1027
+    Align = alBottom
+    BorderStyle = bsNone
+    ReadOnly = True
+    ScrollBars = ssAutoBoth
+    TabOrder = 1
+  end
+  object gbConexao1: TPanel
+    Left = 0
+    Height = 315
+    Top = 112
+    Width = 1027
+    Align = alClient
+    Caption = 'Teste de conexão e TIL'
+    ClientHeight = 315
+    ClientWidth = 1027
+    TabOrder = 2
+    object sbMenu1: TScrollBox
+      Left = 812
+      Height = 313
+      Top = 1
+      Width = 214
+      HorzScrollBar.Page = 136
+      VertScrollBar.Page = 145
+      Align = alRight
+      ClientHeight = 311
+      ClientWidth = 212
+      TabOrder = 0
+      object sbDB_Criar: TSpeedButton
+        Cursor = crHandPoint
+        Left = 0
+        Height = 24
+        Top = 0
+        Width = 212
+        Action = actDB_Criar
+        Align = alTop
+        Flat = True
+        OnMouseLeave = Sublinhado_Desligar
+        OnMouseMove = Sublinhado_Ligar
+      end
+      object sbDB_TransacaoIniciar: TSpeedButton
+        Cursor = crHandPoint
+        Left = 0
+        Height = 24
+        Top = 239
+        Width = 212
+        Action = actTrans1_Iniciar
+        Align = alBottom
+        Flat = True
+        OnMouseLeave = Sublinhado_Desligar
+        OnMouseMove = Sublinhado_Ligar
+      end
+      object sbDB_TransacaoCommit: TSpeedButton
+        Cursor = crHandPoint
+        Left = 0
+        Height = 24
+        Top = 263
+        Width = 212
+        Action = actTrans1_Commit
+        Align = alBottom
+        Flat = True
+        OnMouseLeave = Sublinhado_Desligar
+        OnMouseMove = Sublinhado_Ligar
+      end
+      object sbDB_TransacaoRollBack: TSpeedButton
+        Cursor = crHandPoint
+        Left = 0
+        Height = 24
+        Top = 287
+        Width = 212
+        Action = actTrans1_Rollback
+        Align = alBottom
+        Flat = True
+        OnMouseLeave = Sublinhado_Desligar
+        OnMouseMove = Sublinhado_Ligar
+      end
+      object sbDB_Conectar1: TSpeedButton
+        Cursor = crHandPoint
+        Left = 0
+        Height = 24
+        Top = 24
+        Width = 212
+        Action = actDB_Conectar1
+        Align = alTop
+        Flat = True
+        OnMouseLeave = Sublinhado_Desligar
+        OnMouseMove = Sublinhado_Ligar
+      end
+      object ComboBox_Con1: TComboBox
+        Left = 0
+        Height = 35
+        Top = 87
+        Width = 212
+        Align = alTop
+        ItemHeight = 0
+        Style = csDropDownList
+        TabOrder = 0
+      end
+      object autocommit1: TCheckBox
+        Left = 0
+        Height = 23
+        Top = 122
+        Width = 212
+        Align = alTop
+        Caption = 'auto commit'
+        TabOrder = 1
+      end
+      object SpeedButton3: TSpeedButton
+        Left = 0
+        Height = 22
+        Top = 65
+        Width = 212
+        Action = actDelete_ALL
+        Align = alTop
+        Flat = True
+        OnMouseLeave = Sublinhado_Desligar
+        OnMouseMove = Sublinhado_Ligar
+      end
+      object sb_search: TSpeedButton
+        Left = 0
+        Height = 17
+        Top = 48
+        Width = 212
+        Action = actSearch
+        Align = alTop
+        Flat = True
+        OnMouseLeave = Sublinhado_Desligar
+        OnMouseMove = Sublinhado_Ligar
+      end
+    end
+    object DBGridCon1: TGroupBox
+      Left = 1
+      Height = 313
+      Top = 1
+      Width = 811
+      Align = alClient
+      ClientHeight = 311
+      ClientWidth = 809
+      Color = clWindow
+      ParentBackground = False
+      ParentColor = False
+      TabOrder = 1
+      object DBGrid1: TDBGrid
+        Left = 0
+        Height = 311
+        Top = 0
+        Width = 809
+        Align = alClient
+        AutoEdit = False
+        Color = clWindow
+        Columns = <        
+          item
+            SizePriority = 2
+            Title.Caption = 'CODIGO'
+            Width = 64
+            FieldName = 'ID_CLIENTE'
+          end        
+          item
+            ButtonStyle = cbsCheckboxColumn
+            MaxSize = 30
+            SizePriority = 3
+            Title.MultiLine = True
+            Title.Caption = 'STATUS'
+            Width = 60
+            ValueChecked = 'A'
+            ValueUnchecked = 'C'
+            FieldName = 'END_CIDADE'
+          end        
+          item
+            MinSize = 200
+            MaxSize = 0
+            Title.MultiLine = True
+            Title.Caption = 'DESCRICAO'
+            Width = 83
+            FieldName = 'END_UF'
+          end        
+          item
+            Title.Caption = 'NOME_ALTERNATIVO'
+            FieldName = 'NOME_ALTERNATIVO'
+          end        
+          item
+            Title.Caption = 'STATUS'
+            FieldName = 'STATUS'
+          end>
+        DataSource = DS_ZQuery_Con1
+        FixedCols = 0
+        Flat = True
+        Options = [dgTitles, dgColumnResize, dgColumnMove, dgColLines, dgRowLines, dgTabs, dgAlwaysShowSelection, dgConfirmDelete, dgCancelOnExit, dgDisableDelete, dgDisableInsert, dgRowHighlight, dgDblClickAutoSize, dgDisplayMemoText]
+        Scrollbars = ssAutoBoth
+        TabOrder = 0
+      end
+    end
+  end
+  object gb_test: TGroupBox
+    Left = 0
+    Height = 107
+    Top = 0
+    Width = 1027
+    Align = alTop
+    Caption = 'Tests'
+    ClientHeight = 87
+    ClientWidth = 1025
+    TabOrder = 3
+    Visible = False
+    object pnlAceitar: TPanel
+      Left = 557
+      Height = 87
+      Top = 0
+      Width = 468
+      Align = alRight
+      BevelOuter = bvNone
+      ClientHeight = 87
+      ClientWidth = 468
+      TabOrder = 0
+      object btnAlimentar_Literal: TBitBtn
+        Left = 0
+        Height = 30
+        Top = 0
+        Width = 468
+        Align = alTop
+        Caption = 'Alimentar com SQL Literal'
+        OnClick = btnAlimentar_LiteralClick
+        TabOrder = 0
+      end
+      object btnAlterar1: TBitBtn
+        Left = 0
+        Height = 30
+        Top = 30
+        Width = 468
+        Align = alTop
+        Caption = 'Alimentar com SQL Parametrizada'
+        OnClick = btnAlterar1Click
+        TabOrder = 1
+      end
+      object cBox_Preparar: TCheckBox
+        Left = 0
+        Height = 23
+        Top = 60
+        Width = 468
+        Align = alTop
+        Caption = 'Preparar antes de alimentar com SQL Parametrizado'
+        TabOrder = 2
+      end
+    end
+  end
+  object ActionList1: TActionList
+    Left = 428
+    Top = 280
+    object actDB_Criar: TAction
+      Caption = 'Criar DB e Conectar-se'
+      OnExecute = actDB_CriarExecute
+    end
+    object actDB_Conectar1: TAction
+      Caption = 'Conectar-se'
+      OnExecute = actDB_Conectar1Execute
+    end
+    object actTrans1_Iniciar: TAction
+      Caption = 'Iniciar transação'
+      OnExecute = actTrans1_IniciarExecute
+    end
+    object actTrans1_Commit: TAction
+      Caption = 'Commit'
+      OnExecute = actTrans1_CommitExecute
+    end
+    object actTrans1_Rollback: TAction
+      Caption = 'Rollback'
+      OnExecute = actTrans1_RollbackExecute
+    end
+    object actDB_Desconectar1: TAction
+      Caption = 'Desconectar'
+      OnExecute = actDB_Desconectar1Execute
+    end
+    object actSearch: TAction
+      Caption = 'Pesquisar'
+      OnExecute = actSearchExecute
+    end
+    object actInsert_Prepare: TAction
+      Caption = 'Inserir c/ Prepare'
+    end
+    object actInsert_WPrepare: TAction
+      Caption = 'Inserir s/ Prepare'
+    end
+    object actDelete_ALL: TAction
+      Caption = 'Apagar tudo'
+      OnExecute = actDelete_ALLExecute
+    end
+  end
+  object ZConnection1: TZConnection
+    ControlsCodePage = cCP_UTF8
+    ClientCodepage = 'UTF8'
+    Properties.Strings = (
+      'AutoEncodeStrings='
+      'codepage=UTF8'
+      'controls_cp=CP_UTF8'
+    )
+    TransactIsolationLevel = tiReadCommitted
+    DesignConnection = True
+    AfterConnect = Conexao_Ligada
+    AfterDisconnect = Conexao_Desligada
+    AfterReconnect = Conexao_Refeita
+    SQLHourGlass = True
+    OnCommit = ZConnection1Commit
+    OnRollback = Transacao_RollBack
+    OnStartTransaction = Transacao_Iniciada
+    Port = 0
+    Database = 'lazdemos_gsl.fdb'
+    User = 'SYSDBA'
+    Password = 'masterkey'
+    Protocol = 'firebird'
+    Left = 328
+    Top = 152
+  end
+  object ZQuery_Con1: TZQuery
+    Connection = ZConnection1
+    AfterOpen = ZQuery_Con1AfterOpen
+    SQL.Strings = (
+      'SELECT a.ID_CLIENTE, a.NOME_ALTERNATIVO, a.END_CIDADE, a.END_UF, a.STATUS'
+      'FROM CLIENTES a '
+    )
+    Params = <>
+    Left = 184
+    Top = 136
+    object ZQuery_Con1ID_CLIENTE: TLongintField
+      FieldKind = fkData
+      FieldName = 'ID_CLIENTE'
+      Index = 0
+      LookupCache = False
+      ProviderFlags = [pfInUpdate, pfInWhere]
+      ReadOnly = True
+      Required = False
+    end
+    object ZQuery_Con1NOME_ALTERNATIVO: TStringField
+      FieldKind = fkData
+      FieldName = 'NOME_ALTERNATIVO'
+      Index = 1
+      LookupCache = False
+      ProviderFlags = [pfInUpdate, pfInWhere]
+      ReadOnly = True
+      Required = False
+      Size = 120
+    end
+    object ZQuery_Con1END_CIDADE: TStringField
+      FieldKind = fkData
+      FieldName = 'END_CIDADE'
+      Index = 2
+      LookupCache = False
+      ProviderFlags = [pfInUpdate, pfInWhere]
+      ReadOnly = True
+      Required = False
+      Size = 120
+    end
+    object ZQuery_Con1END_UF: TStringField
+      FieldKind = fkData
+      FieldName = 'END_UF'
+      Index = 3
+      LookupCache = False
+      ProviderFlags = [pfInUpdate, pfInWhere]
+      ReadOnly = True
+      Required = False
+      Size = 2
+    end
+    object ZQuery_Con1STATUS: TStringField
+      FieldKind = fkData
+      FieldName = 'STATUS'
+      Index = 4
+      LookupCache = False
+      ProviderFlags = [pfInUpdate, pfInWhere]
+      ReadOnly = True
+      Required = False
+      Size = 1
+    end
+  end
+  object DS_ZQuery_Con1: TDataSource
+    DataSet = ZQuery_Con1
+    Left = 172
+    Top = 40
+  end
+  object OpenDialog1: TOpenDialog
+    Title = 'Abrir arquivo csv existente'
+    DefaultExt = '.csv'
+    Filter = 'csv file|*.csv'
+    Left = 40
+    Top = 20
+  end
+  object zqupdate: TZQuery
+    Connection = ZConnection1
+    Params = <>
+    Left = 372
+    Top = 32
+  end
+end

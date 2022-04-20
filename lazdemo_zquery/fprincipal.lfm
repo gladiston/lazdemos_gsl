@@ -1,0 +1,238 @@
+object fmPrincipal: TfmPrincipal
+  Left = 2170
+  Height = 542
+  Top = 32
+  Width = 1065
+  Caption = 'fmPrincipal'
+  ClientHeight = 542
+  ClientWidth = 1065
+  OnCreate = FormCreate
+  OnShow = FormShow
+  object Panel1: TPanel
+    Left = 2
+    Height = 62
+    Top = 2
+    Width = 1061
+    Align = alTop
+    BorderSpacing.Around = 2
+    ClientHeight = 62
+    ClientWidth = 1061
+    TabOrder = 0
+    object BitBtn2: TBitBtn
+      Left = 124
+      Height = 60
+      Top = 1
+      Width = 75
+      Align = alLeft
+      Caption = 'Quantos?'
+      OnClick = BitBtn2Click
+      TabOrder = 0
+    end
+    object BitBtn1: TBitBtn
+      Left = 1
+      Height = 60
+      Top = 1
+      Width = 123
+      Align = alLeft
+      Caption = 'Listar todos'
+      OnClick = BitBtn1Click
+      TabOrder = 1
+    end
+    object btnPreparada: TBitBtn
+      Left = 199
+      Height = 60
+      Top = 1
+      Width = 88
+      Align = alLeft
+      Caption = 'Preparada?'
+      OnClick = btnPreparadaClick
+      TabOrder = 2
+    end
+    object gb_procurar_por: TGroupBox
+      Left = 287
+      Height = 60
+      Top = 1
+      Width = 192
+      Align = alLeft
+      Caption = 'Paginação de registros'
+      ClientHeight = 39
+      ClientWidth = 190
+      TabOrder = 3
+      object edtFetch: TComboBox
+        Left = 2
+        Height = 35
+        Top = 2
+        Width = 186
+        Align = alClient
+        BorderSpacing.Around = 2
+        ItemHeight = 0
+        OnKeyDown = edtFetchKeyDown
+        OnKeyPress = edtFetchKeyPress
+        OnSelect = edtFetchSelect
+        TabOrder = 0
+        TextHint = 'Quantos a paginar?'
+      end
+    end
+    object gb_procurar_por1: TGroupBox
+      Left = 648
+      Height = 60
+      Top = 1
+      Width = 412
+      Align = alRight
+      Caption = 'Expressão para filtro'
+      ClientHeight = 39
+      ClientWidth = 410
+      TabOrder = 4
+      object cBoxFiltro_Ativo: TCheckBox
+        Left = 350
+        Height = 39
+        Top = 0
+        Width = 60
+        Align = alRight
+        Caption = 'Ativo'
+        OnChange = cBoxFiltro_AtivoChange
+        TabOrder = 0
+      end
+      object edtFiltro: TComboBox
+        Left = 2
+        Height = 35
+        Top = 2
+        Width = 346
+        Align = alClient
+        BorderSpacing.Around = 2
+        ItemHeight = 0
+        OnKeyDown = edtFiltroKeyDown
+        OnSelect = edtFiltroSelect
+        TabOrder = 1
+        TextHint = 'Expressão para filtro'
+      end
+    end
+  end
+  object painel_dados: TPanel
+    Left = 0
+    Height = 476
+    Top = 66
+    Width = 1065
+    Align = alClient
+    BevelOuter = bvNone
+    ClientHeight = 476
+    ClientWidth = 1065
+    TabOrder = 1
+    object Grade_Detalhe: TDBGrid
+      Left = 5
+      Height = 476
+      Top = 0
+      Width = 1060
+      Align = alClient
+      Color = clWindow
+      Columns = <      
+        item
+          ButtonStyle = cbsButton
+          Title.PrefixOption = poHeaderClick
+          Title.Caption = 'ID_CLIENTE'
+          FieldName = 'ID_CLIENTE'
+        end      
+        item
+          ButtonStyle = cbsButton
+          Title.PrefixOption = poHeaderClick
+          Title.Caption = 'END_UF'
+          FieldName = 'END_UF'
+        end      
+        item
+          ButtonStyle = cbsButton
+          Title.PrefixOption = poHeaderClick
+          Title.Caption = 'NOME_ALTERNATIVO'
+          FieldName = 'NOME_ALTERNATIVO'
+        end>
+      DataSource = ds_detalhe
+      TabOrder = 0
+      OnMouseMove = Grade_DetalheMouseMove
+      OnTitleClick = Grade_DetalheTitleClick
+    end
+    object Splitter1: TSplitter
+      Left = 0
+      Height = 476
+      Top = 0
+      Width = 5
+    end
+  end
+  object ZConnection1: TZConnection
+    ControlsCodePage = cCP_UTF8
+    AutoEncodeStrings = True
+    Properties.Strings = (
+      'AutoEncodeStrings=True'
+      'controls_cp=CP_UTF8'
+    )
+    DesignConnection = True
+    HostName = 'localhost'
+    Port = 0
+    Database = 'testes.fdb'
+    User = 'SYSDBA'
+    Password = 'masterkey'
+    Protocol = 'firebird'
+    LibraryLocation = 'libfbclient.so'
+    Left = 400
+    Top = 264
+  end
+  object zqry_detalhe: TZQuery
+    Connection = ZConnection1
+    SQL.Strings = (
+      'SELECT FIRST 100'
+      '  a.ID_CLIENTE, '
+      '  a.NOME_ALTERNATIVO,'
+      '  a.END_UF'
+      'FROM CLIENTES a'
+      'WHERE a.END_UF=:UF'
+      ''
+    )
+    Params = <    
+      item
+        DataType = ftUnknown
+        Name = 'UF'
+        ParamType = ptUnknown
+      end>
+    Left = 492
+    Top = 138
+    ParamData = <    
+      item
+        DataType = ftUnknown
+        Name = 'UF'
+        ParamType = ptUnknown
+      end>
+    object zqry_detalheID_CLIENTE: TLargeintField
+      FieldKind = fkData
+      FieldName = 'ID_CLIENTE'
+      Index = 0
+      LookupCache = False
+      ProviderFlags = [pfInUpdate, pfInWhere]
+      ReadOnly = False
+      Required = True
+    end
+    object zqry_detalheEND_UF: TStringField
+      FieldKind = fkData
+      FieldName = 'END_UF'
+      Index = 1
+      LookupCache = False
+      ProviderFlags = [pfInUpdate, pfInWhere]
+      ReadOnly = False
+      Required = False
+      Size = 2
+    end
+    object zqry_detalheNOME_ALTERNATIVO: TStringField
+      DisplayWidth = 30
+      FieldKind = fkData
+      FieldName = 'NOME_ALTERNATIVO'
+      Index = 2
+      LookupCache = False
+      ProviderFlags = [pfInUpdate, pfInWhere]
+      ReadOnly = False
+      Required = False
+      Size = 120
+    end
+  end
+  object ds_detalhe: TDataSource
+    DataSet = zqry_detalhe
+    Left = 484
+    Top = 68
+  end
+end

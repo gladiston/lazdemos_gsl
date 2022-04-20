@@ -1,0 +1,249 @@
+object Form1: TForm1
+  Left = 2170
+  Height = 542
+  Top = 32
+  Width = 1065
+  Caption = 'Form1'
+  ClientHeight = 542
+  ClientWidth = 1065
+  object Panel1: TPanel
+    Left = 2
+    Height = 62
+    Top = 2
+    Width = 1061
+    Align = alTop
+    BorderSpacing.Around = 2
+    ClientHeight = 62
+    ClientWidth = 1061
+    TabOrder = 0
+    object BitBtn2: TBitBtn
+      Left = 124
+      Height = 60
+      Top = 1
+      Width = 75
+      Align = alLeft
+      Caption = 'Quantos?'
+      OnClick = BitBtn2Click
+      TabOrder = 0
+    end
+    object BitBtn1: TBitBtn
+      Left = 1
+      Height = 60
+      Top = 1
+      Width = 123
+      Align = alLeft
+      Caption = 'Listar todos'
+      OnClick = BitBtn1Click
+      TabOrder = 1
+    end
+    object btnPreparada: TBitBtn
+      Left = 199
+      Height = 60
+      Top = 1
+      Width = 88
+      Align = alLeft
+      Caption = 'Preparada?'
+      OnClick = btnPreparadaClick
+      TabOrder = 2
+    end
+    object gb_procurar_por: TGroupBox
+      Left = 875
+      Height = 60
+      Top = 1
+      Width = 185
+      Align = alRight
+      Caption = 'Procurar por:'
+      ClientHeight = 39
+      ClientWidth = 183
+      TabOrder = 3
+      object EDTid_cliente: TEdit
+        Left = 2
+        Height = 35
+        Top = 2
+        Width = 134
+        Align = alClient
+        BorderSpacing.Around = 2
+        TabOrder = 0
+        TextHint = 'Código?'
+      end
+      object btnProcurar: TBitBtn
+        Left = 138
+        Height = 35
+        Top = 2
+        Width = 43
+        Align = alRight
+        BorderSpacing.Around = 2
+        Caption = '>'
+        OnClick = btnProcurarClick
+        TabOrder = 1
+      end
+    end
+  end
+  object painel_dados: TPanel
+    Left = 0
+    Height = 476
+    Top = 66
+    Width = 1065
+    Align = alClient
+    BevelOuter = bvNone
+    ClientHeight = 476
+    ClientWidth = 1065
+    TabOrder = 1
+    object Grade_Detalhe: TDBGrid
+      Left = 458
+      Height = 476
+      Top = 0
+      Width = 607
+      Align = alClient
+      Color = clWindow
+      Columns = <>
+      DataSource = ds_detalhe
+      TabOrder = 0
+      OnTitleClick = Grade_DetalheTitleClick
+    end
+    object Splitter1: TSplitter
+      Left = 453
+      Height = 476
+      Top = 0
+      Width = 5
+    end
+    object Grade_Master: TDBGrid
+      Left = 0
+      Height = 476
+      Top = 0
+      Width = 453
+      Align = alLeft
+      Color = clWindow
+      Columns = <>
+      DataSource = ds_mestre
+      TabOrder = 2
+    end
+  end
+  object ZConnection1: TZConnection
+    ControlsCodePage = cCP_UTF8
+    AutoEncodeStrings = True
+    Properties.Strings = (
+      'AutoEncodeStrings=True'
+      'controls_cp=CP_UTF8'
+    )
+    Connected = True
+    HostName = 'localhost'
+    Port = 0
+    Database = 'testes.fdb'
+    User = 'SYSDBA'
+    Password = 'masterkey'
+    Protocol = 'firebird'
+    LibraryLocation = 'libfbclient.so'
+    Left = 400
+    Top = 264
+  end
+  object zqry_detalhe: TZQuery
+    Connection = ZConnection1
+    OnCalcFields = zqry_detalheCalcFields
+    SQL.Strings = (
+      'SELECT FIRST 100'
+      '  a.ID_CLIENTE, '
+      '  a.NOME_ALTERNATIVO,'
+      '  a.END_UF'
+      'FROM CLIENTES a'
+      'WHERE a.END_UF=:UF'
+      ''
+    )
+    Params = <    
+      item
+        DataType = ftUnknown
+        Name = 'UF'
+        ParamType = ptUnknown
+      end>
+    MasterFields = 'UF'
+    MasterSource = ds_mestre
+    LinkedFields = 'END_UF'
+    Left = 492
+    Top = 138
+    ParamData = <    
+      item
+        DataType = ftUnknown
+        Name = 'UF'
+        ParamType = ptUnknown
+      end>
+    object zqry_detalheID_CLIENTE: TLargeintField
+      FieldKind = fkData
+      FieldName = 'ID_CLIENTE'
+      Index = 0
+      LookupCache = False
+      ProviderFlags = [pfInUpdate, pfInWhere]
+      ReadOnly = False
+      Required = True
+    end
+    object zqry_detalheEND_UF: TStringField
+      FieldKind = fkData
+      FieldName = 'END_UF'
+      Index = 1
+      LookupCache = False
+      ProviderFlags = [pfInUpdate, pfInWhere]
+      ReadOnly = False
+      Required = False
+      Size = 2
+    end
+    object zqry_detalheNOME_ALTERNATIVO: TStringField
+      DisplayWidth = 30
+      FieldKind = fkData
+      FieldName = 'NOME_ALTERNATIVO'
+      Index = 2
+      LookupCache = False
+      ProviderFlags = [pfInUpdate, pfInWhere]
+      ReadOnly = False
+      Required = False
+      Size = 120
+    end
+    object zqry_detalhetemp: TLongintField
+      FieldKind = fkCalculated
+      FieldName = 'temp'
+      Index = 3
+      LookupCache = False
+      ProviderFlags = [pfInUpdate, pfInWhere]
+      ReadOnly = False
+      Required = False
+    end
+  end
+  object ds_detalhe: TDataSource
+    DataSet = zqry_detalhe
+    Left = 484
+    Top = 68
+  end
+  object ds_mestre: TDataSource
+    DataSet = zqry_mestre
+    Left = 304
+    Top = 276
+  end
+  object zqry_mestre: TZQuery
+    Connection = ZConnection1
+    SQL.Strings = (
+      'SELECT a.UF, a.DESCRICAO'
+      'FROM ADMIN_UF a ;'
+    )
+    Params = <>
+    Left = 292
+    Top = 356
+    object zqry_mestreUF: TStringField
+      FieldKind = fkData
+      FieldName = 'UF'
+      Index = 0
+      LookupCache = False
+      ProviderFlags = [pfInUpdate, pfInWhere]
+      ReadOnly = False
+      Required = True
+      Size = 2
+    end
+    object zqry_mestreDESCRICAO: TStringField
+      FieldKind = fkData
+      FieldName = 'DESCRICAO'
+      Index = 1
+      LookupCache = False
+      ProviderFlags = [pfInUpdate, pfInWhere]
+      ReadOnly = False
+      Required = False
+      Size = 120
+    end
+  end
+end

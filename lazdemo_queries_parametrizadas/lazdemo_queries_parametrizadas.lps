@@ -16,12 +16,12 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <IsVisibleTab Value="True"/>
-        <TopLine Value="77"/>
-        <CursorPos X="8" Y="97"/>
+        <TopLine Value="428"/>
+        <CursorPos Y="442"/>
         <UsageCount Value="33"/>
         <Bookmarks Count="3">
-          <Item0 X="42" Y="452" ID="9"/>
-          <Item1 X="12" Y="294" ID="8"/>
+          <Item0 X="42" Y="450" ID="9"/>
+          <Item1 X="12" Y="293" ID="8"/>
           <Item2 X="28" Y="91" ID="1"/>
         </Bookmarks>
         <Loaded Value="True"/>
@@ -29,14 +29,6 @@
       </Unit>
     </Units>
     <JumpHistory HistoryIndex="29">
-      <Position>
-        <Filename Value="view.principal.pas"/>
-        <Caret Line="463" TopLine="450"/>
-      </Position>
-      <Position>
-        <Filename Value="view.principal.pas"/>
-        <Caret Line="462" Column="19" TopLine="450"/>
-      </Position>
       <Position>
         <Filename Value="view.principal.pas"/>
         <Caret Line="96" Column="10" TopLine="87"/>
@@ -148,6 +140,14 @@
       <Position>
         <Filename Value="view.principal.pas"/>
         <Caret Line="766" Column="40" TopLine="743"/>
+      </Position>
+      <Position>
+        <Filename Value="view.principal.pas"/>
+        <Caret Line="100" Column="34" TopLine="77"/>
+      </Position>
+      <Position>
+        <Filename Value="view.principal.pas"/>
+        <Caret Line="207" TopLine="194"/>
       </Position>
     </JumpHistory>
     <RunParams>

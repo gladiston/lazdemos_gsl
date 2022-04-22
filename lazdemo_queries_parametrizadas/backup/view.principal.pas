@@ -88,6 +88,7 @@ type
   end;
 const
   FDB_FILE='lazdemos_gsl.fdb';
+  FDB_TABLE='TEST_PREPARE';
   FDB_USERNAME='SYSDBA';
   FDB_PASSWORD='masterkey';
   FDB_PAGESIZE=16384;
@@ -203,7 +204,6 @@ begin
       zConnection1.ClientCodePage:=FDB_CHARSET; //'ISO8859_1';
       // A constante cCP_UTF8 precisa da unit ZCompatibility no uses
       // as constantes cCP_UTF16 e cGET_ACP não são usados no Lazarus.
-      zConnection1.ControlsCodePage:=cCP_UTF8;
       zConnection1.Database:=FFDB_FileEx;
       zConnection1.Hostname:='';
       zConnection1.LibraryLocation:='';    // fbclient.dll(win32) ou libfbclient.so(linux)
@@ -480,7 +480,7 @@ begin
   if (ErrorMsg=emptyStr) and (ZConnection1.Connected) then
   begin
     // Check existence and dont recreate table
-    ErrorMsg:=SQL_TableExists('TEST_PREPARE', bTableExists);
+    ErrorMsg:=SQL_TableExists(FDB_TABLE, bTableExists);
   end;
 
   if (ErrorMsg=emptyStr) and (ZConnection1.Connected) and (not bTableExists) then
@@ -488,7 +488,7 @@ begin
     // todo: test existence of table and not recreate
     try
       L.Clear;
-      L.Add('CREATE TABLE TEST_PREPARE(');
+      L.Add('CREATE TABLE '+FDB_TABLE+'(');
       L.Add('     codigo integer primary key,');     // sem pk a inserção é mais rapida
       L.Add('     descricao varchar(30));');
       if not ZConnection1.InTransaction then
@@ -624,7 +624,7 @@ begin
     DS_ZQuery_Con1.AutoEdit:=false;
     ZQuery_Con1.Connection:=ZConnection1;
     ZQuery_Con1.SQL.Clear;
-    ZQuery_Con1.SQL.Add('select * from TEST_PREPARE');
+    ZQuery_Con1.SQL.Add('select * from '+FDB_TABLE);
     ZQuery_Con1.SQL.Add('where (true)');
     if AForUpdate then
     begin
@@ -671,7 +671,7 @@ begin
 
   // procura o ultimo
   q1.sql.Clear;
-  q1.sql.add('SELECT MAX(codigo) as LAST_RECNO FROM TEST_PREPARE;');
+  q1.sql.add('SELECT MAX(codigo) as LAST_RECNO FROM '+FDB_TABLE+';');
   try
     q1.Open;
     if not q1.IsEmpty then
@@ -689,7 +689,7 @@ begin
       if q1.ParamCheck then
       begin
         q1.sql.Clear;
-        q1.sql.add('INSERT INTO TEST_PREPARE(codigo, descricao)');
+        q1.sql.add('INSERT INTO '+FDB_TABLE+'(codigo, descricao)');
         q1.sql.add('VALUES (:p_codigo, :p_descricao);');
         if APrepare then
         begin
@@ -730,7 +730,7 @@ begin
       else
       begin
         q1.sql.clear;
-        q1.sql.add('INSERT INTO TEST_PREPARE(codigo, descricao)');
+        q1.sql.add('INSERT INTO '+FDB_TABLE+'(codigo, descricao)');
         q1.sql.add('VALUES ('+IntToStr(i)+', '+QuotedStr('descricao #'+IntToStr(i))+');');
       end;
       try
@@ -762,7 +762,7 @@ begin
 
   // find last one
   q1.sql.Clear;
-  q1.sql.add('DELETE FROM TEST_PREPARE;');
+  q1.sql.add('DELETE FROM '+FDB_TABLE+';');
   try
     q1.ExecSQL;
   except

@@ -204,7 +204,6 @@ begin
       zConnection1.ClientCodePage:=FDB_CHARSET; //'ISO8859_1';
       // A constante cCP_UTF8 precisa da unit ZCompatibility no uses
       // as constantes cCP_UTF16 e cGET_ACP não são usados no Lazarus.
-      zConnection1.ControlsCodePage:=cCP_UTF8;
       zConnection1.Database:=FFDB_FileEx;
       zConnection1.Hostname:='';
       zConnection1.LibraryLocation:='';    // fbclient.dll(win32) ou libfbclient.so(linux)
@@ -440,7 +439,6 @@ begin
       ZConnection1.ClientCodePage:=FDB_CHARSET; //'ISO8859_1';
       // A constante cCP_UTF8 precisa da unit ZCompatibility no uses
       // as constantes cCP_UTF16 e cGET_ACP não são usados no Lazarus.
-      ZConnection1.ControlsCodePage:=cCP_UTF8;
       if bIsDirect then
       begin
         ZConnection1.Hostname:='';

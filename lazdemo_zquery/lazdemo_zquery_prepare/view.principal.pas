@@ -7,7 +7,7 @@ interface
 uses
   Classes, SysUtils, ZConnection, ZDataset, ZSqlUpdate, Forms, Controls,
   Graphics, Dialogs, StdCtrls, ExtCtrls, Buttons, ActnList, DBGrids, Menus,
-  DBCtrls, DB;
+  DBCtrls, ComCtrls, DB;
 
 type
 
@@ -26,9 +26,8 @@ type
     actTrans1_Iniciar: TAction;
     ActionList1: TActionList;
     autocommit1: TCheckBox;
-        btnAlimentar_Literal: TBitBtn;
-    btnAlterar1: TBitBtn;
-    cBox_Preparar: TCheckBox;
+        btnCSV_Importar: TBitBtn;
+    cbox_Preparar: TCheckBox;
     ComboBox_Con1: TComboBox;
     DBGrid1: TDBGrid;
     DBGridCon1: TGroupBox;
@@ -63,8 +62,7 @@ type
     procedure actTrans1_CommitExecute(Sender: TObject);
     procedure actTrans1_IniciarExecute(Sender: TObject);
     procedure actTrans1_RollbackExecute(Sender: TObject);
-    procedure btnAlterar1Click(Sender: TObject);
-    procedure btnAlimentar_LiteralClick(Sender: TObject);
+    procedure btnCSV_ImportarClick(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -85,9 +83,10 @@ type
     procedure CheckButtons;
     procedure OpenMyData(AForUpdate, AWithLock:Boolean);
     function SQL_TableExists(ATableName: String; out AExist: Boolean): String;
+    function SQL_Prepare(APrepare:Boolean):Boolean;
     function Truncate_Table: String;
     function SQL_TableCount(ATABLE_NAME:String): Cardinal;
-    function CSV_Importar_ComSQLLiteral(AFileName:String; AUsePrepare:Boolean):String;
+    function CSV_Importar(AFileName:String; AUsePrepare:Boolean):String;
   public
   published
     property FDB_FileEx:String read FFDB_FileEx;
@@ -102,7 +101,6 @@ const
   FDB_PAGESIZE=16384;
   FDB_CHARSET='UTF8';
   FDB_COLLATION='UNICODE_CI_AI';
-  CSV_FILE='clien tes.csv';
   TIL_READ_COMMITED='READ COMMITED';
   TIL_READ_UNCOMMITED='READ UNCOMMITED';
   TIL_REPEATABLE_READ='REPEATABLE READ';
@@ -139,11 +137,12 @@ begin
   ComboBox_Con1.Items.Add(TIL_SERIALIZABLE);
   ComboBox_Con1.ItemIndex:=0;
   DBGridCon1.Visible:=false;
+  //pb1.Visible:=false;
 end;
 
 procedure TfmPrincipal.FormShow(Sender: TObject);
 begin
-  OpenDialog1.Filename:='..'+PathDelim+'db'+PathDelim+CSV_FILE;
+  OpenDialog1.Filename:='..'+PathDelim+'db'+PathDelim+'teste.csv';
 end;
 
 procedure TfmPrincipal.Sublinhado_Desligar(Sender: TObject);
@@ -196,9 +195,6 @@ begin
       zConnection1.Catalog:=''; // voce usa postgre?
       zConnection1.Protocol:='firebird';
       zConnection1.ClientCodePage:=FDB_CHARSET; //'ISO8859_1';
-      // A constante cCP_UTF8 precisa da unit ZCompatibility no uses
-      // as constantes cCP_UTF16 e cGET_ACP não são usados no Lazarus.
-      zConnection1.ControlsCodePage:=cCP_UTF8;
       zConnection1.Database:=FFDB_FileEx;
       zConnection1.Hostname:='';
       zConnection1.LibraryLocation:='';    // fbclient.dll(win32) ou libfbclient.so(linux)
@@ -319,41 +315,35 @@ begin
   end;
 end;
 
-procedure TfmPrincipal.btnAlterar1Click(Sender: TObject);
+procedure TfmPrincipal.btnCSV_ImportarClick(Sender: TObject);
 var
   sys_last_error:String;
+  time_start:TDateTime;
+  time_finish:TDateTime;
+  time_diff:TDateTime;
 begin
   sys_last_error:=emptyStr;
+  time_start:=now;
+  SQL_Prepare(cbox_Preparar.checked);
+
   if OpenDialog1.Execute then
-    begin
-      sys_last_error:=CSV_Importar_ComSQLLiteral(OpenDialog1.Filename, true);
+  begin
+      sys_last_error:=CSV_Importar(OpenDialog1.Filename, cbox_Preparar.checked);
+      time_finish:=now;
     end
   else
     sys_last_error:='Nenhum arquivo foi selecionado';
 
   if  sys_last_error<>emptyStr then
+  begin
     MemoStatus.Lines.Add('FALHOU: '+sys_last_error)
+  end
   else
+  begin
     OpenMyData(false, false);
-
-end;
-
-procedure TfmPrincipal.btnAlimentar_LiteralClick(Sender: TObject);
-var
-  sys_last_error:String;
-begin
-  sys_last_error:=emptyStr;
-  if OpenDialog1.Execute then
-    begin
-      sys_last_error:=CSV_Importar_ComSQLLiteral(OpenDialog1.Filename, false);
-    end
-  else
-    sys_last_error:='Nenhum arquivo foi selecionado';
-
-  if  sys_last_error<>emptyStr then
-    MemoStatus.Lines.Add('FALHOU: '+sys_last_error)
-  else
-    OpenMyData(false, false);
+    time_diff:=time_finish - time_start;
+    MemoStatus.Lines.Add('TEMPO: '+FormatDateTime('[s]" seconds"', time_diff, [fdoInterval]));
+  end;
 
 end;
 
@@ -407,7 +397,7 @@ begin
       ZConnection1.ClientCodePage:=FDB_CHARSET; //'ISO8859_1';
       // A constante cCP_UTF8 precisa da unit ZCompatibility no uses
       // as constantes cCP_UTF16 e cGET_ACP não são usados no Lazarus.
-      ZConnection1.ControlsCodePage:=cCP_UTF8;
+      //ZConnection1.ControlsCodePage:=cCP_UTF8;
       if bIsDirect then
       begin
         ZConnection1.Hostname:='';
@@ -435,7 +425,7 @@ begin
         ZConnection1.TransactIsolationLevel:=tiRepeatableRead;
       if SameText(ComboBox_Con1.Text, TIL_SERIALIZABLE) then
         ZConnection1.TransactIsolationLevel:=tiSerializable;
-      ZConnection1.Properties.Clear;
+      //ZConnection1.Properties.Clear;
       ZConnection1.ReadOnly:=false;
       ZConnection1.SQLHourGlass:=true;
       ZConnection1.UseMetadata:=true;
@@ -554,30 +544,7 @@ begin
   begin
     if (ZConnection1.Connected) then
     begin
-      if zqupdate.active then
-        zqupdate.Close;
-      zqupdate.Connection:=ZConnection1;
-      zqupdate.sql.clear;
-      zqupdate.sql.add('UPDATE OR INSERT INTO '+FDB_TABLE2+'(');
-      zqupdate.sql.add('     id_cliente,');
-      zqupdate.sql.add('     nome_alternativo,');
-      zqupdate.sql.add('     end_cidade,');
-      zqupdate.sql.add('     end_uf,');
-      zqupdate.sql.add('     status) ');
-      zqupdate.sql.add('values(');
-      zqupdate.sql.add('  :p_id_cliente,');
-      zqupdate.sql.add('  :p_NOME_ALTERNATIVO,');
-      zqupdate.sql.add('  :p_END_CIDADE,');
-      zqupdate.sql.add('  :p_END_UF,');
-      zqupdate.sql.add('  :p_STATUS) ');
-      zqupdate.sql.add('MATCHING(id_cliente) ;');      // bug tá comendo linhas com a com til porque banco utf8 e charset=ISO8859_1 e autoencode=true
-      try
-        if not zqupdate.Prepared then
-          zqupdate.Prepare;
-      except
-      on e:exception do MsgStatus:='Erro ao preparar query:'+sLineBreak+zqupdate.sql.Text;
-      end;
-
+      SQL_Prepare(cbox_Preparar.Checked);
       actSearchExecute(nil);
     end;
   end
@@ -717,24 +684,14 @@ begin
 end;
 
 function TfmPrincipal.Truncate_Table: String;
-var
-  q1:TZQuery;
 begin
   Result:=emptyStr;
-  q1:=TZQuery.Create(Self);
-  q1.Connection:=ZConnection1;
-
-  // find last one
-  q1.sql.Clear;
-  q1.sql.add('DELETE FROM TEST_SQLINJECTION;');
   try
-    q1.ExecSQL;
+    ZConnection1.ExecuteDirect('DELETE FROM '+FDB_TABLE1+';');
+    ZConnection1.ExecuteDirect('DELETE FROM '+FDB_TABLE2+';');
   except
   on e:exception do Result:=e.message;
   end;
-  if q1.Active then
-    q1.Close;
-  q1.Free;
 end;
 
 function TfmPrincipal.SQL_TableCount(ATABLE_NAME:String): Cardinal;
@@ -760,7 +717,7 @@ begin
   q1.Free;
 end;
 
-function TfmPrincipal.CSV_Importar_ComSQLLiteral(AFileName: String; AUsePrepare:Boolean): String;
+function TfmPrincipal.CSV_Importar(AFileName: String; AUsePrepare:Boolean): String;
 var
   i:integer;
   sID_CLIENTE:String;
@@ -775,7 +732,7 @@ var
   myFile : TextFile;
 begin
   Result:=emptyStr;
-
+  //pb1.Visible:=true;
   CSV_DataRow:=TStringList.Create;
   CSV_DataRow.Delimiter:=';'; // delimitador
   CSV_DataRow.QuoteChar:='''';     // aspas simples
@@ -783,7 +740,7 @@ begin
 
   if zqupdate.active then
     zqupdate.Close;
-  zqupdate.Connection:=ZConnection1;
+
   if not fileExists(AFileName) then
       Result:='Arquivo não existe: '+AFileName;
 
@@ -797,6 +754,7 @@ begin
     begin
       Inc(i);
       ReadLn(myFile, sLinha);
+      //pb1.StepIt;
       CSV_DataRow.Clear;
       CSV_DataRow.DelimitedText:=sLinha;  // texto delimitado
 
@@ -835,20 +793,6 @@ begin
         col_END_CIDADE:=Trim(col_END_CIDADE);
         col_END_UF:=Trim(col_END_UF);
         col_STATUS:=Trim(col_STATUS);
-        sSQL:=
-          'UPDATE OR INSERT INTO '+FDB_TABLE2+'('+sLineBreak+
-          '     id_cliente,'+sLineBreak+
-          '     nome_alternativo,'+sLineBreak+
-          '     end_cidade,'+sLineBreak+
-          '     end_uf,'+sLineBreak+
-          '     status) '+sLineBreak+
-          'values('+sLineBreak+
-          IntToStr(col_ID_CLIENTE)+','+sLineBreak+
-          QuotedStr(col_NOME_ALTERNATIVO)+','+sLineBreak+
-          QuotedStr(col_END_CIDADE)+','+sLineBreak+
-          QuotedStr(col_END_UF)+','+sLineBreak+
-          QuotedStr(col_STATUS)+') '+sLineBreak+
-          'MATCHING(id_cliente) ;'+sLineBreak;
         if AUsePrepare then
         begin
           if zqupdate.Active then
@@ -866,13 +810,22 @@ begin
         end
         else
         begin
-          // bug tá comendo linhas com 'a' com til porque banco utf8 e charset=ISO8859_1 e autoencode=true
-
           try
-            zqupdate.sql.clear;
-            zqupdate.sql.AddText(sSQL);
-            zqupdate.ExecSQL;
-            //ZConnection1.ExecuteDirect(sSQL);
+            sSQL:=
+             'UPDATE OR INSERT INTO '+FDB_TABLE2+'('+sLineBreak+
+             '     id_cliente,'+sLineBreak+
+             '     nome_alternativo,'+sLineBreak+
+             '     end_cidade,'+sLineBreak+
+             '     end_uf,'+sLineBreak+
+             '     status) '+sLineBreak+
+             'values('+sLineBreak+
+             IntToStr(col_ID_CLIENTE)+','+sLineBreak+
+             QuotedStr(col_NOME_ALTERNATIVO)+','+sLineBreak+
+             QuotedStr(col_END_CIDADE)+','+sLineBreak+
+             QuotedStr(col_END_UF)+','+sLineBreak+
+             QuotedStr(col_STATUS)+') '+sLineBreak+
+             'MATCHING(id_cliente) ;'+sLineBreak;
+           ZConnection1.ExecuteDirect(sSQL);
           except
           on e:exception do Result:='Erro na linha #'+IntToStr(i)+': '+e.message+sLineBreak+sSQL;
           end;
@@ -883,6 +836,7 @@ begin
     end;
   end;
   CSV_DataRow.Free;
+  //pb1.Visible:=false;
 end;
 
 
@@ -915,6 +869,42 @@ begin
 
    end;
    q1.Free;
+end;
+
+function TfmPrincipal.SQL_Prepare(APrepare: Boolean): Boolean;
+begin
+  Result:=false;
+  if APrepare then
+  begin
+    if zqupdate.active then
+     zqupdate.Close;
+    zqupdate.Connection:=ZConnection1;
+    zqupdate.sql.clear;
+    zqupdate.sql.add('UPDATE OR INSERT INTO '+FDB_TABLE2+'(');
+    zqupdate.sql.add('     id_cliente,');
+    zqupdate.sql.add('     nome_alternativo,');
+    zqupdate.sql.add('     end_cidade,');
+    zqupdate.sql.add('     end_uf,');
+    zqupdate.sql.add('     status) ');
+    zqupdate.sql.add('values(');
+    zqupdate.sql.add('  :p_id_cliente,');
+    zqupdate.sql.add('  :p_NOME_ALTERNATIVO,');
+    zqupdate.sql.add('  :p_END_CIDADE,');
+    zqupdate.sql.add('  :p_END_UF,');
+    zqupdate.sql.add('  :p_STATUS) ');
+    zqupdate.sql.add('MATCHING(id_cliente) ;');      // bug tá comendo linhas com a com til porque banco utf8 e charset=ISO8859_1 e autoencode=true
+    try
+     if (not zqupdate.Prepared) and (APrepare) then
+       zqupdate.Prepare;
+     Result:=true;
+    except
+    on e:exception do MsgStatus:='Erro ao preparar query:'+sLineBreak+zqupdate.sql.Text;
+    end;
+  end
+  else
+  begin
+    zqupdate.UnPrepare;
+  end;
 end;
 
 

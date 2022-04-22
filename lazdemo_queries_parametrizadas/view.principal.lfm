@@ -12,6 +12,7 @@ object fmPrincipal: TfmPrincipal
   OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
   Position = poDefault
+  LCLVersion = '2.2.0.4'
   object Splitter1: TSplitter
     Cursor = crVSplit
     Left = 0
@@ -139,8 +140,8 @@ object fmPrincipal: TfmPrincipal
       Top = 1
       Width = 811
       Align = alClient
-      ClientHeight = 356
-      ClientWidth = 807
+      ClientHeight = 357
+      ClientWidth = 809
       Color = clWindow
       ParentBackground = False
       ParentColor = False
@@ -165,8 +166,8 @@ object fmPrincipal: TfmPrincipal
     Width = 1027
     Align = alTop
     Caption = 'Tests'
-    ClientHeight = 20
-    ClientWidth = 1023
+    ClientHeight = 21
+    ClientWidth = 1025
     TabOrder = 3
     object sb_search: TSpeedButton
       Left = 957
@@ -215,7 +216,6 @@ object fmPrincipal: TfmPrincipal
   end
   object ZConnection1: TZConnection
     ControlsCodePage = cCP_UTF8
-    AutoEncodeStrings = True
     ClientCodepage = 'ISO8859_1'
     Properties.Strings = (
       'AutoEncodeStrings=ON'
@@ -278,8 +278,8 @@ object fmPrincipal: TfmPrincipal
     end
   end
   object ZQuery_Con1: TZQuery
-    Connection = ZConnection1
     AfterOpen = ZQuery_Con1AfterOpen
+    Connection = ZConnection1
     Params = <>
     Left = 156
     Top = 108

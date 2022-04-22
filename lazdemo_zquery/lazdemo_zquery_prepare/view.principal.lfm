@@ -175,39 +175,35 @@ object fmPrincipal: TfmPrincipal
         Width = 809
         Align = alClient
         AutoEdit = False
+        AutoFillColumns = True
         Color = clWindow
         Columns = <        
           item
-            SizePriority = 2
-            Title.Caption = 'CODIGO'
-            Width = 64
+            Title.Caption = 'ID_CLIENTE'
+            Width = 161
             FieldName = 'ID_CLIENTE'
           end        
           item
-            ButtonStyle = cbsCheckboxColumn
-            MaxSize = 30
-            SizePriority = 3
-            Title.MultiLine = True
-            Title.Caption = 'STATUS'
-            Width = 60
-            ValueChecked = 'A'
-            ValueUnchecked = 'C'
-            FieldName = 'END_CIDADE'
-          end        
-          item
-            MinSize = 200
-            MaxSize = 0
-            Title.MultiLine = True
-            Title.Caption = 'DESCRICAO'
-            Width = 83
-            FieldName = 'END_UF'
-          end        
-          item
             Title.Caption = 'NOME_ALTERNATIVO'
+            Width = 161
             FieldName = 'NOME_ALTERNATIVO'
           end        
           item
+            Title.Caption = 'END_CIDADE'
+            Width = 161
+            FieldName = 'END_CIDADE'
+          end        
+          item
+            Title.Caption = 'END_UF'
+            Width = 161
+            FieldName = 'END_UF'
+          end        
+          item
+            ButtonStyle = cbsCheckboxColumn
             Title.Caption = 'STATUS'
+            Width = 164
+            ValueChecked = 'A'
+            ValueUnchecked = 'C'
             FieldName = 'STATUS'
           end>
         DataSource = DS_ZQuery_Con1
@@ -240,34 +236,24 @@ object fmPrincipal: TfmPrincipal
       ClientHeight = 87
       ClientWidth = 468
       TabOrder = 0
-      object btnAlimentar_Literal: TBitBtn
+      object btnCSV_Importar: TBitBtn
         Left = 0
         Height = 30
         Top = 0
         Width = 468
         Align = alTop
-        Caption = 'Alimentar com SQL Literal'
-        OnClick = btnAlimentar_LiteralClick
+        Caption = 'Importar aquivo .csv'
+        OnClick = btnCSV_ImportarClick
         TabOrder = 0
       end
-      object btnAlterar1: TBitBtn
+      object cbox_Preparar: TCheckBox
         Left = 0
-        Height = 30
+        Height = 23
         Top = 30
         Width = 468
         Align = alTop
-        Caption = 'Alimentar com SQL Parametrizada'
-        OnClick = btnAlterar1Click
-        TabOrder = 1
-      end
-      object cBox_Preparar: TCheckBox
-        Left = 0
-        Height = 23
-        Top = 60
-        Width = 468
-        Align = alTop
         Caption = 'Preparar antes de alimentar com SQL Parametrizado'
-        TabOrder = 2
+        TabOrder = 1
       end
     end
   end
@@ -321,6 +307,7 @@ object fmPrincipal: TfmPrincipal
       'codepage=UTF8'
       'controls_cp=CP_UTF8'
     )
+    AutoCommit = False
     TransactIsolationLevel = tiReadCommitted
     DesignConnection = True
     AfterConnect = Conexao_Ligada
@@ -339,8 +326,8 @@ object fmPrincipal: TfmPrincipal
     Top = 152
   end
   object ZQuery_Con1: TZQuery
-    Connection = ZConnection1
     AfterOpen = ZQuery_Con1AfterOpen
+    Connection = ZConnection1
     SQL.Strings = (
       'SELECT a.ID_CLIENTE, a.NOME_ALTERNATIVO, a.END_CIDADE, a.END_UF, a.STATUS'
       'FROM CLIENTES a '

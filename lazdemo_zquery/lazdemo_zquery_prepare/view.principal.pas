@@ -97,7 +97,7 @@ const
   FDB_TABLE1='UF';
   FDB_TABLE2='CLIENTES';
   FDB_HOST='localhost';
-  FDB_PORT=3040;
+  FDB_PORT=3050;
   FDB_USERNAME='SYSDBA';
   FDB_PASSWORD='masterkey';
   FDB_PAGESIZE=16384;
@@ -740,12 +740,9 @@ begin
   CSV_DataRow.QuoteChar:='''';     // aspas simples
   CSV_DataRow.StrictDelimiter:=true;  // quando não for usar espaço como delimitador
 
-  if zqupdate.active then
-    zqupdate.Close;
-
   if not fileExists(AFileName) then
       Result:='Arquivo não existe: '+AFileName;
-
+  //ShowMessage(IntToStr(zqupdate.Params.Count));
   if Result=emptyStr then
   begin
     AssignFile(myFile, AFileName);
@@ -799,11 +796,16 @@ begin
         begin
           if zqupdate.Active then
             zqupdate.Close;
-          zqupdate.parambyname('p_id_cliente').AsInteger:=col_ID_CLIENTE;
-          zqupdate.parambyname('p_NOME_ALTERNATIVO').AsString:=col_NOME_ALTERNATIVO;
-          zqupdate.parambyname('p_END_CIDADE').AsString:=col_END_CIDADE;
-          zqupdate.parambyname('p_END_UF').AsString:=col_END_UF;
-          zqupdate.parambyname('p_STATUS').AsString:=col_STATUS;
+          //zqupdate.parambyname('p_id_cliente').AsInteger:=col_ID_CLIENTE;
+          //zqupdate.parambyname('p_NOME_ALTERNATIVO').AsString:=col_NOME_ALTERNATIVO;
+          //zqupdate.parambyname('p_END_CIDADE').AsString:=col_END_CIDADE;
+          //zqupdate.parambyname('p_END_UF').AsString:=col_END_UF;
+          //zqupdate.parambyname('p_STATUS').AsString:=col_STATUS;
+          zqupdate.Params[0].AsInteger:=col_ID_CLIENTE;
+          zqupdate.params[1].AsString:=col_NOME_ALTERNATIVO;
+          zqupdate.params[2].AsString:=col_END_CIDADE;
+          zqupdate.params[3].AsString:=col_END_UF;
+          zqupdate.params[4].AsString:=col_STATUS;
           try
             zqupdate.ExecSQL;
           except
@@ -882,19 +884,29 @@ begin
      zqupdate.Close;
     zqupdate.Connection:=ZConnection1;
     zqupdate.sql.clear;
-    zqupdate.sql.add('UPDATE OR INSERT INTO '+FDB_TABLE2+'(');
-    zqupdate.sql.add('     id_cliente,');
-    zqupdate.sql.add('     nome_alternativo,');
-    zqupdate.sql.add('     end_cidade,');
-    zqupdate.sql.add('     end_uf,');
-    zqupdate.sql.add('     status) ');
-    zqupdate.sql.add('values(');
-    zqupdate.sql.add('  :p_id_cliente,');
-    zqupdate.sql.add('  :p_NOME_ALTERNATIVO,');
-    zqupdate.sql.add('  :p_END_CIDADE,');
-    zqupdate.sql.add('  :p_END_UF,');
-    zqupdate.sql.add('  :p_STATUS) ');
-    zqupdate.sql.add('MATCHING(id_cliente) ;');      // bug tá comendo linhas com a com til porque banco utf8 e charset=ISO8859_1 e autoencode=true
+    zqupdate.sql.add('EXECUTE BLOCK(');
+    zqupdate.sql.add('    p_id_cliente int=~p_id_cliente,');
+    zqupdate.sql.add('    p_NOME_ALTERNATIVO varchar(120)=~p_NOME_ALTERNATIVO,');
+    zqupdate.sql.add('    p_END_CIDADE varchar(120)=~p_END_CIDADE,');
+    zqupdate.sql.add('    p_END_UF varchar(2)=~p_END_UF,');
+    zqupdate.sql.add('    p_STATUS varchar(1)=~p_STATUS ');
+    zqupdate.sql.add(')');
+    zqupdate.sql.add('as');
+    zqupdate.sql.add('begin');
+    //zqupdate.sql.add('  UPDATE OR INSERT INTO '+FDB_TABLE2+'(');
+    //zqupdate.sql.add('     id_cliente,');
+    //zqupdate.sql.add('     nome_alternativo,');
+    //zqupdate.sql.add('     end_cidade,');
+    //zqupdate.sql.add('     end_uf,');
+    //zqupdate.sql.add('     status) ');
+    //zqupdate.sql.add('  values(');
+    //zqupdate.sql.add('    :p_id_cliente,');
+    //zqupdate.sql.add('    :p_NOME_ALTERNATIVO,');
+    //zqupdate.sql.add('    :p_END_CIDADE,');
+    //zqupdate.sql.add('    :p_END_UF,');
+    //zqupdate.sql.add('    :p_STATUS) ');
+    //zqupdate.sql.add('  MATCHING(id_cliente) ;');
+    zqupdate.sql.add('end');
     try
      if (not zqupdate.Prepared) and (APrepare) then
        zqupdate.Prepare;

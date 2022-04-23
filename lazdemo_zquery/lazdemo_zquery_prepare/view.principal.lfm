@@ -1,22 +1,24 @@
 object fmPrincipal: TfmPrincipal
   Left = 241
-  Height = 555
+  Height = 832
   Top = 31
-  Width = 1027
+  Width = 1540
   Caption = 'fmPrincipal'
-  ClientHeight = 555
-  ClientWidth = 1027
+  ClientHeight = 832
+  ClientWidth = 1540
   Color = clWhite
-  Font.Height = -13
+  DesignTimePPI = 144
+  Font.Height = -20
   Font.Name = 'Segoe UI'
   OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
   OnShow = FormShow
   Position = poDefault
+  LCLVersion = '2.2.0.4'
   object Splitter1: TSplitter
     Cursor = crVSplit
     Left = 0
-    Height = 5
+    Height = 8
     Top = 107
     Width = 1027
     Align = alTop
@@ -24,8 +26,8 @@ object fmPrincipal: TfmPrincipal
   end
   object MemoStatus: TMemo
     Left = 0
-    Height = 128
-    Top = 427
+    Height = 192
+    Top = 363
     Width = 1027
     Align = alBottom
     BorderStyle = bsNone
@@ -44,20 +46,20 @@ object fmPrincipal: TfmPrincipal
     ClientWidth = 1027
     TabOrder = 2
     object sbMenu1: TScrollBox
-      Left = 812
+      Left = 705
       Height = 313
       Top = 1
-      Width = 214
+      Width = 321
       HorzScrollBar.Page = 136
       VertScrollBar.Page = 145
       Align = alRight
       ClientHeight = 311
-      ClientWidth = 212
+      ClientWidth = 319
       TabOrder = 0
       object sbDB_Criar: TSpeedButton
         Cursor = crHandPoint
         Left = 0
-        Height = 24
+        Height = 36
         Top = 0
         Width = 212
         Action = actDB_Criar
@@ -69,8 +71,8 @@ object fmPrincipal: TfmPrincipal
       object sbDB_TransacaoIniciar: TSpeedButton
         Cursor = crHandPoint
         Left = 0
-        Height = 24
-        Top = 239
+        Height = 36
+        Top = 227
         Width = 212
         Action = actTrans1_Iniciar
         Align = alBottom
@@ -81,8 +83,8 @@ object fmPrincipal: TfmPrincipal
       object sbDB_TransacaoCommit: TSpeedButton
         Cursor = crHandPoint
         Left = 0
-        Height = 24
-        Top = 263
+        Height = 36
+        Top = 251
         Width = 212
         Action = actTrans1_Commit
         Align = alBottom
@@ -93,8 +95,8 @@ object fmPrincipal: TfmPrincipal
       object sbDB_TransacaoRollBack: TSpeedButton
         Cursor = crHandPoint
         Left = 0
-        Height = 24
-        Top = 287
+        Height = 36
+        Top = 275
         Width = 212
         Action = actTrans1_Rollback
         Align = alBottom
@@ -105,7 +107,7 @@ object fmPrincipal: TfmPrincipal
       object sbDB_Conectar1: TSpeedButton
         Cursor = crHandPoint
         Left = 0
-        Height = 24
+        Height = 36
         Top = 24
         Width = 212
         Action = actDB_Conectar1
@@ -135,7 +137,7 @@ object fmPrincipal: TfmPrincipal
       end
       object SpeedButton3: TSpeedButton
         Left = 0
-        Height = 22
+        Height = 33
         Top = 65
         Width = 212
         Action = actDelete_ALL
@@ -146,7 +148,7 @@ object fmPrincipal: TfmPrincipal
       end
       object sb_search: TSpeedButton
         Left = 0
-        Height = 17
+        Height = 26
         Top = 48
         Width = 212
         Action = actSearch
@@ -179,27 +181,37 @@ object fmPrincipal: TfmPrincipal
         Color = clWindow
         Columns = <        
           item
+            MinSize = 15
+            MaxSize = 300
             Title.Caption = 'ID_CLIENTE'
             Width = 161
             FieldName = 'ID_CLIENTE'
           end        
           item
+            MinSize = 15
+            MaxSize = 300
             Title.Caption = 'NOME_ALTERNATIVO'
             Width = 161
             FieldName = 'NOME_ALTERNATIVO'
           end        
           item
+            MinSize = 15
+            MaxSize = 300
             Title.Caption = 'END_CIDADE'
             Width = 161
             FieldName = 'END_CIDADE'
           end        
           item
+            MinSize = 15
+            MaxSize = 300
             Title.Caption = 'END_UF'
             Width = 161
             FieldName = 'END_UF'
           end        
           item
             ButtonStyle = cbsCheckboxColumn
+            MinSize = 15
+            MaxSize = 300
             Title.Caption = 'STATUS'
             Width = 164
             ValueChecked = 'A'
@@ -217,28 +229,28 @@ object fmPrincipal: TfmPrincipal
   end
   object gb_test: TGroupBox
     Left = 0
-    Height = 107
+    Height = 160
     Top = 0
     Width = 1027
     Align = alTop
     Caption = 'Tests'
-    ClientHeight = 87
+    ClientHeight = 140
     ClientWidth = 1025
     TabOrder = 3
     Visible = False
     object pnlAceitar: TPanel
-      Left = 557
+      Left = 323
       Height = 87
       Top = 0
-      Width = 468
+      Width = 702
       Align = alRight
       BevelOuter = bvNone
       ClientHeight = 87
-      ClientWidth = 468
+      ClientWidth = 702
       TabOrder = 0
       object btnCSV_Importar: TBitBtn
         Left = 0
-        Height = 30
+        Height = 45
         Top = 0
         Width = 468
         Align = alTop
@@ -258,8 +270,8 @@ object fmPrincipal: TfmPrincipal
     end
   end
   object ActionList1: TActionList
-    Left = 428
-    Top = 280
+    Left = 642
+    Top = 420
     object actDB_Criar: TAction
       Caption = 'Criar DB e Conectar-se'
       OnExecute = actDB_CriarExecute
@@ -301,6 +313,7 @@ object fmPrincipal: TfmPrincipal
   end
   object ZConnection1: TZConnection
     ControlsCodePage = cCP_UTF8
+    AutoEncodeStrings = True
     ClientCodepage = 'UTF8'
     Properties.Strings = (
       'AutoEncodeStrings='
@@ -322,19 +335,19 @@ object fmPrincipal: TfmPrincipal
     User = 'SYSDBA'
     Password = 'masterkey'
     Protocol = 'firebird'
-    Left = 328
-    Top = 152
+    Left = 492
+    Top = 228
   end
   object ZQuery_Con1: TZQuery
-    AfterOpen = ZQuery_Con1AfterOpen
     Connection = ZConnection1
+    AfterOpen = ZQuery_Con1AfterOpen
     SQL.Strings = (
       'SELECT a.ID_CLIENTE, a.NOME_ALTERNATIVO, a.END_CIDADE, a.END_UF, a.STATUS'
       'FROM CLIENTES a '
     )
     Params = <>
-    Left = 184
-    Top = 136
+    Left = 276
+    Top = 204
     object ZQuery_Con1ID_CLIENTE: TLongintField
       FieldKind = fkData
       FieldName = 'ID_CLIENTE'
@@ -387,20 +400,20 @@ object fmPrincipal: TfmPrincipal
   end
   object DS_ZQuery_Con1: TDataSource
     DataSet = ZQuery_Con1
-    Left = 172
-    Top = 40
+    Left = 258
+    Top = 60
   end
   object OpenDialog1: TOpenDialog
     Title = 'Abrir arquivo csv existente'
     DefaultExt = '.csv'
     Filter = 'csv file|*.csv'
-    Left = 40
-    Top = 20
+    Left = 60
+    Top = 30
   end
   object zqupdate: TZQuery
     Connection = ZConnection1
     Params = <>
-    Left = 372
-    Top = 32
+    Left = 558
+    Top = 48
   end
 end

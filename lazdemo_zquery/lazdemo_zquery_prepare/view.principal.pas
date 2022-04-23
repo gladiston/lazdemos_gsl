@@ -96,6 +96,8 @@ const
   FDB_FILE='lazdemos_gsl.fdb';
   FDB_TABLE1='UF';
   FDB_TABLE2='CLIENTES';
+  FDB_HOST='localhost';
+  FDB_PORT=3040;
   FDB_USERNAME='SYSDBA';
   FDB_PASSWORD='masterkey';
   FDB_PAGESIZE=16384;
@@ -201,7 +203,7 @@ begin
       zConnection1.LoginPrompt:=false;
       zConnection1.User:=FDB_USERNAME;
       zConnection1.Password:=FDB_PASSWORD;
-      //zConnection1.Port:=3050;
+      zConnection1.Port:=FDB_PORT;
       // As constantes dentro de TransactIsolationLevel
       // estão dentro da unit ZDbcIntfs
       zConnection1.TransactIsolationLevel := tiReadCommitted;
@@ -406,15 +408,15 @@ begin
       end
       else
       begin
-        ZConnection1.Hostname:='localhost';
-        ZConnection1.Port:=3050;
+        ZConnection1.Hostname:=FDB_HOST;
+        ZConnection1.Port:=FDB_PORT;
         ZConnection1.Database:=FDB_FILE;
       end;
       zConnection1.LibraryLocation:='';    // fbclient.dll(win32) ou libfbclient.so(linux)
       ZConnection1.LoginPrompt:=false;
       ZConnection1.User:=FDB_USERNAME;
       ZConnection1.Password:=FDB_PASSWORD;
-      //ZConnection1.Port:=3050;
+      ZConnection1.Port:=FDB_PORT;
       // As constantes dentro de TransactIsolationLevel
       // estão dentro da unit ZDbcIntfs
       if SameText(ComboBox_Con1.Text, TIL_READ_COMMITED) then

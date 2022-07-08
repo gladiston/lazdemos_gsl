@@ -1,0 +1,61 @@
+object Form1: TForm1
+  Left = 470
+  Height = 365
+  Top = 154
+  Width = 844
+  Caption = 'Form1'
+  ClientHeight = 365
+  ClientWidth = 844
+  LCLVersion = '2.2.2.0'
+  object BtnShowMessage: TButton
+    Left = 22
+    Height = 45
+    Top = 104
+    Width = 159
+    Caption = 'ShowMessage'
+    OnClick = BtnShowMessageClick
+    TabOrder = 0
+  end
+  object BtnShowMessage_Alt: TButton
+    Left = 192
+    Height = 45
+    Top = 103
+    Width = 200
+    Caption = 'ShowMessage() alternativo'
+    OnClick = BtnShowMessage_AltClick
+    TabOrder = 1
+  end
+  object BtnMessageDlg: TButton
+    Left = 24
+    Height = 45
+    Top = 168
+    Width = 159
+    Caption = 'MessageDlg '
+    OnClick = BtnMessageDlgClick
+    TabOrder = 2
+  end
+  object BtnMessageDlg_Alt: TButton
+    Left = 192
+    Height = 45
+    Top = 168
+    Width = 200
+    Caption = 'MessageDlg alternativo'
+    OnClick = BtnMessageDlg_AltClick
+    TabOrder = 3
+  end
+  object BtnMessageDlg_Alt2: TButton
+    Left = 400
+    Height = 45
+    Top = 168
+    Width = 308
+    Caption = 'MessageDlg alternativo com botões personaliazdos'
+    OnClick = BtnMessageDlg_Alt2Click
+    TabOrder = 4
+  end
+  object TaskDialog1: TTaskDialog
+    Buttons = <>
+    RadioButtons = <>
+    Left = 52
+    Top = 16
+  end
+end

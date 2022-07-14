@@ -1,0 +1,170 @@
+object fmDialog_msg: TfmDialog_msg
+  Left = 7140
+  Height = 700
+  Top = 382
+  Width = 922
+  Caption = 'Confirmação'
+  ClientHeight = 700
+  ClientWidth = 922
+  Color = clWhite
+  Constraints.MinHeight = 700
+  Constraints.MinWidth = 920
+  DesignTimePPI = 144
+  Font.Height = -20
+  Font.Name = 'Segoe UI'
+  OnCreate = FormCreate
+  OnShow = FormShow
+  object pnl_Aceite: TPanel
+    Left = 12
+    Height = 62
+    Top = 632
+    Width = 898
+    Align = alBottom
+    BorderSpacing.Left = 6
+    BorderSpacing.Right = 6
+    BorderSpacing.Around = 6
+    BevelOuter = bvNone
+    ClientHeight = 62
+    ClientWidth = 898
+    Font.Height = -20
+    Font.Name = 'Segoe UI'
+    ParentFont = False
+    TabOrder = 0
+    object BtnReposta_Sim: TSpeedButton
+      Cursor = crHandPoint
+      Left = 551
+      Height = 50
+      Top = 6
+      Width = 144
+      Align = alRight
+      AllowAllUp = True
+      AutoSize = True
+      BorderSpacing.Around = 6
+      BorderSpacing.CellAlignHorizontal = ccaCenter
+      BorderSpacing.CellAlignVertical = ccaCenter
+      Caption = 'Concordo'
+      Color = clGreen
+      Flat = True
+      Font.Color = clWhite
+      Font.Height = -24
+      Font.Name = 'Segoe UI'
+      GroupIndex = 1
+      Images = dmPrincipal.ImageList1
+      ImageIndex = 40
+      ImageWidth = 32
+      Transparent = False
+      OnClick = BtnReposta_SimClick
+      OnMouseLeave = Desfocar_Caption
+      OnMouseMove = Focar_Caption
+      ParentFont = False
+    end
+    object BtnReposta_Nao: TSpeedButton
+      Cursor = crHandPoint
+      Left = 701
+      Height = 50
+      Top = 6
+      Width = 191
+      Align = alRight
+      AllowAllUp = True
+      AutoSize = True
+      BorderSpacing.Around = 6
+      BorderSpacing.CellAlignHorizontal = ccaCenter
+      BorderSpacing.CellAlignVertical = ccaCenter
+      Caption = 'Não concordo'
+      Color = clRed
+      Flat = True
+      Font.Color = clWhite
+      Font.Height = -24
+      GroupIndex = 1
+      Images = dmPrincipal.ImageList1
+      ImageIndex = 52
+      ImageWidth = 32
+      Transparent = False
+      OnClick = BtnReposta_NaoClick
+      OnMouseLeave = Desfocar_Caption
+      OnMouseMove = Focar_Caption
+      ParentFont = False
+    end
+    object BtnCopyToClipBoard: TSpeedButton
+      Cursor = crHandPoint
+      Left = 0
+      Height = 62
+      Hint = 'Clique aqui para copiar a mensagem para a área de clipboard'
+      Top = 0
+      Width = 32
+      Align = alLeft
+      Flat = True
+      Images = dmPrincipal.ImageList1
+      ImageIndex = 22
+      ImageWidth = 32
+      OnClick = BtnCopyToClipBoardClick
+    end
+    object BtnSaveScreens: TSpeedButton
+      Cursor = crHandPoint
+      Left = 32
+      Height = 62
+      Hint = 'Clique aqui para salvar no disco as janelas envolvidas'
+      Top = 0
+      Width = 40
+      Align = alLeft
+      Flat = True
+      Images = dmPrincipal.ImageList1
+      ImageIndex = 73
+      ImageWidth = 32
+      OnClick = BtnSaveScreensClick
+    end
+  end
+  object pnlTitulo: TPanel
+    Cursor = crSizeAll
+    Left = 12
+    Height = 96
+    Top = 12
+    Width = 898
+    Align = alTop
+    BorderSpacing.Left = 6
+    BorderSpacing.Top = 6
+    BorderSpacing.Right = 6
+    BorderSpacing.Bottom = 6
+    BorderSpacing.Around = 6
+    BorderSpacing.InnerBorder = 6
+    BevelOuter = bvNone
+    Caption = 'pnlTitulo'
+    Color = 10770508
+    Font.Color = clWhite
+    Font.Height = -29
+    Font.Name = 'Segoe UI Black'
+    Font.Style = [fsBold]
+    ParentBackground = False
+    ParentColor = False
+    ParentFont = False
+    TabOrder = 1
+    OnMouseDown = pnlTituloMouseDown
+    OnMouseMove = pnlTituloMouseMove
+  end
+  object MyInfo: THtmlViewer
+    Left = 0
+    Height = 474
+    Top = 120
+    Width = 922
+    BorderStyle = htFocused
+    DefBackground = clWhite
+    HistoryMaxCount = 0
+    NoSelect = False
+    PrintMarginBottom = 2
+    PrintMarginLeft = 2
+    PrintMarginRight = 2
+    PrintMarginTop = 2
+    PrintScale = 1
+    Align = alClient
+    TabOrder = 2
+  end
+  object cbox_Nao_Mostrar_Novamente: TCheckBox
+    Left = 0
+    Height = 32
+    Top = 594
+    Width = 922
+    Align = alBottom
+    Caption = 'Não mostrar este tipo de mensagem novamente'
+    TabOrder = 3
+  end
+end

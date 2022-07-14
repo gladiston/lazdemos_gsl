@@ -1,0 +1,133 @@
+object __MAINFORM__: T__MAINFORM__
+  Left = 321
+  Height = 454
+  Top = 31
+  Width = 815
+  Caption = '__MAINFORM__'
+  Menu = MainMenu1
+  LCLVersion = '2.2.2.0'
+  object ActionList1: TActionList
+    Left = 516
+    Top = 108
+    object actLogin: TAction
+      Caption = 'Entrar'
+      ImageIndex = 50
+    end
+    object actSair: TAction
+      Caption = 'Sair'
+      Hint = 'Clique aqui para sair'
+      ImageIndex = 63
+    end
+    object actUpgrade_DB: TAction
+      Category = 'Ferramentas'
+      Caption = 'Upgrade de versão de banco de dados'
+      Hint = 'Upgrade de versão de banco de dados'
+      ImageIndex = 25
+    end
+    object actLista_Colaboradores: TAction
+      Category = 'Cadastros'
+      Caption = 'Lista de Colaboradores'
+      Hint = 'Lista de colaboradores que recebem/entregam EPs'
+      ImageIndex = 85
+    end
+    object actCalendarioNUtil: TAction
+      Category = 'Cadastros'
+      Caption = 'Calendário de datas não úteis para os colaboradores'
+      Hint = 'Agenda de períodos não úteis'
+      ImageIndex = 17
+    end
+    object actLista_EPI: TAction
+      Category = 'Cadastros'
+      Caption = 'Lista de EPs'
+      Hint = 'Lista de EPs'
+      ImageIndex = 44
+    end
+    object actLista_CA: TAction
+      Category = 'Cadastros'
+      Caption = 'Lista de Certificados de Aprovação(CA)'
+      Hint = 'Lista de Certificados de Aprovação(CA)'
+      ImageIndex = 83
+    end
+    object actLista_Perfis: TAction
+      Category = 'Cadastros'
+      Caption = 'Lista de perfís'
+      Hint = 'Lista de perfís que podem ser associados aos Colaboradores e EPs'
+      ImageIndex = 66
+    end
+    object actFechar_janelas: TAction
+      Caption = 'Fechar as janelas ativas'
+      Hint = 'Fechar todas as janelas de gerenciamento que estejam carregadas ou sendo exibidas'
+      ImageIndex = 78
+    end
+    object actRebuid_DayUse: TAction
+      Caption = 'Processar day-use dos colaboradores'
+      ImageIndex = 18
+    end
+    object actRebuild_Bag: TAction
+      Caption = 'Construir a Sacola de EPs do colaborador'
+      ImageIndex = 16
+    end
+    object actPreferencias: TAction
+      Category = 'Ferramentas'
+      Caption = 'Preferências'
+      Hint = 'Ajustar algumas preferências'
+      ImageIndex = 77
+    end
+  end
+  object MainMenu1: TMainMenu
+    ImagesWidth = 24
+    Left = 351
+    Top = 132
+    object MenuItem1: TMenuItem
+      Caption = '&Arquivo'
+      object MenuItem2: TMenuItem
+        Action = actLogin
+      end
+      object N1: TMenuItem
+        Caption = '-'
+      end
+      object MenuItem3: TMenuItem
+        Action = actSair
+      end
+    end
+    object MenuItem4: TMenuItem
+      Caption = '&Cadastros'
+      object MenuItem7: TMenuItem
+        Action = actLista_Colaboradores
+      end
+      object MenuItem8: TMenuItem
+        Action = actLista_EPI
+      end
+      object MenuItem9: TMenuItem
+        Action = actLista_CA
+      end
+      object MenuItem10: TMenuItem
+        Action = actLista_Perfis
+      end
+      object MenuItem11: TMenuItem
+        Action = actCalendarioNUtil
+      end
+      object N2: TMenuItem
+        Caption = '-'
+      end
+      object MenuItem13: TMenuItem
+        Action = actFechar_janelas
+      end
+    end
+    object MenuItem5: TMenuItem
+      Caption = '&Ferramentas'
+      object MenuItem14: TMenuItem
+        Action = actPreferencias
+      end
+      object Separator1: TMenuItem
+        Caption = '-'
+      end
+      object MenuItem12: TMenuItem
+        Action = actUpgrade_DB
+      end
+    end
+    object MenuItem6: TMenuItem
+      Caption = 'A&juda'
+    end
+  end
+end

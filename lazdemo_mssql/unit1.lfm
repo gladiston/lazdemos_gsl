@@ -1,0 +1,23 @@
+object Form1: TForm1
+  Left = 321
+  Height = 386
+  Top = 31
+  Width = 502
+  Caption = 'Form1'
+  object ZConnection1: TZConnection
+    ControlsCodePage = cCP_UTF8
+    Properties.Strings = (
+      'RawStringEncoding=DB_CP'
+    )
+    TransactIsolationLevel = tiReadCommitted
+    HostName = 'terra'
+    Port = 0
+    Database = 'VIDY'
+    User = 'sa'
+    Password = 'masterkey'
+    Protocol = 'ASA'
+    LibraryLocation = 'C:\Projetos-dxe\dxe_addons\zeoslib\lib\freetds\32 Bits\sybdb.dll'
+    Left = 217
+    Top = 151
+  end
+end

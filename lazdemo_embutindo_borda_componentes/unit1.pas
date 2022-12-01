@@ -34,6 +34,7 @@ implementation
 
 procedure TForm1.Button1Click(Sender: TObject);
 begin
+  // o que fizemos visualmente, podemos fazer de maneira programatica:
   // panel sem bordas e com espaçamento interno de 4
   panel1.BevelInner:=bvNone;
   panel1.BevelOuter:=bvNone;

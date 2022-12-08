@@ -1,0 +1,31 @@
+object Form1: TForm1
+  Left = 321
+  Height = 339
+  Top = 31
+  Width = 452
+  Caption = 'Form1'
+  ClientHeight = 339
+  ClientWidth = 452
+  LCLVersion = '2.2.2.0'
+  object btnConsumir: TButton
+    Left = 0
+    Height = 25
+    Top = 314
+    Width = 452
+    Align = alBottom
+    Caption = 'Consumir DLL'
+    OnClick = btnConsumirClick
+    TabOrder = 0
+  end
+  object Memo1: TMemo
+    Left = 0
+    Height = 314
+    Top = 0
+    Width = 452
+    Align = alClient
+    Lines.Strings = (
+      'Memo1'
+    )
+    TabOrder = 1
+  end
+end

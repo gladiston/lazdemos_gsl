@@ -4,7 +4,7 @@
     <Version Value="12"/>
     <General>
       <SessionStorage Value="InProjectDir"/>
-      <Title Value="lazdemo_zquery_prepare"/>
+      <Title Value="lazdemo_importar_csv"/>
       <Scaled Value="True"/>
       <ResourceType Value="res"/>
       <UseXPManifest Value="True"/>
@@ -25,10 +25,10 @@
     </RunParams>
     <RequiredPackages>
       <Item>
-        <PackageName Value="FCL"/>
+        <PackageName Value="zcore"/>
       </Item>
       <Item>
-        <PackageName Value="zcore"/>
+        <PackageName Value="zcomponentdesign"/>
       </Item>
       <Item>
         <PackageName Value="zcomponent"/>
@@ -39,7 +39,7 @@
     </RequiredPackages>
     <Units>
       <Unit>
-        <Filename Value="lazdemo_zquery_prepare.lpr"/>
+        <Filename Value="lazdemo_importar_csv.lpr"/>
         <IsPartOfProject Value="True"/>
       </Unit>
       <Unit>
@@ -54,10 +54,11 @@
   <CompilerOptions>
     <Version Value="11"/>
     <Target>
-      <Filename Value="../../bin/lazdemo_zquery_prepare.exe"/>
+      <Filename Value="../bin/lazdemo_importar_csv.exe"/>
     </Target>
     <SearchPaths>
       <IncludeFiles Value="$(ProjOutDir)"/>
+      <OtherUnitFiles Value="/home/gladiston/projetos-fpc/lazdemos_gsl/lazdemo_importar_csv"/>
       <UnitOutputDirectory Value="lib/$(TargetCPU)-$(TargetOS)"/>
     </SearchPaths>
     <Linking>
@@ -78,9 +79,6 @@
       </Item>
       <Item>
         <Name Value="EFOpenError"/>
-      </Item>
-      <Item>
-        <Name Value="EReadError"/>
       </Item>
     </Exceptions>
   </Debugging>

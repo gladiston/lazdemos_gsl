@@ -236,24 +236,33 @@ object fmPrincipal: TfmPrincipal
       ClientHeight = 87
       ClientWidth = 468
       TabOrder = 0
-      object btnCSV_Importar: TBitBtn
+      object btnImportarCSV: TBitBtn
         Left = 0
         Height = 30
         Top = 0
         Width = 468
         Align = alTop
-        Caption = 'Importar aquivo .csv'
-        OnClick = btnCSV_ImportarClick
+        Caption = 'Popular a patir de CSV'
+        OnClick = btnImportarCSVClick
         TabOrder = 0
       end
-      object cbox_Preparar: TCheckBox
+      object ProgressBar1: TProgressBar
         Left = 0
-        Height = 23
+        Height = 20
+        Top = 60
+        Width = 468
+        Align = alTop
+        TabOrder = 1
+      end
+      object BtnImportarScript: TBitBtn
+        Left = 0
+        Height = 30
         Top = 30
         Width = 468
         Align = alTop
-        Caption = 'Preparar antes de alimentar com SQL Parametrizado'
-        TabOrder = 1
+        Caption = 'Popular a partir de Script SQL'
+        OnClick = BtnImportarScriptClick
+        TabOrder = 2
       end
     end
   end
@@ -404,5 +413,12 @@ object fmPrincipal: TfmPrincipal
     Params = <>
     Left = 372
     Top = 32
+  end
+  object ZSQLProcessor1: TZSQLProcessor
+    Params = <>
+    Connection = ZConnection1
+    Delimiter = ';'
+    Left = 450
+    Top = 142
   end
 end

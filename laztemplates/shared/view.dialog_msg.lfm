@@ -1,0 +1,149 @@
+object fmDialog_msg: TfmDialog_msg
+  Left = 7140
+  Height = 467
+  Top = 382
+  Width = 615
+  Caption = 'Confirmação'
+  ClientHeight = 467
+  ClientWidth = 615
+  Color = clWhite
+  Constraints.MinHeight = 467
+  Constraints.MinWidth = 613
+  Font.Height = -13
+  Font.Name = 'Segoe UI'
+  OnCreate = FormCreate
+  OnShow = FormShow
+  LCLVersion = '2.2.0.4'
+  object pnl_Aceite: TPanel
+    Left = 8
+    Height = 41
+    Top = 422
+    Width = 599
+    Align = alBottom
+    BorderSpacing.Left = 4
+    BorderSpacing.Right = 4
+    BorderSpacing.Around = 4
+    BevelOuter = bvNone
+    ClientHeight = 41
+    ClientWidth = 599
+    Font.Height = -13
+    Font.Name = 'Segoe UI'
+    ParentFont = False
+    TabOrder = 0
+    object BtnReposta_Sim: TSpeedButton
+      Cursor = crHandPoint
+      Left = 419
+      Height = 33
+      Top = 4
+      Width = 71
+      Align = alRight
+      AllowAllUp = True
+      AutoSize = True
+      BorderSpacing.Around = 4
+      BorderSpacing.CellAlignHorizontal = ccaCenter
+      BorderSpacing.CellAlignVertical = ccaCenter
+      Caption = 'Concordo'
+      Color = clGreen
+      Flat = True
+      Font.Color = clWhite
+      Font.Height = -16
+      Font.Name = 'Segoe UI'
+      GroupIndex = 1
+      ImageIndex = 40
+      ImageWidth = 32
+      Transparent = False
+      OnClick = BtnReposta_SimClick
+      OnMouseLeave = Desfocar_Caption
+      OnMouseMove = Focar_Caption
+      ParentFont = False
+    end
+    object BtnReposta_Nao: TSpeedButton
+      Cursor = crHandPoint
+      Left = 494
+      Height = 33
+      Top = 4
+      Width = 101
+      Align = alRight
+      AllowAllUp = True
+      AutoSize = True
+      BorderSpacing.Around = 4
+      BorderSpacing.CellAlignHorizontal = ccaCenter
+      BorderSpacing.CellAlignVertical = ccaCenter
+      Caption = 'Não concordo'
+      Color = clRed
+      Flat = True
+      Font.Color = clWhite
+      Font.Height = -16
+      GroupIndex = 1
+      ImageIndex = 52
+      ImageWidth = 32
+      Transparent = False
+      OnClick = BtnReposta_NaoClick
+      OnMouseLeave = Desfocar_Caption
+      OnMouseMove = Focar_Caption
+      ParentFont = False
+    end
+    object BtnCopyToClipBoard: TSpeedButton
+      Cursor = crHandPoint
+      Left = 0
+      Height = 41
+      Hint = 'Clique aqui para copiar a mensagem para a área de clipboard'
+      Top = 0
+      Width = 53
+      Align = alLeft
+      Caption = 'Copiar'
+      Flat = True
+      ImageIndex = 22
+      ImageWidth = 32
+      OnClick = BtnCopyToClipBoardClick
+    end
+  end
+  object pnlTitulo: TPanel
+    Cursor = crSizeAll
+    Left = 8
+    Height = 64
+    Top = 8
+    Width = 599
+    Align = alTop
+    BorderSpacing.Left = 4
+    BorderSpacing.Top = 4
+    BorderSpacing.Right = 4
+    BorderSpacing.Bottom = 4
+    BorderSpacing.Around = 4
+    BorderSpacing.InnerBorder = 4
+    BevelOuter = bvNone
+    Caption = 'pnlTitulo'
+    Color = 10770508
+    Font.Color = clWhite
+    Font.Height = -19
+    Font.Name = 'Segoe UI Black'
+    Font.Style = [fsBold]
+    ParentBackground = False
+    ParentColor = False
+    ParentFont = False
+    TabOrder = 1
+    OnMouseDown = pnlTituloMouseDown
+    OnMouseMove = pnlTituloMouseMove
+  end
+  object cbox_Nao_Mostrar_Novamente: TCheckBox
+    Left = 0
+    Height = 23
+    Top = 395
+    Width = 615
+    Align = alBottom
+    Caption = 'Não mostrar este tipo de mensagem novamente'
+    TabOrder = 2
+  end
+  object MyInfo: TMemo
+    Left = 0
+    Height = 315
+    Top = 80
+    Width = 615
+    Align = alClient
+    BorderStyle = bsNone
+    Lines.Strings = (
+      'Memo1'
+    )
+    TabOrder = 3
+  end
+end

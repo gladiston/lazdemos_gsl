@@ -5,9 +5,9 @@ unit view.principal;
 interface
 
 uses
-  Classes, SysUtils, ZConnection, ZDataset, ZSqlUpdate, Forms, Controls,
-  Graphics, Dialogs, StdCtrls, ExtCtrls, Buttons, ActnList, DBGrids, Menus,
-  DBCtrls, ComCtrls, DB;
+  Classes, SysUtils, ZConnection, ZDataset, ZSqlUpdate, ZSqlProcessor, Forms,
+  Controls, Graphics, Dialogs, StdCtrls, ExtCtrls, Buttons, ActnList, DBGrids,
+  Menus, DBCtrls, ComCtrls, DB;
 
 type
 
@@ -26,8 +26,8 @@ type
     actTrans1_Iniciar: TAction;
     ActionList1: TActionList;
     autocommit1: TCheckBox;
-        btnCSV_Importar: TBitBtn;
-    cbox_Preparar: TCheckBox;
+        btnImportarCSV: TBitBtn;
+        BtnImportarScript: TBitBtn;
     ComboBox_Con1: TComboBox;
     DBGrid1: TDBGrid;
     DBGridCon1: TGroupBox;
@@ -37,6 +37,7 @@ type
     MemoStatus: TMemo;
     OpenDialog1: TOpenDialog;
     pnlAceitar: TPanel;
+    ProgressBar1: TProgressBar;
     sbDB_Conectar1: TSpeedButton;
     sbDB_Criar: TSpeedButton;
     sbDB_TransacaoCommit: TSpeedButton;
@@ -54,6 +55,7 @@ type
     ZQuery_Con1NOME_ALTERNATIVO: TStringField;
     ZQuery_Con1STATUS: TStringField;
     zqupdate: TZQuery;
+    ZSQLProcessor1: TZSQLProcessor;
     procedure actDB_Conectar1Execute(Sender: TObject);
     procedure actDB_CriarExecute(Sender: TObject);
     procedure actDB_Desconectar1Execute(Sender: TObject);
@@ -62,7 +64,8 @@ type
     procedure actTrans1_CommitExecute(Sender: TObject);
     procedure actTrans1_IniciarExecute(Sender: TObject);
     procedure actTrans1_RollbackExecute(Sender: TObject);
-    procedure btnCSV_ImportarClick(Sender: TObject);
+    procedure BtnImportarScriptClick(Sender: TObject);
+    procedure btnImportarCSVClick(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -79,6 +82,7 @@ type
   private
     FMsgStatus: String;
     FFDB_FileEx:String;
+    function CSV_Importar_VIA_SQL(AFileName: String): String;
     procedure SetMsgStatus(AValue: String);
     procedure CheckButtons;
     procedure OpenMyData(AForUpdate, AWithLock:Boolean);
@@ -86,7 +90,14 @@ type
     function SQL_Prepare(APrepare:Boolean):Boolean;
     function Truncate_Table: String;
     function SQL_TableCount(ATABLE_NAME:String): Cardinal;
-    function CSV_Importar(AFileName:String; AUsePrepare:Boolean):String;
+    function CSV_Importar_via_Prepare(AFileName:String):String;
+    function Perguntar_Sim_Nao(
+        ACaption:String;
+        ATitle:String;
+        AText:String;
+        AButtonText1:String;
+        AButtonText2:String):TModalResult;
+
   public
   published
     property FDB_FileEx:String read FFDB_FileEx;
@@ -139,7 +150,7 @@ begin
   ComboBox_Con1.Items.Add(TIL_SERIALIZABLE);
   ComboBox_Con1.ItemIndex:=0;
   DBGridCon1.Visible:=false;
-  //pb1.Visible:=false;
+  ProgressBar1.Visible:=false;
 end;
 
 procedure TfmPrincipal.FormShow(Sender: TObject);
@@ -317,7 +328,7 @@ begin
   end;
 end;
 
-procedure TfmPrincipal.btnCSV_ImportarClick(Sender: TObject);
+procedure TfmPrincipal.BtnImportarScriptClick(Sender: TObject);
 var
   sys_last_error:String;
   time_start:TDateTime;
@@ -325,13 +336,68 @@ var
   time_diff:TDateTime;
 begin
   sys_last_error:=emptyStr;
-  time_start:=now;
-  SQL_Prepare(cbox_Preparar.checked);
-
+  OpenDialog1.Title:=BtnImportarScript.Caption;
+  OpenDialog1.DefaultExt:='.sql';
+  OpenDialog1.Filter:='SQL Script|*.sql';
   if OpenDialog1.Execute then
   begin
-      sys_last_error:=CSV_Importar(OpenDialog1.Filename, cbox_Preparar.checked);
+      // importando via script
+      try
+        time_start:=now;
+        ZSQLProcessor1.Script.LoadFromFile(OpenDialog1.FileName);
+        ZSQLProcessor1.Execute;
+      except
+      on e:exception do sys_last_error:=e.message;
+      end;
       time_finish:=now;
+    end
+  else
+    sys_last_error:='Nenhum arquivo foi selecionado';
+
+  if  sys_last_error<>emptyStr then
+  begin
+    MemoStatus.Lines.Add('FALHOU: '+sys_last_error)
+  end
+  else
+  begin
+    OpenMyData(false, false);
+    time_diff:=time_finish - time_start;
+    MemoStatus.Lines.Add('TEMPO: '+FormatDateTime('[s]" seconds"', time_diff, [fdoInterval]));
+  end;
+
+end;
+
+procedure TfmPrincipal.btnImportarCSVClick(Sender: TObject);
+var
+  sys_last_error:String;
+  time_start:TDateTime;
+  time_finish:TDateTime;
+  time_diff:TDateTime;
+begin
+  sys_last_error:=emptyStr;
+  OpenDialog1.Title:=btnImportarCSV.Caption;
+  OpenDialog1.DefaultExt:='.csv';
+  OpenDialog1.Filter:='Dados em formato CSV|*.csv';
+  if OpenDialog1.Execute then
+  begin
+     SQL_Prepare(true);
+     if Perguntar_Sim_Nao(
+       'Metodo de execução',
+       'Qual a forma de execução',
+       'Por preparação ou SQL Texto puro?',
+       'via preparação',
+       'via sql texto puro')=mrYes then
+     begin
+       time_start:=now;
+       sys_last_error:=CSV_Importar_via_Prepare(OpenDialog1.Filename);
+       time_finish:=now;
+     end
+     else
+     begin
+       time_start:=now;
+       sys_last_error:=CSV_Importar_via_SQL(OpenDialog1.Filename);
+       time_finish:=now;
+     end;
     end
   else
     sys_last_error:='Nenhum arquivo foi selecionado';
@@ -364,27 +430,34 @@ var
   ErrorMsg:String;
   iRecCount:Cardinal;
   L:TStringList;
+  mrResposta:TModalResult;
 begin
   ErrorMsg:=emptyStr;
   bIsDirect:=true;
   bTable1Exists:=true;
   bTable2Exists:=true;
   iRecCount:=0;
+  mrResposta:=mrNone;
   L:=TStringList.Create;
   if ErrorMsg=emptyStr then
   begin
-    case QuestionDlg(
-      'Conexão embarcada?',
-      'Conexão embarcada é monousuario e mais rapida, '+
-      'Conexão cliente/servidor precisará de um alias '+FDB_FILE+'='+FFDB_FileEx+
-      ' no arquivo databases.conf e a a senha de '+FDB_USERNAME+
-      ' deve ser "'+FDB_PASSWORD+'". Qual sua opção:',
-      mtInformation, [mrNo, 'Nao, cliente/servidor', mrYes, 'Sim, embarcada', 'IsDefault'], '') of
-        mrYes: bIsDirect:=true;
-        mrNo: bIsDirect:=false;
-      else
-        ErrorMsg:='Operação canelada pelo usuário.';
-    end;
+     mrResposta:=Perguntar_Sim_Nao(
+       'Conexão embarcada?',
+       'Qual a forma de conexão que pretende usar?',
+       'Conexão embarcada é monousuario porém mais rapida, a conexão localhost é '+
+       'multiusuário e usa protocolo de rede para atender as requisições.'+sLineBreak+
+       'Atenção: Conexão cliente/servidor precisará de um alias '+FDB_FILE+'='+FFDB_FileEx+
+       ' no arquivo databases.conf e a a senha de '+FDB_USERNAME+
+       ' deve ser "'+FDB_PASSWORD+'".',
+       'Conexão embarcada',
+       'Conexão Cliente/Servidor');
+
+    if mrResposta=mrYes
+      then bIsDirect:=true;
+    if mrResposta=mrNo
+      then bIsDirect:=true;
+    if mrResposta=mrNone
+      then  ErrorMsg:='Nenhuma opção foi selecionada.';
   end;
   if ErrorMsg=emptyStr then
   begin
@@ -546,7 +619,7 @@ begin
   begin
     if (ZConnection1.Connected) then
     begin
-      SQL_Prepare(cbox_Preparar.Checked);
+      SQL_Prepare(true);
       actSearchExecute(nil);
     end;
   end
@@ -719,7 +792,7 @@ begin
   q1.Free;
 end;
 
-function TfmPrincipal.CSV_Importar(AFileName: String; AUsePrepare:Boolean): String;
+function TfmPrincipal.CSV_Importar_via_Prepare(AFileName: String): String;
 var
   i:integer;
   sID_CLIENTE:String;
@@ -729,12 +802,11 @@ var
   col_END_UF:String;
   col_STATUS:String;
   sLinha:String;
-  sSQL:String;
   CSV_DataRow: TStringList;
   myFile : TextFile;
 begin
   Result:=emptyStr;
-  //pb1.Visible:=true;
+  ProgressBar1.Visible:=true;
   CSV_DataRow:=TStringList.Create;
   CSV_DataRow.Delimiter:=';'; // delimitador
   CSV_DataRow.QuoteChar:='''';     // aspas simples
@@ -742,7 +814,7 @@ begin
 
   if not fileExists(AFileName) then
       Result:='Arquivo não existe: '+AFileName;
-  //ShowMessage(IntToStr(zqupdate.Params.Count));
+
   if Result=emptyStr then
   begin
     AssignFile(myFile, AFileName);
@@ -753,10 +825,9 @@ begin
     begin
       Inc(i);
       ReadLn(myFile, sLinha);
-      //pb1.StepIt;
+      ProgressBar1.StepIt;
       CSV_DataRow.Clear;
       CSV_DataRow.DelimitedText:=sLinha;  // texto delimitado
-
       sID_CLIENTE:=CSV_DataRow[0];
       col_NOME_ALTERNATIVO:=emptystr;
       col_END_CIDADE:=emptystr;
@@ -792,57 +863,170 @@ begin
         col_END_CIDADE:=Trim(col_END_CIDADE);
         col_END_UF:=Trim(col_END_UF);
         col_STATUS:=Trim(col_STATUS);
-        if AUsePrepare then
-        begin
-          if zqupdate.Active then
-            zqupdate.Close;
-          //zqupdate.parambyname('p_id_cliente').AsInteger:=col_ID_CLIENTE;
-          //zqupdate.parambyname('p_NOME_ALTERNATIVO').AsString:=col_NOME_ALTERNATIVO;
-          //zqupdate.parambyname('p_END_CIDADE').AsString:=col_END_CIDADE;
-          //zqupdate.parambyname('p_END_UF').AsString:=col_END_UF;
-          //zqupdate.parambyname('p_STATUS').AsString:=col_STATUS;
-          zqupdate.Params[0].AsInteger:=col_ID_CLIENTE;
-          zqupdate.params[1].AsString:=col_NOME_ALTERNATIVO;
-          zqupdate.params[2].AsString:=col_END_CIDADE;
-          zqupdate.params[3].AsString:=col_END_UF;
-          zqupdate.params[4].AsString:=col_STATUS;
-          try
-            zqupdate.ExecSQL;
-          except
-          on e:exception do Result:='Erro na linha #'+IntToStr(i)+': '+e.message+sLineBreak+zqupdate.sql.Text;
-          end;
-        end
-        else
-        begin
-          try
-            sSQL:=
-             'UPDATE OR INSERT INTO '+FDB_TABLE2+'('+sLineBreak+
-             '     id_cliente,'+sLineBreak+
-             '     nome_alternativo,'+sLineBreak+
-             '     end_cidade,'+sLineBreak+
-             '     end_uf,'+sLineBreak+
-             '     status) '+sLineBreak+
-             'values('+sLineBreak+
-             IntToStr(col_ID_CLIENTE)+','+sLineBreak+
-             QuotedStr(col_NOME_ALTERNATIVO)+','+sLineBreak+
-             QuotedStr(col_END_CIDADE)+','+sLineBreak+
-             QuotedStr(col_END_UF)+','+sLineBreak+
-             QuotedStr(col_STATUS)+') '+sLineBreak+
-             'MATCHING(id_cliente) ;'+sLineBreak;
-           ZConnection1.ExecuteDirect(sSQL);
-          except
-          on e:exception do Result:='Erro na linha #'+IntToStr(i)+': '+e.message+sLineBreak+sSQL;
-          end;
+        if zqupdate.Active then
+          zqupdate.Close;
+        //zqupdate.parambyname('p_id_cliente').AsInteger:=col_ID_CLIENTE;
+        //zqupdate.parambyname('p_NOME_ALTERNATIVO').AsString:=col_NOME_ALTERNATIVO;
+        //zqupdate.parambyname('p_END_CIDADE').AsString:=col_END_CIDADE;
+        //zqupdate.parambyname('p_END_UF').AsString:=col_END_UF;
+        //zqupdate.parambyname('p_STATUS').AsString:=col_STATUS;
+        zqupdate.Params[0].AsInteger:=col_ID_CLIENTE;
+        zqupdate.params[1].AsString:=col_NOME_ALTERNATIVO;
+        zqupdate.params[2].AsString:=col_END_CIDADE;
+        zqupdate.params[3].AsString:=col_END_UF;
+        zqupdate.params[4].AsString:=col_STATUS;
+        try
+          zqupdate.ExecSQL;
+        except
+        on e:exception do Result:='Erro na linha #'+IntToStr(i)+': '+e.message+sLineBreak+zqupdate.sql.Text;
         end;
+      end;
+    end;
+  end;
+  CSV_DataRow.Free;
+  ProgressBar1.Visible:=false;
+end;
 
+function TfmPrincipal.Perguntar_Sim_Nao(
+    ACaption:String;
+    ATitle:String;
+    AText:String;
+    AButtonText1:String;
+    AButtonText2:String):TModalResult;
+begin
+  Result:=mrNone;
+  if ACaption=emptyStr
+    then ACaption:=ExtractFileName(Application.ExeName);
+  if ATitle=emptyStr
+    then ATitle:='Questão:';
+  with TTaskDialog.Create(self) do
+  try
+    Caption := ACaption;
+    Title := ATitle;
+    Text := AText;
+    // CommonButtons deve estar vazio porque irei constituir meus próprios botões
+    CommonButtons := [];
+    // Note que cada botão acrescentado, devo ter um ModalResult atribuído para ele
+    with TTaskDialogButtonItem(Buttons.Add) do
+    begin
+      Caption := AButtonText1;
+      ModalResult := mrYes;
+    end;
+    with TTaskDialogButtonItem(Buttons.Add) do
+    begin
+      Caption := AButtonText2;
+      ModalResult := mrNo;
+    end;
+    MainIcon := tdiQuestion;
+    if Execute then
+    begin
+      Result:=ModalResult;
+    end;
+  finally
+    Free;
+  end;
+end;
+
+function TfmPrincipal.CSV_Importar_VIA_SQL(AFileName: String): String;
+var
+  i:integer;
+  sID_CLIENTE:String;
+  col_ID_CLIENTE:Longint;
+  col_NOME_ALTERNATIVO:String;
+  col_END_CIDADE:String;
+  col_END_UF:String;
+  col_STATUS:String;
+  sLinha:String;
+  sSQL:String;
+  CSV_DataRow: TStringList;
+  myFile : TextFile;
+begin
+  Result:=emptyStr;
+  ProgressBar1.Visible:=true;
+  CSV_DataRow:=TStringList.Create;
+  CSV_DataRow.Delimiter:=';'; // delimitador
+  CSV_DataRow.QuoteChar:='''';     // aspas simples
+  CSV_DataRow.StrictDelimiter:=true;  // quando não for usar espaço como delimitador
+
+  if not fileExists(AFileName) then
+      Result:='Arquivo não existe: '+AFileName;
+
+  if Result=emptyStr then
+  begin
+    AssignFile(myFile, AFileName);
+    Reset(myFile);
+    ReadLn(myFile, sLinha); // a linha 0 é o cabecalho e precisa ser pulada
+    i:=0;
+    while not Eof(myFile) do
+    begin
+      Inc(i);
+      ReadLn(myFile, sLinha);
+      ProgressBar1.StepIt;
+      CSV_DataRow.Clear;
+      CSV_DataRow.DelimitedText:=sLinha;  // texto delimitado
+      sID_CLIENTE:=CSV_DataRow[0];
+      col_NOME_ALTERNATIVO:=emptystr;
+      col_END_CIDADE:=emptystr;
+      col_END_UF:=emptyStr;
+      col_STATUS:=emptystr;
+      if CSV_DataRow.Count>0
+        then col_NOME_ALTERNATIVO:=CSV_DataRow[1]; // coluna 1
+      if CSV_DataRow.Count>1
+        then col_END_CIDADE:=CSV_DataRow[2]; // coluna 2
+      if CSV_DataRow.Count>2
+        then col_END_UF:=CSV_DataRow[3];  // coluna 3
+      if CSV_DataRow.Count>3
+        then col_STATUS:=CSV_DataRow[4];  // coluna 4
+
+      if (Result=emptyStr) and (not TryStrToInt(sID_CLIENTE, col_ID_CLIENTE)) then  // coluna 0
+        Result:='Erro ao ler a linha #'+IntToStr(i)+': id_cliente='+sID_CLIENTE+' é inválido';
+      //if (Result=emptyStr) and (col_NOME_ALTERNATIVO=emptyStr) then  // coluna 1
+      //  Result:='Erro ao ler a linha #'+IntToStr(i)+': nome alternativo não pode ser vazio';
+      //if (Result=emptyStr) and (col_END_CIDADE=emptyStr) then  // coluna 2
+      //  Result:='Erro ao ler a linha #'+IntToStr(i)+': cidade não pode ser vazio';
+      //if (Result=emptyStr) and (col_END_UF=emptyStr) then  // coluna 3
+      //  Result:='Erro ao ler a linha #'+IntToStr(i)+': UF não pode ser vazio';
+      //if (Result=emptyStr) and (col_STATUS=emptyStr) then  // coluna 3
+      //  Result:='Erro ao ler a linha #'+IntToStr(i)+': STATUS não pode ser vazio';
+      if (Result=emptyStr)
+        and (col_END_CIDADE<>emptyStr)
+        and (col_NOME_ALTERNATIVO<>emptyStr)
+        and (col_END_CIDADE<>emptyStr)
+        and (col_END_UF<>emptyStr)
+        and (col_STATUS<>emptyStr)  then
+      begin
+        col_NOME_ALTERNATIVO:=Trim(col_NOME_ALTERNATIVO);
+        col_END_CIDADE:=Trim(col_END_CIDADE);
+        col_END_UF:=Trim(col_END_UF);
+        col_STATUS:=Trim(col_STATUS);
+        if zqupdate.Active then
+          zqupdate.Close;
+        try
+          sSQL:=
+           'UPDATE OR INSERT INTO '+FDB_TABLE2+'('+sLineBreak+
+           '     id_cliente,'+sLineBreak+
+           '     nome_alternativo,'+sLineBreak+
+           '     end_cidade,'+sLineBreak+
+           '     end_uf,'+sLineBreak+
+           '     status) '+sLineBreak+
+           'values('+sLineBreak+
+           IntToStr(col_ID_CLIENTE)+','+sLineBreak+
+           QuotedStr(col_NOME_ALTERNATIVO)+','+sLineBreak+
+           QuotedStr(col_END_CIDADE)+','+sLineBreak+
+           QuotedStr(col_END_UF)+','+sLineBreak+
+           QuotedStr(col_STATUS)+') '+sLineBreak+
+           'MATCHING(id_cliente) ;'+sLineBreak;
+         ZConnection1.ExecuteDirect(sSQL);
+        except
+        on e:exception do Result:='Erro na linha #'+IntToStr(i)+': '+e.message+sLineBreak+sSQL;
+        end;
 
       end;
     end;
   end;
   CSV_DataRow.Free;
-  //pb1.Visible:=false;
+  ProgressBar1.Visible:=false;
 end;
-
 
 function TfmPrincipal.SQL_TableExists(ATableName: String; out AExist:Boolean): String;
 var

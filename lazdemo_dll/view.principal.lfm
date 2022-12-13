@@ -1,31 +1,62 @@
 object Form1: TForm1
-  Left = 321
-  Height = 339
+  Left = 303
+  Height = 473
   Top = 31
-  Width = 452
+  Width = 559
   Caption = 'Form1'
-  ClientHeight = 339
-  ClientWidth = 452
-  LCLVersion = '2.2.2.0'
-  object btnConsumir: TButton
-    Left = 0
-    Height = 25
-    Top = 314
-    Width = 452
-    Align = alBottom
-    Caption = 'Consumir DLL'
-    OnClick = btnConsumirClick
-    TabOrder = 0
-  end
+  ClientHeight = 473
+  ClientWidth = 559
+  OnCreate = FormCreate
+  LCLVersion = '2.2.4.0'
   object Memo1: TMemo
     Left = 0
-    Height = 314
+    Height = 423
     Top = 0
-    Width = 452
+    Width = 559
     Align = alClient
     Lines.Strings = (
       'Memo1'
     )
+    TabOrder = 0
+  end
+  object pnlFuncoes: TPanel
+    Left = 0
+    Height = 50
+    Top = 423
+    Width = 559
+    Align = alBottom
+    ClientHeight = 50
+    ClientWidth = 559
     TabOrder = 1
+    object btnDebug: TButton
+      Left = 411
+      Height = 48
+      Top = 1
+      Width = 147
+      Align = alRight
+      Caption = 'Debug'
+      OnClick = btnDebugClick
+      TabOrder = 0
+    end
+    object btnMetodo: TBitBtn
+      Left = 261
+      Height = 48
+      Top = 1
+      Width = 75
+      Align = alRight
+      Caption = 'Metodo'
+      OnClick = btnMetodoClick
+      TabOrder = 1
+    end
+    object btnWhoAmI: TBitBtn
+      Left = 336
+      Height = 48
+      Top = 1
+      Width = 75
+      Align = alRight
+      Caption = 'WhoAmI'
+      OnClick = btnWhoAmIClick
+      TabOrder = 2
+    end
   end
 end

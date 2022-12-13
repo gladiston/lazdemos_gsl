@@ -2,37 +2,52 @@
 <CONFIG>
   <ProjectGroup FileVersion="2">
     <Targets>
-      <Target FileName="lazdemo_combobox_casting/lazdemo_combobox_casting.lpi">
+      <Target FileName="lazdemo_combobox_casting\lazdemo_combobox_casting.lpi">
         <BuildModes>
           <Mode Name="Default"/>
         </BuildModes>
       </Target>
-      <Target FileName="lazdemo_combobox_explicito/lazdemo_combobox_explicitos.lpi">
+      <Target FileName="lazdemo_combobox_explicito\lazdemo_combobox_explicitos.lpi">
         <BuildModes>
           <Mode Name="Default"/>
         </BuildModes>
       </Target>
-      <Target FileName="lazdemo_combobox_objetos/lazdemo_combobox_objetos.lpi">
+      <Target FileName="lazdemo_combobox_objetos\lazdemo_combobox_objetos.lpi">
         <BuildModes>
           <Mode Name="Default"/>
         </BuildModes>
       </Target>
-      <Target FileName="lazdemo_combobox_parvalor/lazdemo_combobox_parvalor.lpi">
+      <Target FileName="lazdemo_combobox_parvalor\lazdemo_combobox_parvalor.lpi">
         <BuildModes>
           <Mode Name="Default"/>
         </BuildModes>
       </Target>
-      <Target FileName="lazdemo_imagelist/lazdemo_imagelist.lpi">
+      <Target FileName="lazdemo_imagelist\lazdemo_imagelist.lpi">
         <BuildModes>
           <Mode Name="Default"/>
         </BuildModes>
       </Target>
-      <Target FileName="../sesmt_facil/src/sesmt_facil.lpi">
+      <Target FileName="..\sesmt_facil\src\sesmt_facil.lpi">
         <BuildModes>
           <Mode Name="Default"/>
         </BuildModes>
       </Target>
-      <Target FileName="lazdemo_test_conn/lazdemo_test_conn.lpi">
+      <Target FileName="lazdemo_test_conn\lazdemo_test_conn.lpi">
+        <BuildModes>
+          <Mode Name="Default"/>
+        </BuildModes>
+      </Target>
+      <Target FileName="lazdemo_dll\lazdemo_dll_servidor.lpi">
+        <BuildModes>
+          <Mode Name="Default"/>
+        </BuildModes>
+      </Target>
+      <Target FileName="lazdemo_dll\lazdemo_dll_cliente.lpi">
+        <BuildModes>
+          <Mode Name="Default"/>
+        </BuildModes>
+      </Target>
+      <Target FileName="..\vidy15\src\rel\Fortes\FT_Extrato_Comissionado\test_from_dll\test_from_dll.lpi">
         <BuildModes>
           <Mode Name="Default"/>
         </BuildModes>

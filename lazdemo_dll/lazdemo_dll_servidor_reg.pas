@@ -10,14 +10,14 @@ uses
   Forms,
   Dialogs;
 
-function DLL_Proc(var pParamList:pChar): pChar; CdEcl;
-function DLL_WhoAmI(var pParamList:pChar): pChar; CdEcl;
-function DLL_Debug(var pParamList:pChar): pChar; CdEcl;
+function DLL_Proc(var pParamList:pChar): pChar; cdecl;
+function DLL_WhoAmI(var pParamList:pChar): pChar; cdecl;
+function DLL_Debug(var pParamList:pChar): pChar; cdecl;
 
 implementation
 //uses
 
-function DLL_Proc(var pParamList:pChar): pChar; CdEcl;
+function DLL_Proc(var pParamList:pChar): pChar; cdecl;
 var
   sParamList: String;
   sResultado:String;
@@ -33,7 +33,7 @@ begin
   Result:=pParamList; // retornar a entrada apenas para ver se chegou certo
 end;
 
-function DLL_WhoAmI(var pParamList:pChar): pChar; CdEcl;
+function DLL_WhoAmI(var pParamList:pChar): pChar; cdecl;
 begin
   Result:=PChar(
     'descricao=Relatório de extrato de comissionados|'+sLineBreak+
@@ -50,7 +50,7 @@ begin
 
 end;
 
-function DLL_Debug(var pParamList:pChar): pChar; CdEcl;
+function DLL_Debug(var pParamList:pChar): pChar; cdecl;
 begin
   Result:=pParamList;
 end;

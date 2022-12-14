@@ -56,17 +56,17 @@ function DLL_Proc(
   ADLL_Param1:String;
   out ADLL_ResultAsString:String):String;
 type
-  TDLL_Proc= function (pParamList:pChar): pChar; cdecl;
+  TDLL_Proc= function (pParamList:PChar): PChar; cdecl;
 var
   myDLL_Proc: TDLL_Proc;
-  myLibHandle : THandle;
-  ADLL_Param1_AsPchar:pChar;
-  ADLL_Result_AsPchar:pChar;
+  myLibHandle : TLibHandle;
+  ADLL_Param1_AsPChar:PChar;
+  ADLL_Result_AsPChar:PChar;
 begin
   Result:=emptyStr;
   ADLL_ResultAsString:='';
   ADLL_Filename:=Trim(ADLL_Filename);
-  ADLL_Param1_AsPchar:=pChar(ADLL_Param1);
+  ADLL_Param1_AsPChar:=PChar(ADLL_Param1);
   if not FileExists(ADLL_Filename) then
     Result:='Arquivo não existe: '+ADLL_Filename;
 
@@ -84,9 +84,9 @@ begin
         // Verifica se um endereço válido foi retornado
         if @myDLL_Proc <> nil then
         begin
-          ADLL_Result_AsPchar := myDLL_Proc(ADLL_Param1_AsPchar);
+          ADLL_Result_AsPChar := myDLL_Proc(ADLL_Param1_AsPChar);
           // retornando como string
-          ADLL_ResultAsString:=String(ADLL_Result_AsPchar);
+          ADLL_ResultAsString:=String(ADLL_Result_AsPChar);
         end;
 
       except
@@ -106,17 +106,17 @@ function DLL_WhoAmI(
   ADLL_Param1:String;
   out ADLL_ResultAsString:String):String;
 type
-  TDLL_WhoAmI= function (pParamList:pChar): pChar; cdecl;
+  TDLL_WhoAmI= function (pParamList:PChar): PChar; cdecl;
 var
   myDLL_WhoAmI: TDLL_WhoAmI;
-  myLibHandle : THandle;
-  ADLL_Param1_AsPchar:pChar;
-  ADLL_Result_AsPchar:pChar;
+  myLibHandle : TLibHandle;
+  ADLL_Param1_AsPChar:PChar;
+  ADLL_Result_AsPChar:PChar;
 begin
   Result:=emptyStr;
   ADLL_ResultAsString:='';
   ADLL_Filename:=Trim(ADLL_Filename);
-  ADLL_Param1_AsPchar:=pChar(ADLL_Param1);
+  ADLL_Param1_AsPChar:=PChar(ADLL_Param1);
   if not FileExists(ADLL_Filename) then
     Result:='Arquivo não existe: '+ADLL_Filename;
 
@@ -134,9 +134,9 @@ begin
         // Verifica se um endereço válido foi retornado
         if @myDLL_WhoAmI <> nil then
         begin
-          ADLL_Result_AsPchar := myDLL_WhoAmI(ADLL_Param1_AsPchar);
+          ADLL_Result_AsPChar := myDLL_WhoAmI(ADLL_Param1_AsPChar);
           // retornando como string
-          ADLL_ResultAsString:=String(ADLL_Result_AsPchar);
+          ADLL_ResultAsString:=String(ADLL_Result_AsPChar);
         end;
 
       except
@@ -156,17 +156,17 @@ function DLL_Echo(
   ADLL_Param1:String;
   out ADLL_ResultAsString:String):String;
 type
-  TDLL_Echo= function (pParamList:pChar): pChar; cdecl;
+  TDLL_Echo= function (pParamList:PChar): PChar; cdecl;
 var
   myDLL_Echo: TDLL_Echo;
   myLibHandle : TLibHandle;
-  ADLL_Param1_AsPchar:pChar;
-  ADLL_Result_AsPchar:pChar;
+  ADLL_Param1_AsPChar:PChar;
+  ADLL_Result_AsPChar:PChar;
 begin
   Result:=emptyStr;
   ADLL_ResultAsString:=emptyStr;
   ADLL_Filename:=Trim(ADLL_Filename);
-  ADLL_Param1_AsPchar:=pChar(ADLL_Param1);
+  ADLL_Param1_AsPChar:=PChar(ADLL_Param1);
 
   if not FileExists(ADLL_Filename) then
     Result:='Arquivo não existe: '+ADLL_Filename;
@@ -185,9 +185,9 @@ begin
         // Verifica se um endereço válido foi retornado
         if Assigned(myDLL_Echo) then
         begin
-          ADLL_Result_AsPchar := myDLL_Echo(ADLL_Param1_AsPchar);
+          ADLL_Result_AsPChar := myDLL_Echo(ADLL_Param1_AsPChar);
           // retornando como string
-          ADLL_ResultAsString:=String(ADLL_Result_AsPchar);
+          ADLL_ResultAsString:=String(ADLL_Result_AsPChar);
         end;
 
       except

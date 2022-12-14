@@ -57,8 +57,10 @@ function DLL_Proc(
   out ADLL_ResultAsString:String):String;
 type
   TDLL_Proc= function (pParamList:PChar): PChar; cdecl;
+  TDLL_FreeProc= procedure (pParamList:pChar); cdecl;
 var
   myDLL_Proc: TDLL_Proc;
+  myDLL_FreeProc: TDLL_FreeProc;
   myLibHandle : TLibHandle;
   ADLL_Param1_AsPChar:PChar;
   ADLL_Result_AsPChar:PChar;
@@ -80,13 +82,24 @@ begin
       // 'myDLL_Proc' da DLL DLL_Servidor.dll
       try
         Pointer(myDLL_Proc) := GetProcAddress(myLibHandle, 'DLL_Proc');
-
         // Verifica se um endereço válido foi retornado
         if @myDLL_Proc <> nil then
         begin
           ADLL_Result_AsPChar := myDLL_Proc(ADLL_Param1_AsPChar);
           // retornando como string
           ADLL_ResultAsString:=String(ADLL_Result_AsPChar);
+          // Liberando memória que esta na DLL, neste caso, passo o ponteiro
+          //   a se eliminado com StrDispose(dentro da DLL). Se não fizer isso
+          //   haverá vazamento de memória
+          try
+            Pointer(myDLL_FreeProc) := GetProcAddress(myLibHandle, 'DLL_FreeProc');
+            if @myDLL_FreeProc <> nil then
+            begin
+              myDLL_FreeProc(@myDLL_Proc);
+            end;
+          except
+            on e:exception do Result:=e.message;
+          end;
         end;
 
       except
@@ -107,8 +120,10 @@ function DLL_WhoAmI(
   out ADLL_ResultAsString:String):String;
 type
   TDLL_WhoAmI= function (pParamList:PChar): PChar; cdecl;
+  TDLL_FreeProc= procedure (pParamList:pChar); cdecl;
 var
   myDLL_WhoAmI: TDLL_WhoAmI;
+  myDLL_FreeProc: TDLL_FreeProc;
   myLibHandle : TLibHandle;
   ADLL_Param1_AsPChar:PChar;
   ADLL_Result_AsPChar:PChar;
@@ -137,6 +152,21 @@ begin
           ADLL_Result_AsPChar := myDLL_WhoAmI(ADLL_Param1_AsPChar);
           // retornando como string
           ADLL_ResultAsString:=String(ADLL_Result_AsPChar);
+          // Liberando memória que esta na DLL, neste caso, passo o ponteiro
+          //   a se eliminado com StrDispose(dentro da DLL). Se não fizer isso
+          //   haverá vazamento de memória
+          {
+          // FAIL
+          try
+            Pointer(myDLL_FreeProc) := GetProcAddress(myLibHandle, 'DLL_FreeProc');
+            if @myDLL_FreeProc <> nil then
+            begin
+              myDLL_FreeProc(@myDLL_WhoAmI);
+            end;
+          except
+            on e:exception do Result:=e.message;
+          end;
+          }
         end;
 
       except
@@ -157,8 +187,10 @@ function DLL_Echo(
   out ADLL_ResultAsString:String):String;
 type
   TDLL_Echo= function (pParamList:PChar): PChar; cdecl;
+  TDLL_FreeProc= procedure (pParamList:pChar); cdecl;
 var
   myDLL_Echo: TDLL_Echo;
+  myDLL_FreeProc: TDLL_FreeProc;
   myLibHandle : TLibHandle;
   ADLL_Param1_AsPChar:PChar;
   ADLL_Result_AsPChar:PChar;
@@ -188,6 +220,18 @@ begin
           ADLL_Result_AsPChar := myDLL_Echo(ADLL_Param1_AsPChar);
           // retornando como string
           ADLL_ResultAsString:=String(ADLL_Result_AsPChar);
+          // Liberando memória que esta na DLL, neste caso, passo o ponteiro
+          //   a se eliminado com StrDispose(dentro da DLL). Se não fizer isso
+          //   haverá vazamento de memória
+          try
+            Pointer(myDLL_FreeProc) := GetProcAddress(myLibHandle, 'DLL_FreeProc');
+            if @myDLL_FreeProc <> nil then
+            begin
+              myDLL_FreeProc(@myDLL_Echo);
+            end;
+          except
+            on e:exception do Result:=e.message;
+          end;
         end;
 
       except
@@ -238,7 +282,7 @@ var
 begin
   sMsg_Err:=DLL_WhoAmI(
     'lazdemo_dll_servidor.dll',
-    'Fim da mensagem',
+    '### Fim da função WhoAmI ###',
     sResultado);
   if sMsg_Err<>'' then
     memo1.lines.Add(sMsg_Err)

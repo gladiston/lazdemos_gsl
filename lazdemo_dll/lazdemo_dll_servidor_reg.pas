@@ -13,6 +13,7 @@ uses
 function DLL_Proc(pParamList:pChar): pChar; cdecl;
 function DLL_WhoAmI(pParamList:pChar): pChar; cdecl;
 function DLL_Echo(pParamList:pChar): pChar; cdecl;
+procedure DLL_FreeProc(pParamList: PChar); cdecl;
 
 implementation
 //uses
@@ -68,6 +69,11 @@ end;
 function DLL_Echo(pParamList:pChar): pChar; cdecl;
 begin
   Result:=pParamList;
+end;
+
+procedure DLL_FreeProc(pParamList: PChar); cdecl;
+begin
+  StrDispose(pParamList);
 end;
 
 end.

@@ -16,7 +16,8 @@ uses
 exports
   DLL_Proc,
   DLL_WhoAmI,
-  DLL_Echo;
+  DLL_Echo,
+  DLL_FreeProc;
 
 
 begin

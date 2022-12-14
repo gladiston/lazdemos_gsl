@@ -23,6 +23,7 @@ var
 begin
   LResult:=TStringList.Create;
   LResult.Text:=String(pParamList);
+  LResult.Values['Result']:='FAIL';
 
   // Bug:Esse jeito tá errado porque o Result ficará preso ao LResult
   //   funcionando como uma ancora entre esta DLL e o projeto que a consume.

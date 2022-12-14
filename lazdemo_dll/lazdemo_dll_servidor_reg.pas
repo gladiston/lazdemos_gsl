@@ -19,31 +19,34 @@ implementation
 
 function DLL_Proc(pParamList:pChar): pChar; cdecl;
 var
-  sParamList: String;
   LResult:TStringList;
 begin
   LResult:=TStringList.Create;
-  LResult.Values['HostName']:='localhost';
-  LResult.Values['Database']:='banco.fdb';
-  LResult.Values['Username']:='SYSDBA';
-  LResult.Values['Password']:='masterkey';
-  LResult.Values['Port']:='3050';
+  LResult.Text:=String(pParamList);
+
   // Bug:Esse jeito tá errado porque o Result ficará preso ao LResult
   //   funcionando como uma ancora entre esta DLL e o projeto que a consume.
   //   LResult "morre" quando dá o .Free e então o Result "morre" com ele
   //   então retornando algo inexperado na posição do ponteiro.
   //Result:=pChar(LResult.Text);
 
+  // do something...
+
+  // returning
+  LResult.Values['Result']:='OK';
+
   // Possivel correção: O jeito mais adequado seria transferir byte a byte
   // para que nosso Result não funcione ancorado ao LResult
   Result := StrAlloc(Length(LResult.Text)+1);
   StrPCopy(Result, LResult.Text);
-  //LResult.Free;
+  LResult.Free;
 end;
 
 function DLL_WhoAmI(pParamList:pChar): pChar; cdecl;
+var
+  S:String;
 begin
-  Result:=PChar(
+  S:=
     'descricao=Relatório de extrato de comissionados|'+sLineBreak+
     'categoria=financeiro|'+sLineBreak+
     'tags=comissão,comissões,comissao,comissoes|'+sLineBreak+
@@ -54,15 +57,16 @@ begin
       'Também é capaz de enviá-las por email ou imprimi-las.|'+sLineBreak+
     'tabelas=PROC_COMISSAO|'+sLineBreak+
     'last_update=2017-07-10 00:00|'+sLineBreak+
-    'last_owner=Gladiston|'+sLineBreak);
-
+    'last_owner=Gladiston|'+sLineBreak+
+    'Parametros enviados:'+sLineBreak+
+    String(pParamList);
+  Result := StrAlloc(Length(S)+1);
+  StrPCopy(Result, S);
 end;
 
 function DLL_Echo(pParamList:pChar): pChar; cdecl;
 begin
   Result:=pParamList;
-  //Result := StrAlloc(Length(pParamList)+1);
-  //StrPCopy(Result, pParamList);
 end;
 
 end.

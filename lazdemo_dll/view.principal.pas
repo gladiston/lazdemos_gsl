@@ -84,7 +84,7 @@ begin
         // Verifica se um endereço válido foi retornado
         if @myDLL_Proc <> nil then
         begin
-          ADLL_Result_AsPchar := myDLL_Proc(ADLL_Param1_AsPchar);   // bug
+          ADLL_Result_AsPchar := myDLL_Proc(ADLL_Param1_AsPchar);
           // retornando como string
           ADLL_ResultAsString:=String(ADLL_Result_AsPchar);
         end;
@@ -97,7 +97,7 @@ begin
     // liberar memoria
     myDLL_Proc := nil;
     if myLibHandle <> 0 then
-      FreeLibrary(myLibHandle);  //always A/V
+      FreeLibrary(myLibHandle);  // sometimes Access Viollation
   end;
 end;
 
@@ -134,7 +134,7 @@ begin
         // Verifica se um endereço válido foi retornado
         if @myDLL_WhoAmI <> nil then
         begin
-          ADLL_Result_AsPchar := myDLL_WhoAmI(ADLL_Param1_AsPchar);   // bug
+          ADLL_Result_AsPchar := myDLL_WhoAmI(ADLL_Param1_AsPchar);
           // retornando como string
           ADLL_ResultAsString:=String(ADLL_Result_AsPchar);
         end;
@@ -147,7 +147,7 @@ begin
     // liberar memoria
     myDLL_WhoAmI := nil;
     if myLibHandle <> 0 then
-      FreeLibrary(myLibHandle);  //always A/V
+      FreeLibrary(myLibHandle);  // sometimes Access Viollation
   end;
 end;
 
@@ -238,7 +238,7 @@ var
 begin
   sMsg_Err:=DLL_WhoAmI(
     'lazdemo_dll_servidor.dll',
-    emptyStr,
+    'Fim da mensagem',
     sResultado);
   if sMsg_Err<>'' then
     memo1.lines.Add(sMsg_Err)

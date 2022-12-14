@@ -10,30 +10,38 @@ uses
   Forms,
   Dialogs;
 
-function DLL_Proc(var pParamList:pChar): pChar; cdecl;
-function DLL_WhoAmI(var pParamList:pChar): pChar; cdecl;
-function DLL_Debug(var pParamList:pChar): pChar; cdecl;
+function DLL_Proc(pParamList:pChar): pChar; cdecl;
+function DLL_WhoAmI(pParamList:pChar): pChar; cdecl;
+function DLL_Echo(pParamList:pChar): pChar; cdecl;
 
 implementation
 //uses
 
-function DLL_Proc(var pParamList:pChar): pChar; cdecl;
+function DLL_Proc(pParamList:pChar): pChar; cdecl;
 var
   sParamList: String;
-  sResultado:String;
+  LResult:TStringList;
 begin
-  //sResultado:='RESULTADO=FAIL'+sLineBreak+'TESTE=SIM'+sLineBreak;
-  //sResultado:=String(pParamList);   // pchar para string
-  //Application.MessageBox( pParamList,'DLL Recebeu nativamente:');
-  // convertendo para String;
-  //sParamList:=pParamList;
-  //ShowMessage(sParamList);
+  LResult:=TStringList.Create;
+  LResult.Values['HostName']:='localhost';
+  LResult.Values['Database']:='banco.fdb';
+  LResult.Values['Username']:='SYSDBA';
+  LResult.Values['Password']:='masterkey';
+  LResult.Values['Port']:='3050';
+  // Bug:Esse jeito tá errado porque o Result ficará preso ao LResult
+  //   funcionando como uma ancora entre esta DLL e o projeto que a consume.
+  //   LResult "morre" quando dá o .Free e então o Result "morre" com ele
+  //   então retornando algo inexperado na posição do ponteiro.
+  Result:=pChar(LResult.Text);
 
-  //Result:=Pchar(UnicodeString(sResultado)); // correto
-  Result:=pParamList; // retornar a entrada apenas para ver se chegou certo
+  // Possivel correção: O jeito mais adequado seria transferir byte a byte
+  // para que nosso Result não funcione ancorado ao LResult
+  //Result := StrAlloc(Length(sResultado)+1);
+  //StrPCopy(Result, sResultado);
+  LResult.Free;
 end;
 
-function DLL_WhoAmI(var pParamList:pChar): pChar; cdecl;
+function DLL_WhoAmI(pParamList:pChar): pChar; cdecl;
 begin
   Result:=PChar(
     'descricao=Relatório de extrato de comissionados|'+sLineBreak+
@@ -50,7 +58,7 @@ begin
 
 end;
 
-function DLL_Debug(var pParamList:pChar): pChar; cdecl;
+function DLL_Echo(pParamList:pChar): pChar; cdecl;
 begin
   Result:=pParamList;
 end;

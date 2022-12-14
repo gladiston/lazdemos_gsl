@@ -14,12 +14,12 @@ type
   { TForm1 }
 
   TForm1 = class(TForm)
-    btnDebug: TButton;
+    btnEcho: TButton;
     btnMetodo: TBitBtn;
     btnWhoAmI: TBitBtn;
     Memo1: TMemo;
     pnlFuncoes: TPanel;
-    procedure btnDebugClick(Sender: TObject);
+    procedure btnEchoClick(Sender: TObject);
     procedure btnWhoAmIClick(Sender: TObject);
     procedure btnMetodoClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -42,7 +42,7 @@ var
     ADLL_Param1:String;
     out ADLL_ResultAsString:String):String;
 
-  function DLL_Debug(
+  function DLL_Echo(
     ADLL_Filename:String;
     ADLL_Param1:String;
     out ADLL_ResultAsString:String):String;
@@ -151,14 +151,14 @@ begin
   end;
 end;
 
-function DLL_Debug(
+function DLL_Echo(
   ADLL_Filename:String;
   ADLL_Param1:String;
   out ADLL_ResultAsString:String):String;
 type
-  TDLL_Debug= function (var pParamList:pChar): pChar; cdecl;
+  TDLL_Echo= function (var pParamList:pChar): pChar; cdecl;
 var
-  myDLL_Debug: TDLL_Debug;
+  myDLL_Echo: TDLL_Echo;
   myLibHandle : TLibHandle;
   ADLL_Param1_AsPchar:pChar;
   ADLL_Result_AsPchar:pChar;
@@ -177,19 +177,17 @@ begin
     // Verifica se o carregamento da DLL foi bem-sucedido
     if myLibHandle <> 0 then
     begin
-      // Atribui o endereço da chamada da sub-rotina à variável myDLL_Debug
-      // 'myDLL_Debug' da DLL DLL_Servidor.dll
+      // Atribui o endereço da chamada da sub-rotina à variável myDLL_Echo
+      // 'myDLL_Echo' da DLL DLL_Servidor.dll
       try
-        Pointer(myDLL_Debug) := GetProcAddress(myLibHandle, 'DLL_Debug');
+        Pointer(myDLL_Echo) := GetProcAddress(myLibHandle, 'DLL_Echo');
 
         // Verifica se um endereço válido foi retornado
-        //if @myDLL_Debug <> nil then
-        if Assigned(myDLL_Debug) then
+        if Assigned(myDLL_Echo) then
         begin
-          ADLL_Result_AsPchar := myDLL_Debug(ADLL_Param1_AsPchar);
+          ADLL_Result_AsPchar := myDLL_Echo(ADLL_Param1_AsPchar);
           // retornando como string
           ADLL_ResultAsString:=String(ADLL_Result_AsPchar);
-
         end;
 
       except
@@ -198,75 +196,54 @@ begin
     end;
 
     // liberar memoria
-    myDLL_Debug := nil;
+    myDLL_echo := nil;
     if myLibHandle <> 0 then
-      FreeLibrary(myLibHandle);  //always A/V
+      FreeLibrary(myLibHandle);  // sometimes Access Viollation
   end;
 end;
 
 { TForm1 }
 
 
-procedure TForm1.btnDebugClick(Sender: TObject);
+procedure TForm1.btnEchoClick(Sender: TObject);
 var
   sResultado:String;
   sMsg_Err:String;
-  L:TStringList;
-begin
-  L:=TStringList.Create;
-  L.Values['CODREPRESENTANTE']:='ELIZABETH';
-  L.Values['DT_FILTRO_VENCIMENTO']:='true';
-  L.Values['DT_INICIAL']:='01/12/2022';
-  L.Values['DT_FINAL']:='31/12/2022';
-  L.Values['SOMENTE_COMISSOES_PENDENTES']:='true';
-  L.Values['EXPORT_DIR']:='D:\DONWLOADS';
-  L.Values['HostName']:='localhost';
-  L.Values['Database']:='banco.fdb';
-  L.Values['Username']:='SYSDBA';
-  L.Values['Password']:='masterkey';
-  L.Values['Port']:='3040';
 
-  sMsg_Err:=DLL_Debug(
+begin
+  if Memo1.Lines.Count=0 then
+  begin
+    // Exemplo (sample)
+    Memo1.Lines.Values['HostName']:='localhost';
+    Memo1.Lines.Values['Database']:='banco.fdb';
+    Memo1.Lines.Values['Username']:='SYSDBA';
+    Memo1.Lines.Values['Password']:='masterkey';
+    Memo1.Lines.Values['Port']:='3050';
+  end;
+
+  sMsg_Err:=DLL_Echo(
     'lazdemo_dll_servidor.dll',
-    L.Text,
+    Memo1.Lines.Text,
     sResultado);
   if sMsg_Err<>'' then
     memo1.lines.Add(sMsg_Err)
   else
-    memo1.lines.Add(sResultado);
-  L.Free;
-
+    memo1.lines.Add('Retorno:'+sLineBreak+sResultado);
 end;
 
 procedure TForm1.btnWhoAmIClick(Sender: TObject);
 var
   sResultado:String;
   sMsg_Err:String;
-  L:TStringList;
 begin
-  L:=TStringList.Create;
-  L.Values['CODREPRESENTANTE']:='ELIZABETH';
-  L.Values['DT_FILTRO_VENCIMENTO']:='true';
-  L.Values['DT_INICIAL']:='01/12/2022';
-  L.Values['DT_FINAL']:='31/12/2022';
-  L.Values['SOMENTE_COMISSOES_PENDENTES']:='true';
-  L.Values['EXPORT_DIR']:='D:\DONWLOADS';
-  L.Values['HostName']:='localhost';
-  L.Values['Database']:='banco.fdb';
-  L.Values['Username']:='SYSDBA';
-  L.Values['Password']:='masterkey';
-  L.Values['Port']:='3040';
-  memo1.clear;
   sMsg_Err:=DLL_WhoAmI(
     'lazdemo_dll_servidor.dll',
-    L.Text,
+    emptyStr,
     sResultado);
   if sMsg_Err<>'' then
     memo1.lines.Add(sMsg_Err)
   else
-    memo1.lines.Add(sResultado);
-  L.Free;
-
+    memo1.lines.Add('Retorno:'+sLineBreak+sResultado);
 end;
 
 procedure TForm1.btnMetodoClick(Sender: TObject);
@@ -276,17 +253,11 @@ var
   L:TStringList;
 begin
   L:=TStringList.Create;
-  L.Values['CODREPRESENTANTE']:='ELIZABETH';
-  L.Values['DT_FILTRO_VENCIMENTO']:='true';
-  L.Values['DT_INICIAL']:='01/12/2022';
-  L.Values['DT_FINAL']:='31/12/2022';
-  L.Values['SOMENTE_COMISSOES_PENDENTES']:='true';
-  L.Values['EXPORT_DIR']:='D:\DONWLOADS';
   L.Values['HostName']:='localhost';
   L.Values['Database']:='banco.fdb';
   L.Values['Username']:='SYSDBA';
   L.Values['Password']:='masterkey';
-  L.Values['Port']:='3040';
+  L.Values['Port']:='3050';
   memo1.clear;
   sMsg_Err:=DLL_Proc(
     'lazdemo_dll_servidor.dll',
@@ -295,7 +266,7 @@ begin
   if sMsg_Err<>'' then
     memo1.lines.Add(sMsg_Err)
   else
-    memo1.lines.Add(sResultado);
+    memo1.lines.Add('Retorno:'+sLineBreak+sResultado);
   L.Free;
 
 end;

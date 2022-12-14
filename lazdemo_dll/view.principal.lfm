@@ -7,7 +7,6 @@ object Form1: TForm1
   ClientHeight = 473
   ClientWidth = 559
   OnCreate = FormCreate
-  LCLVersion = '2.2.4.0'
   object Memo1: TMemo
     Left = 0
     Height = 423
@@ -25,34 +24,36 @@ object Form1: TForm1
     Top = 423
     Width = 559
     Align = alBottom
+    Alignment = taLeftJustify
+    Caption = '    Executar...'
     ClientHeight = 50
     ClientWidth = 559
     TabOrder = 1
-    object btnDebug: TButton
+    object btnEcho: TButton
       Left = 411
       Height = 48
       Top = 1
       Width = 147
       Align = alRight
-      Caption = 'Debug'
-      OnClick = btnDebugClick
+      Caption = 'Echo'
+      OnClick = btnEchoClick
       TabOrder = 0
     end
     object btnMetodo: TBitBtn
-      Left = 261
+      Left = 157
       Height = 48
       Top = 1
-      Width = 75
+      Width = 131
       Align = alRight
-      Caption = 'Metodo'
+      Caption = 'Proc'
       OnClick = btnMetodoClick
       TabOrder = 1
     end
     object btnWhoAmI: TBitBtn
-      Left = 336
+      Left = 288
       Height = 48
       Top = 1
-      Width = 75
+      Width = 123
       Align = alRight
       Caption = 'WhoAmI'
       OnClick = btnWhoAmIClick

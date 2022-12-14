@@ -36,8 +36,8 @@ begin
 
   // Possivel correção: O jeito mais adequado seria transferir byte a byte
   // para que nosso Result não funcione ancorado ao LResult
-  //Result := StrAlloc(Length(sResultado)+1);
-  //StrPCopy(Result, sResultado);
+  //Result := StrAlloc(Length(LResult.Text)+1);
+  //StrPCopy(Result, LResult.Text);
   LResult.Free;
 end;
 

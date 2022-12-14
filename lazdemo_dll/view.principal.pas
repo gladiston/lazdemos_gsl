@@ -56,7 +56,7 @@ function DLL_Proc(
   ADLL_Param1:String;
   out ADLL_ResultAsString:String):String;
 type
-  TDLL_Proc= function (var pParamList:pChar): pChar; cdecl;
+  TDLL_Proc= function (pParamList:pChar): pChar; cdecl;
 var
   myDLL_Proc: TDLL_Proc;
   myLibHandle : THandle;
@@ -106,7 +106,7 @@ function DLL_WhoAmI(
   ADLL_Param1:String;
   out ADLL_ResultAsString:String):String;
 type
-  TDLL_WhoAmI= function (var pParamList:pChar): pChar; cdecl;
+  TDLL_WhoAmI= function (pParamList:pChar): pChar; cdecl;
 var
   myDLL_WhoAmI: TDLL_WhoAmI;
   myLibHandle : THandle;
@@ -156,7 +156,7 @@ function DLL_Echo(
   ADLL_Param1:String;
   out ADLL_ResultAsString:String):String;
 type
-  TDLL_Echo= function (var pParamList:pChar): pChar; cdecl;
+  TDLL_Echo= function (pParamList:pChar): pChar; cdecl;
 var
   myDLL_Echo: TDLL_Echo;
   myLibHandle : TLibHandle;

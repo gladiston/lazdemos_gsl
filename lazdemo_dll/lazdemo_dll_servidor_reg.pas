@@ -32,13 +32,13 @@ begin
   //   funcionando como uma ancora entre esta DLL e o projeto que a consume.
   //   LResult "morre" quando dá o .Free e então o Result "morre" com ele
   //   então retornando algo inexperado na posição do ponteiro.
-  Result:=pChar(LResult.Text);
+  //Result:=pChar(LResult.Text);
 
   // Possivel correção: O jeito mais adequado seria transferir byte a byte
   // para que nosso Result não funcione ancorado ao LResult
-  //Result := StrAlloc(Length(LResult.Text)+1);
-  //StrPCopy(Result, LResult.Text);
-  LResult.Free;
+  Result := StrAlloc(Length(LResult.Text)+1);
+  StrPCopy(Result, LResult.Text);
+  //LResult.Free;
 end;
 
 function DLL_WhoAmI(pParamList:pChar): pChar; cdecl;
@@ -50,7 +50,7 @@ begin
     'grupos=Financeiro|'+sLineBreak+
     'se_supervisor=N|'+sLineBreak+
     'parametros=DT_INICIAL(Data inicial);DT_FINAL(Data Final);COMISSIONADOS(Comissionados);|'+sLineBreak+
-    'explicacao=Este relatório exibe comissionados e suas comissões deviudas. '+
+    'explicacao=Este relatório exibe comissionados e suas comissões devidas. '+
       'Também é capaz de enviá-las por email ou imprimi-las.|'+sLineBreak+
     'tabelas=PROC_COMISSAO|'+sLineBreak+
     'last_update=2017-07-10 00:00|'+sLineBreak+
@@ -61,6 +61,8 @@ end;
 function DLL_Echo(pParamList:pChar): pChar; cdecl;
 begin
   Result:=pParamList;
+  //Result := StrAlloc(Length(pParamList)+1);
+  //StrPCopy(Result, pParamList);
 end;
 
 end.

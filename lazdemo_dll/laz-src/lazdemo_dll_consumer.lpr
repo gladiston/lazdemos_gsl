@@ -17,7 +17,7 @@ uses
   {$ENDIF}
   Interfaces, // this includes the LCL widgetset
   Forms,
-  view.principal
+  view.main
   { you can add units after this };
 
 {$R *.res}

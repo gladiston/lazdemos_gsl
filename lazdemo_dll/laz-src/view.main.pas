@@ -1,26 +1,45 @@
 unit view.main;
+{
+  This sample will be consume this functions in 'lazdemo_dll_server.dll':
+  DLL_Proc, DLL_WhoAmI and DLL_Echo
+  In this sample, DLL_Proc send and receive StringList content.
+  I can use theses values to perform many values with an unique parameter.
+  Be free to use this sample in your projects.
+}
+
+{$mode objfpc}{$H+}
 
 interface
 
 uses
-  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.Buttons, Vcl.ExtCtrls;
+  Classes,
+  SysUtils,
+  Forms,
+  Controls,
+  Graphics,
+  Dialogs,
+  Buttons,
+  StdCtrls,
+  ExtCtrls;
 
 type
+
+  { TForm1 }
+
   TForm1 = class(TForm)
-    Panel1: TPanel;
-    btnEcho: TBitBtn;
+    btnEcho: TButton;
     btnMetodo: TBitBtn;
     btnWhoAmI: TBitBtn;
     Memo1: TMemo;
-    procedure FormCreate(Sender: TObject);
-    procedure btnMetodoClick(Sender: TObject);
-    procedure btnWhoAmIClick(Sender: TObject);
+    pnlFuncoes: TPanel;
     procedure btnEchoClick(Sender: TObject);
+    procedure btnWhoAmIClick(Sender: TObject);
+    procedure btnMetodoClick(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
   private
-    { Private declarations }
+
   public
-    { Public declarations }
+
   end;
 
 var
@@ -43,7 +62,7 @@ var
 
 implementation
 
-{$R *.dfm}
+{$R *.lfm}
 
 function DLL_Proc(
   ADLL_Filename:String;
@@ -55,7 +74,7 @@ type
 var
   myDLL_Proc: TDLL_Proc;
   myDLL_FreeProc: TDLL_FreeProc;
-  myLibHandle : THandle; //TLibHandle;
+  myLibHandle : TLibHandle;
   ADLL_Param1_AsPChar:PChar;
   ADLL_Result_AsPChar:PChar;
 begin
@@ -72,23 +91,21 @@ begin
     // Verifica se o carregamento da DLL foi bem-sucedido
     if myLibHandle <> 0 then
     begin
-      // Atribui o endereÁo da chamada da sub-rotina ‡ vari·vel myDLL_Proc
+      // Atribui o endere√ßo da chamada da sub-rotina √† vari√°vel myDLL_Proc
       // 'myDLL_Proc' da DLL DLL_Servidor.dll
       try
-        //Pointer(myDLL_Proc) := GetProcAddress(myLibHandle, 'DLL_Proc');
-        @myDLL_Proc := GetProcAddress(myLibHandle, 'DLL_Proc');
-        // Verifica se um endereÁo v·lido foi retornado
+        Pointer(myDLL_Proc) := GetProcAddress(myLibHandle, 'DLL_Proc');
+        // Verifica se um endere√ßo v√°lido foi retornado
         if @myDLL_Proc <> nil then
         begin
           ADLL_Result_AsPChar := myDLL_Proc(ADLL_Param1_AsPChar);
           // retornando como string
           ADLL_ResultAsString:=String(ADLL_Result_AsPChar);
-          // Liberando memÛria que esta na DLL, neste caso, passo o ponteiro
-          //   a se eliminado com StrDispose(dentro da DLL). Se n„o fizer isso
-          //   haver· vazamento de memÛria
+          // Liberando mem√≥ria que esta na DLL, neste caso, passo o ponteiro
+          //   a se eliminado com StrDispose(dentro da DLL). Se n√£o fizer isso
+          //   haver√° vazamento de mem√≥ria
           try
-            //Pointer(myDLL_FreeProc) := GetProcAddress(myLibHandle, 'DLL_FreeProc');
-            @myDLL_FreeProc := GetProcAddress(myLibHandle, 'DLL_FreeProc');
+            Pointer(myDLL_FreeProc) := GetProcAddress(myLibHandle, 'DLL_FreeProc');
             if @myDLL_FreeProc <> nil then
             begin
               if ADLL_Result_AsPChar<>nil then
@@ -121,7 +138,7 @@ type
 var
   myDLL_WhoAmI: TDLL_WhoAmI;
   myDLL_FreeProc: TDLL_FreeProc;
-  myLibHandle : THandle; //TLibHandle;
+  myLibHandle : TLibHandle;
   ADLL_Param1_AsPChar:PChar;
   ADLL_Result_AsPChar:PChar;
 begin
@@ -138,24 +155,22 @@ begin
     // Verifica se o carregamento da DLL foi bem-sucedido
     if myLibHandle <> 0 then
     begin
-      // Atribui o endereÁo da chamada da sub-rotina ‡ vari·vel myDLL_WhoAmI
+      // Atribui o endere√ßo da chamada da sub-rotina √† vari√°vel myDLL_WhoAmI
       // 'myDLL_WhoAmI' da DLL DLL_Servidor.dll
       try
-        //Pointer(myDLL_WhoAmI) := GetProcAddress(myLibHandle, 'DLL_WhoAmI');
-        @myDLL_WhoAmI := GetProcAddress(myLibHandle, 'DLL_WhoAmI');
+        Pointer(myDLL_WhoAmI) := GetProcAddress(myLibHandle, 'DLL_WhoAmI');
 
-        // Verifica se um endereÁo v·lido foi retornado
+        // Verifica se um endere√ßo v√°lido foi retornado
         if @myDLL_WhoAmI <> nil then
         begin
           ADLL_Result_AsPChar := myDLL_WhoAmI(ADLL_Param1_AsPChar);
           // retornando como string
           ADLL_ResultAsString:=String(ADLL_Result_AsPChar);
-          // Liberando memÛria que esta na DLL, neste caso, passo o ponteiro
-          //   a se eliminado com StrDispose(dentro da DLL). Se n„o fizer isso
-          //   haver· vazamento de memÛria
+          // Liberando mem√≥ria que esta na DLL, neste caso, passo o ponteiro
+          //   a se eliminado com StrDispose(dentro da DLL). Se n√£o fizer isso
+          //   haver√° vazamento de mem√≥ria
           try
-            //Pointer(myDLL_FreeProc) := GetProcAddress(myLibHandle, 'DLL_FreeProc');
-            @myDLL_FreeProc := GetProcAddress(myLibHandle, 'DLL_FreeProc');
+            Pointer(myDLL_FreeProc) := GetProcAddress(myLibHandle, 'DLL_FreeProc');
             if @myDLL_FreeProc <> nil then
             begin
               if ADLL_Result_AsPChar<>nil then
@@ -188,7 +203,7 @@ type
 var
   myDLL_Echo: TDLL_Echo;
   myDLL_FreeProc: TDLL_FreeProc;
-  myLibHandle : THandle; //TLibHandle;
+  myLibHandle : TLibHandle;
   ADLL_Param1_AsPChar:PChar;
   ADLL_Result_AsPChar:PChar;
 begin
@@ -206,24 +221,22 @@ begin
     // Verifica se o carregamento da DLL foi bem-sucedido
     if myLibHandle <> 0 then
     begin
-      // Atribui o endereÁo da chamada da sub-rotina ‡ vari·vel myDLL_Echo
+      // Atribui o endere√ßo da chamada da sub-rotina √† vari√°vel myDLL_Echo
       // 'myDLL_Echo' da DLL DLL_Servidor.dll
       try
-        //Pointer(myDLL_Echo) := GetProcAddress(myLibHandle, 'DLL_Echo');
-        @myDLL_Echo := GetProcAddress(myLibHandle, 'DLL_Echo');
+        Pointer(myDLL_Echo) := GetProcAddress(myLibHandle, 'DLL_Echo');
 
-        // Verifica se um endereÁo v·lido foi retornado
+        // Verifica se um endere√ßo v√°lido foi retornado
         if Assigned(myDLL_Echo) then
         begin
           ADLL_Result_AsPChar := myDLL_Echo(ADLL_Param1_AsPChar);
           // retornando como string
           ADLL_ResultAsString:=String(ADLL_Result_AsPChar);
-          // Liberando memÛria que esta na DLL, neste caso, passo o ponteiro
-          //   a se eliminado com StrDispose(dentro da DLL). Se n„o fizer isso
-          //   haver· vazamento de memÛria
+          // Liberando mem√≥ria que esta na DLL, neste caso, passo o ponteiro
+          //   a se eliminado com StrDispose(dentro da DLL). Se n√£o fizer isso
+          //   haver√° vazamento de mem√≥ria
           try
-            //Pointer(myDLL_FreeProc) := GetProcAddress(myLibHandle, 'DLL_FreeProc');
-            @myDLL_FreeProc := GetProcAddress(myLibHandle, 'DLL_FreeProc');
+            Pointer(myDLL_FreeProc) := GetProcAddress(myLibHandle, 'DLL_FreeProc');
             if @myDLL_FreeProc <> nil then
             begin
               if ADLL_Result_AsPChar<>nil then
@@ -249,15 +262,6 @@ end;
 { TForm1 }
 
 
-
-
-
-procedure TForm1.FormCreate(Sender: TObject);
-begin
-  Caption:='Delphi DLL Sample Server and Consumer';
-  memo1.Clear;
-end;
-
 procedure TForm1.btnEchoClick(Sender: TObject);
 var
   sResultado:String;
@@ -281,7 +285,21 @@ begin
     memo1.lines.Add(sMsg_Err)
   else
     memo1.lines.Add('Returning:'+sLineBreak+sResultado);
+end;
 
+procedure TForm1.btnWhoAmIClick(Sender: TObject);
+var
+  sResultado:String;
+  sMsg_Err:String;
+begin
+  sMsg_Err:=DLL_WhoAmI(
+    'lazdemo_dll_server.dll',
+    '### Fim da fun√ß√£o WhoAmI ###',
+    sResultado);
+  if sMsg_Err<>'' then
+    memo1.lines.Add(sMsg_Err)
+  else
+    memo1.lines.Add('Returning:'+sLineBreak+sResultado);
 end;
 
 procedure TForm1.btnMetodoClick(Sender: TObject);
@@ -306,22 +324,14 @@ begin
   else
     memo1.lines.Add('Returning:'+sLineBreak+sResultado);
   L.Free;
+
 end;
 
-procedure TForm1.btnWhoAmIClick(Sender: TObject);
-var
-  sResultado:String;
-  sMsg_Err:String;
+procedure TForm1.FormCreate(Sender: TObject);
 begin
-  sMsg_Err:=DLL_WhoAmI(
-    'lazdemo_dll_server.dll',
-    '### Fim da funÁ„o WhoAmI ###',
-    sResultado);
-  if sMsg_Err<>'' then
-    memo1.lines.Add(sMsg_Err)
-  else
-    memo1.lines.Add('Returning:'+sLineBreak+sResultado);
-
+  Caption:='Lazarus DLL Sample Server and Consumer';
+  memo1.clear;
 end;
 
 end.
+

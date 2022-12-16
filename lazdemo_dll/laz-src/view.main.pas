@@ -46,7 +46,8 @@ var
   Form1: TForm1;
 
 implementation
-uses utils_dll;
+uses
+  utils_dll;
 
 {$R *.lfm}
 

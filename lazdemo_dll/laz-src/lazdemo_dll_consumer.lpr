@@ -1,4 +1,4 @@
-program lazdemo_dll_cliente;
+program lazdemo_dll_consumer;
 
 {$mode objfpc}{$H+}
 

@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+  <Transactions>
+    <Transaction>2022/12/16 13:41:01.473,=C:\Projetos-dxe\vidy15\src\Unit1.pas</Transaction>
+    <Transaction>2022/12/16 13:41:39.160,C:\Projetos-fpc\lazdemos_gsl\lazdemo_dll\delphi-src\view.main.pas=C:\Projetos-dxe\vidy15\src\Unit1.pas</Transaction>
+    <Transaction>2022/12/16 13:41:39.160,C:\Projetos-fpc\lazdemos_gsl\lazdemo_dll\delphi-src\view.main.dfm=C:\Projetos-dxe\vidy15\src\Unit1.dfm</Transaction>
+    <Transaction>2022/12/16 13:42:01.416,C:\Projetos-fpc\lazdemos_gsl\lazdemo_dll\delphi-src\dxdemo_dll_consumer.dproj=C:\Projetos-dxe\vidy15\src\Project1.dproj</Transaction>
+  </Transactions>
+</BorlandProject>

@@ -1,0 +1,27 @@
+object Form1: TForm1
+  Left = 303
+  Height = 465
+  Top = 31
+  Width = 629
+  Caption = 'Form1'
+  ClientHeight = 465
+  ClientWidth = 629
+  Font.Height = -16
+  object Label1: TLabel
+    Left = 149
+    Height = 21
+    Top = 154
+    Width = 196
+    Caption = 'https://www.gladiston.net.br'
+    ParentColor = False
+  end
+  object BitBtn1: TBitBtn
+    Left = 406
+    Height = 30
+    Top = 263
+    Width = 75
+    Caption = 'BitBtn1'
+    OnClick = BitBtn1Click
+    TabOrder = 0
+  end
+end

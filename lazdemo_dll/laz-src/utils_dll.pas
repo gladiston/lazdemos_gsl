@@ -95,6 +95,8 @@ begin
 
     // liberar memoria
     myDLL_Proc := nil;
+    myDLL_FreeProc := nil;
+
     if myLibHandle <> 0 then
       FreeLibrary(myLibHandle);
   end;
@@ -160,6 +162,7 @@ begin
 
     // liberar memoria
     myDLL_WhoAmI := nil;
+    myDLL_FreeProc := nil;
     if myLibHandle <> 0 then
       FreeLibrary(myLibHandle);
   end;
@@ -226,6 +229,8 @@ begin
 
     // liberar memoria
     myDLL_echo := nil;
+    myDLL_FreeProc:=nil;
+
     if myLibHandle <> 0 then
       FreeLibrary(myLibHandle);
   end;

@@ -10,7 +10,9 @@ object Form1: TForm1
   Font.Height = -12
   Font.Name = 'Segoe UI'
   Font.Style = []
+  OldCreateOrder = True
   OnCreate = FormCreate
+  PixelsPerInch = 96
   TextHeight = 15
   object Panel1: TPanel
     Left = 0
@@ -21,9 +23,6 @@ object Form1: TForm1
     Alignment = taLeftJustify
     Caption = '    Call DLL function...'
     TabOrder = 0
-    ExplicitLeft = 228
-    ExplicitTop = 220
-    ExplicitWidth = 185
     object btnEcho: TBitBtn
       Left = 493
       Top = 1
@@ -33,7 +32,6 @@ object Form1: TForm1
       Caption = 'Echo'
       TabOrder = 0
       OnClick = btnEchoClick
-      ExplicitLeft = 548
     end
     object btnMetodo: TBitBtn
       Left = 233
@@ -44,7 +42,6 @@ object Form1: TForm1
       Caption = 'Proc'
       TabOrder = 1
       OnClick = btnMetodoClick
-      ExplicitLeft = 288
     end
     object btnWhoAmI: TBitBtn
       Left = 363
@@ -55,7 +52,6 @@ object Form1: TForm1
       Caption = 'WhoAmI'
       TabOrder = 2
       OnClick = btnWhoAmIClick
-      ExplicitLeft = 418
     end
   end
   object Memo1: TMemo
@@ -67,9 +63,5 @@ object Form1: TForm1
     Lines.Strings = (
       'Memo1')
     TabOrder = 1
-    ExplicitLeft = 118
-    ExplicitTop = 124
-    ExplicitWidth = 185
-    ExplicitHeight = 89
   end
 end

@@ -5,8 +5,11 @@ library lazdemo_dll_server;
 uses
   // Sharemem does not have to be used because we work with pchar values
   //Sharemem,
-  Classes,
   Interfaces,
+  Classes,
+  SysUtils,
+  Forms,
+  Dialogs,
   lazdemo_dll_server_register;
 
 exports
@@ -17,5 +20,6 @@ exports
 
 
 begin
-  ;
+  // I need to uncomment line bellow to to use Application.MessageBox
+  //Application.Initialize;
 end.

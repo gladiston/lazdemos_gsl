@@ -19,17 +19,17 @@ uses
 
 function DLL_Proc(
   ADLL_Filename:String;
-  ADLL_Param1:String;
+  ADLL_Param1:WideString;
   out ADLL_ResultAsString:String):String;
 
 function DLL_WhoAmI(
   ADLL_Filename:String;
-  ADLL_Param1:String;
+  ADLL_Param1:WideString;
   out ADLL_ResultAsString:String):String;
 
 function DLL_Echo(
   ADLL_Filename:String;
-  ADLL_Param1:String;
+  ADLL_Param1:WideString;
   out ADLL_ResultAsString:String):String;
 
 
@@ -38,22 +38,22 @@ implementation
 
 function DLL_Proc(
   ADLL_Filename:String;
-  ADLL_Param1:String;
+  ADLL_Param1:WideString;
   out ADLL_ResultAsString:String):String;
 type
-  TDLL_Proc= function (pParamList:PChar): PChar; cdecl;
-  TDLL_FreeProc= procedure (pParamList:pChar); cdecl;
+  TDLL_Proc= function (pParamList:PWideChar): PWideChar; cdecl;
+  TDLL_FreeProc= procedure (pParamList:PWideChar); cdecl;
 var
   myDLL_Proc: TDLL_Proc;
   myDLL_FreeProc: TDLL_FreeProc;
   myLibHandle : TLibHandle;
-  ADLL_Param1_AsPChar:PChar;
-  ADLL_Result_AsPChar:PChar;
+  ADLL_Param1_AsPWideChar:PWideChar;
+  ADLL_Result_AsPWideChar:PWideChar;
 begin
   Result:=emptyStr;
   ADLL_ResultAsString:='';
   ADLL_Filename:=Trim(ADLL_Filename);
-  ADLL_Param1_AsPChar:=PChar(ADLL_Param1);
+  ADLL_Param1_AsPWideChar:=PWideChar(ADLL_Param1);
   if not FileExists(ADLL_Filename) then
     Result:='File not found: '+ADLL_Filename;
 
@@ -70,9 +70,9 @@ begin
         // Verifica se um endereço válido foi retornado
         if @myDLL_Proc <> nil then
         begin
-          ADLL_Result_AsPChar := myDLL_Proc(ADLL_Param1_AsPChar);
+          ADLL_Result_AsPWideChar := myDLL_Proc(ADLL_Param1_AsPWideChar);
           // retornando como string
-          ADLL_ResultAsString:=String(ADLL_Result_AsPChar);
+          ADLL_ResultAsString:=String(ADLL_Result_AsPWideChar);
           // Liberando memória que esta na DLL, neste caso, passo o ponteiro
           //   a se eliminado com StrDispose(dentro da DLL). Se não fizer isso
           //   haverá vazamento de memória
@@ -80,8 +80,8 @@ begin
             Pointer(myDLL_FreeProc) := GetProcAddress(myLibHandle, 'DLL_FreeProc');
             if @myDLL_FreeProc <> nil then
             begin
-              if ADLL_Result_AsPChar<>nil then
-                 myDLL_FreeProc(ADLL_Result_AsPChar); // --> StrDispose(ADLL_Result_AsPChar);
+              if ADLL_Result_AsPWideChar<>nil then
+                 myDLL_FreeProc(ADLL_Result_AsPWideChar); // --> StrDispose(ADLL_Result_AsPWideChar);
             end;
           except
             on e:exception do Result:=e.message;
@@ -104,22 +104,22 @@ end;
 
 function DLL_WhoAmI(
   ADLL_Filename:String;
-  ADLL_Param1:String;
+  ADLL_Param1:WideString;
   out ADLL_ResultAsString:String):String;
 type
-  TDLL_WhoAmI= function (pParamList:PChar): PChar; cdecl;
-  TDLL_FreeProc= procedure (pParamList:pChar); cdecl;
+  TDLL_WhoAmI= function (pParamList:PWideChar): PWideChar; cdecl;
+  TDLL_FreeProc= procedure (pParamList:PWideChar); cdecl;
 var
   myDLL_WhoAmI: TDLL_WhoAmI;
   myDLL_FreeProc: TDLL_FreeProc;
   myLibHandle : TLibHandle;
-  ADLL_Param1_AsPChar:PChar;
-  ADLL_Result_AsPChar:PChar;
+  ADLL_Param1_AsPWideChar:PWideChar;
+  ADLL_Result_AsPWideChar:PWideChar;
 begin
   Result:=emptyStr;
   ADLL_ResultAsString:='';
   ADLL_Filename:=Trim(ADLL_Filename);
-  ADLL_Param1_AsPChar:=PChar(ADLL_Param1);
+  ADLL_Param1_AsPWideChar:=PWideChar(ADLL_Param1);
   if not FileExists(ADLL_Filename) then
     Result:='File not found: '+ADLL_Filename;
 
@@ -137,9 +137,9 @@ begin
         // Verifica se um endereço válido foi retornado
         if @myDLL_WhoAmI <> nil then
         begin
-          ADLL_Result_AsPChar := myDLL_WhoAmI(ADLL_Param1_AsPChar);
+          ADLL_Result_AsPWideChar := myDLL_WhoAmI(ADLL_Param1_AsPWideChar);
           // retornando como string
-          ADLL_ResultAsString:=String(ADLL_Result_AsPChar);
+          ADLL_ResultAsString:=String(ADLL_Result_AsPWideChar);
           // Liberando memória que esta na DLL, neste caso, passo o ponteiro
           //   a se eliminado com StrDispose(dentro da DLL). Se não fizer isso
           //   haverá vazamento de memória
@@ -147,8 +147,8 @@ begin
             Pointer(myDLL_FreeProc) := GetProcAddress(myLibHandle, 'DLL_FreeProc');
             if @myDLL_FreeProc <> nil then
             begin
-              if ADLL_Result_AsPChar<>nil then
-                myDLL_FreeProc(ADLL_Result_AsPChar); // --> StrDispose(ADLL_Result_AsPChar);
+              if ADLL_Result_AsPWideChar<>nil then
+                myDLL_FreeProc(ADLL_Result_AsPWideChar); // --> StrDispose(ADLL_Result_AsPWideChar);
             end;
           except
             on e:exception do Result:=e.message;
@@ -170,22 +170,22 @@ end;
 
 function DLL_Echo(
   ADLL_Filename:String;
-  ADLL_Param1:String;
+  ADLL_Param1:WideString;
   out ADLL_ResultAsString:String):String;
 type
-  TDLL_Echo= function (pParamList:PChar): PChar; cdecl;
-  TDLL_FreeProc= procedure (pParamList:pChar); cdecl;
+  TDLL_Echo= function (pParamList:PWideChar): PWideChar; cdecl;
+  TDLL_FreeProc= procedure (pParamList:PWideChar); cdecl;
 var
   myDLL_Echo: TDLL_Echo;
   myDLL_FreeProc: TDLL_FreeProc;
   myLibHandle : TLibHandle;
-  ADLL_Param1_AsPChar:PChar;
-  ADLL_Result_AsPChar:PChar;
+  ADLL_Param1_AsPWideChar:PWideChar;
+  ADLL_Result_AsPWideChar:PWideChar;
 begin
   Result:=emptyStr;
   ADLL_ResultAsString:=emptyStr;
   ADLL_Filename:=Trim(ADLL_Filename);
-  ADLL_Param1_AsPChar:=PChar(ADLL_Param1);
+  ADLL_Param1_AsPWideChar:=PWideChar(ADLL_Param1);
 
   if not FileExists(ADLL_Filename) then
     Result:='File not found: '+ADLL_Filename;
@@ -204,9 +204,9 @@ begin
         // Verifica se um endereço válido foi retornado
         if Assigned(myDLL_Echo) then
         begin
-          ADLL_Result_AsPChar := myDLL_Echo(ADLL_Param1_AsPChar);
+          ADLL_Result_AsPWideChar := myDLL_Echo(ADLL_Param1_AsPWideChar);
           // retornando como string
-          ADLL_ResultAsString:=String(ADLL_Result_AsPChar);
+          ADLL_ResultAsString:=WideString(ADLL_Result_AsPWideChar);
           // Liberando memória que esta na DLL, neste caso, passo o ponteiro
           //   a se eliminado com StrDispose(dentro da DLL). Se não fizer isso
           //   haverá vazamento de memória
@@ -214,8 +214,8 @@ begin
             Pointer(myDLL_FreeProc) := GetProcAddress(myLibHandle, 'DLL_FreeProc');
             if @myDLL_FreeProc <> nil then
             begin
-              if ADLL_Result_AsPChar<>nil then
-                 myDLL_FreeProc(ADLL_Result_AsPChar); // --> StrDispose(ADLL_Result_AsPChar);
+              if ADLL_Result_AsPWideChar<>nil then
+                 myDLL_FreeProc(ADLL_Result_AsPWideChar); // --> StrDispose(ADLL_Result_AsPWideChar);
             end;
           except
             on e:exception do Result:=e.message;

@@ -75,26 +75,38 @@ unit lazdemo_dll_server_register;
 interface
 
 uses
+  Interfaces,
+  Rtti,
   Classes,
   SysUtils,
   Forms,
   Dialogs;
 
-function DLL_Proc(pParamList:pChar): pChar; cdecl;
-function DLL_WhoAmI(pParamList:pChar): pChar; cdecl;
-function DLL_Echo(pParamList:pChar): pChar; cdecl;
-procedure DLL_FreeProc(pParamList: PChar); cdecl;
+function DLL_Proc(pParamList:PWideChar): PWideChar; cdecl;
+function DLL_WhoAmI(pParamList:PWideChar): PWideChar; cdecl;
+function DLL_Echo(pParamList:pWideChar): pWideChar; cdecl;
+procedure DLL_FreeProc(pParamList: PWideChar); cdecl;
+procedure DLL_MsgBox(AText, ATitle:PChar);
 
 implementation
 //uses
 
-function DLL_Proc(pParamList:pChar): pChar; cdecl;
+function DLL_Proc(pParamList:PWideChar): PWideChar; cdecl;
 var
   LResult:TStringList;
+  LParamList:TStringList;
+  S:UnicodeString;
 begin
+  S:=WideCharToString(pParamList);
+  LParamList:=TStringList.Create;
+  LParamList.DefaultEncoding:=TEncoding.ANSI;
+  LParamList.Text:=AnsiString(S);
+
   LResult:=TStringList.Create;
-  LResult.Text:=String(pParamList);
+  LResult.Text:=String(S);
   LResult.Values['Result']:='FAIL';
+
+  DLL_MsgBox(pChar(LParamList.Text), pChar('DLL received the following data:'));
 
   //
   // do something...
@@ -104,20 +116,31 @@ begin
   // now we returning what I need from prior process
   LResult.Values['Result']:='OK';
 
-  // The best way to transfer stringList.text to Result as pChar is byte per byte
-  //   using StrAlloc and StrPCopy. StrAlloc requires call DLL_FreeProc(pParamList)
+  // The best way to transfer stringList.text to Result as pWideChar is byte per byte
+  //   using WideStrAlloc and StrPCopy. WideStrAlloc requires call DLL_FreeProc(pParamList)
   //   in consumer side after returning. See header example.
-  Result := StrAlloc(Length(LResult.Text)+1);
+  Result := WideStrAlloc(Length(LResult.Text)+1);
   StrPCopy(Result, LResult.Text);
 
-  // Clean LResult
+  // Clean vars
+  LParamList.Free;
   LResult.Free;
 end;
 
-function DLL_WhoAmI(pParamList:pChar): pChar; cdecl;
+function DLL_WhoAmI(pParamList:PWideChar): PWideChar; cdecl;
 var
   LResult:TStringList;
+  LParamList:TStringList;
+  S:UnicodeString;
 begin
+  S:=WideCharToString(pParamList);
+  LParamList:=TStringList.Create;
+  LParamList.DefaultEncoding:=TEncoding.ANSI;
+  //LParamList.Text:=S;
+  LParamList.Text:=AnsiString(S);
+
+  DLL_MsgBox(pChar(LParamList.Text), pChar('DLL_WhoAmI received the following data:'));
+
   LResult:=TStringList.Create;
   LResult.Values['title']:='Sales Report';
   LResult.Values['category']:='finance';
@@ -127,41 +150,63 @@ begin
   LResult.Values['explain']:='This report show sales per month';
   LResult.Values['last_update']:='2017-07-10 00:00';
   LResult.Values['last_owner']:='MyName';
-  LResult.Values['Parameters echo test:']:=
-    StringReplace(String(pParamList), sLineBreak, '\n', [rfReplaceALL]);
+  LResult.Values['Parameters received count:']:=IntToStr(LParamList.Count);
+  LResult.AddStrings(LParamList);
 
-  // The best way to transfer stringList.text to Result as pChar is byte per byte
-  //   using StrAlloc and StrPCopy. StrAlloc requires call DLL_FreeProc(pParamList)
+
+  //DLL_MsgBox(LResult.Text, 'DLL_WhoAmI returning:');
+
+  // The best way to transfer stringList.text to Result as pWideChar is byte per byte
+  //   using WideStrAlloc and StrPCopy. WideStrAlloc requires call DLL_FreeProc(pParamList)
   //   in consumer side after returning. See header example.
-  Result := StrAlloc(Length(LResult.Text)+1);
+  Result := WideStrAlloc(Length(LResult.Text)+1);
   StrPCopy(Result, LResult.Text);
 
-  // Clean LResult
+  // Clean vars
+  LParamList.Free;
   LResult.Free;
 end;
 
-function DLL_Echo(pParamList:pChar): pChar; cdecl;
+function DLL_Echo(pParamList:PWideChar): PWideChar; cdecl;
 var
   LResult:TStringList;
+  LParamList:TStringList;
+  S:UnicodeString;
 begin
-  LResult:=TStringList.Create;
-  LResult.Text:=String(pParamList);
+  S:=WideCharToString(pParamList);
+  LParamList:=TStringList.Create;
+  LParamList.DefaultEncoding:=TEncoding.ANSI;
+  //LParamList.Text:=S;
+  LParamList.Text:=AnsiString(S);
+  //DLL_MsgBox(pChar(LParamList.Text), pChar('DLL_Echo received the following data:'));
 
-  // The best way to transfer stringList.text to Result as pChar is byte per byte
-  //   using StrAlloc and StrPCopy. StrAlloc requires call DLL_FreeProc(pParamList)
+  LResult:=TStringList.Create;
+  LResult.DefaultEncoding:=TEncoding.ANSI;
+  LResult.AddStrings(LParamList);
+  //DLL_MsgBox(pChar(LParamList.Text), pChar('DLL_Echo LResult:'));
+
+  // The best way to transfer stringList.text to Result as pWideChar is byte per byte
+  //   using WideStrAlloc and StrPCopy. WideStrAlloc requires call DLL_FreeProc(pParamList)
   //   in consumer side after returning. See header example.
-  Result := StrAlloc(Length(LResult.Text)+1);
+  Result := WideStrAlloc(Length(LResult.Text)+1);
   StrPCopy(Result, LResult.Text);
 
-  // Clean LResult
+  // Clean vars
+  LParamList.Free;
   LResult.Free;
 end;
 
-procedure DLL_FreeProc(pParamList: PChar); cdecl;
+procedure DLL_FreeProc(pParamList: PWideChar); cdecl;
 begin
   // When any function use StrAlloc, after consumes, we need to call
   //   DLL_FreeProc(pParamList) to deallocate memory used from this DLL
   StrDispose(pParamList);
+end;
+
+// DLL_MsgBox - Just for debug
+procedure DLL_MsgBox(AText, ATitle: pChar);
+begin
+  //Application.MessageBox(AText, ATitle);
 end;
 
 end.

@@ -76,46 +76,52 @@ begin
   if sMsg_Err<>'' then
     memo1.lines.Add(sMsg_Err)
   else
-    memo1.lines.Add('Returning:'+sLineBreak+sResultado);
+    memo1.lines.Add('DLL_Echo Returning:'+sLineBreak+sResultado);
 end;
 
 procedure TForm1.btnWhoAmIClick(Sender: TObject);
 var
+  LSendParams:TStringList;
   sResultado:String;
   sMsg_Err:String;
 begin
+  LSendParams:=TStringList.Create;
+  LSendparams.Values['param1']:='var1';
+  LSendparams.Values['param2']:='var2';
+  LSendparams.Values['param3']:='var3';
   sMsg_Err:=DLL_WhoAmI(
     'lazdemo_dll_server.dll',
-    '### Fim da função WhoAmI ###',
+    LSendparams.Text,
     sResultado);
   if sMsg_Err<>'' then
     memo1.lines.Add(sMsg_Err)
   else
-    memo1.lines.Add('Returning:'+sLineBreak+sResultado);
+    memo1.lines.Add('DLL_WhoAmI Returning:'+sLineBreak+sResultado);
+  LSendparams.Free;
 end;
 
 procedure TForm1.btnMetodoClick(Sender: TObject);
 var
   sResultado:String;
   sMsg_Err:String;
-  L:TStringList;
+  LSendParams:TStringList;
 begin
-  L:=TStringList.Create;
-  L.Values['HostName']:='localhost';
-  L.Values['Database']:='banco.fdb';
-  L.Values['Username']:='SYSDBA';
-  L.Values['Password']:='masterkey';
-  L.Values['Port']:='3050';
+  LSendParams:=TStringList.Create;
+  LSendParams.Values['HostName']:='localhost';
+  LSendParams.Values['Database']:='banco.fdb';
+  LSendParams.Values['Username']:='SYSDBA';
+  LSendParams.Values['Password']:='masterkey';
+  LSendParams.Values['Port']:='3050';
 
   sMsg_Err:=DLL_Proc(
     'lazdemo_dll_server.dll',
-    L.Text,
+    LSendParams.Text,
     sResultado);
   if sMsg_Err<>'' then
     memo1.lines.Add(sMsg_Err)
   else
-    memo1.lines.Add('Returning:'+sLineBreak+sResultado);
-  L.Free;
+    memo1.lines.Add('DLL_Proc Returning:'+sLineBreak+sResultado);
+  LSendParams.Free;
 
 end;
 

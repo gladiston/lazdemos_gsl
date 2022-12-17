@@ -1,18 +1,19 @@
 object Form1: TForm1
   Left = 303
-  Height = 473
+  Height = 710
   Top = 31
-  Width = 559
+  Width = 838
   Caption = 'Form1'
-  ClientHeight = 473
-  ClientWidth = 559
+  ClientHeight = 710
+  ClientWidth = 838
+  DesignTimePPI = 144
   OnCreate = FormCreate
   LCLVersion = '2.2.4.0'
   object Memo1: TMemo
     Left = 0
-    Height = 423
+    Height = 635
     Top = 0
-    Width = 559
+    Width = 838
     Align = alClient
     Lines.Strings = (
       'Memo1'
@@ -21,40 +22,40 @@ object Form1: TForm1
   end
   object pnlFuncoes: TPanel
     Left = 0
-    Height = 50
-    Top = 423
-    Width = 559
+    Height = 75
+    Top = 635
+    Width = 838
     Align = alBottom
     Alignment = taLeftJustify
     Caption = '    Call DLL function...'
-    ClientHeight = 50
-    ClientWidth = 559
+    ClientHeight = 75
+    ClientWidth = 838
     TabOrder = 1
     object btnEcho: TButton
-      Left = 428
-      Height = 48
+      Left = 642
+      Height = 73
       Top = 1
-      Width = 130
+      Width = 195
       Align = alRight
       Caption = 'Echo'
       OnClick = btnEchoClick
       TabOrder = 0
     end
     object btnMetodo: TBitBtn
-      Left = 168
-      Height = 48
+      Left = 252
+      Height = 73
       Top = 1
-      Width = 130
+      Width = 195
       Align = alRight
       Caption = 'Proc'
       OnClick = btnMetodoClick
       TabOrder = 1
     end
     object btnWhoAmI: TBitBtn
-      Left = 298
-      Height = 48
+      Left = 447
+      Height = 73
       Top = 1
-      Width = 130
+      Width = 195
       Align = alRight
       Caption = 'WhoAmI'
       OnClick = btnWhoAmIClick

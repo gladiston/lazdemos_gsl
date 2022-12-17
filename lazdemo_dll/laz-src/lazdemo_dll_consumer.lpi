@@ -18,7 +18,7 @@
           <Version Value="11"/>
           <PathDelim Value="\"/>
           <Target>
-            <Filename Value="C:\Projetos-fpc\lazdemos_gsl\lazdemo_dll\lazdemo_dll_consumer.rel" ApplyConventions="False"/>
+            <Filename Value="../../bin/lazdemo_dll_consumer"/>
           </Target>
           <SearchPaths>
             <IncludeFiles Value="$(ProjOutDir)"/>
@@ -38,9 +38,6 @@
               <GenerateDebugInfo Value="False"/>
             </Debugging>
             <LinkSmart Value="True"/>
-            <Options>
-              <ExecutableType Value="Library"/>
-            </Options>
           </Linking>
         </CompilerOptions>
       </Item>
@@ -81,7 +78,7 @@
     <Version Value="11"/>
     <PathDelim Value="\"/>
     <Target>
-      <Filename Value="..//../bin/lazdemo_dll_consumer"/>
+      <Filename Value="../../bin/lazdemo_dll_consumer"/>
     </Target>
     <SearchPaths>
       <IncludeFiles Value="$(ProjOutDir)"/>

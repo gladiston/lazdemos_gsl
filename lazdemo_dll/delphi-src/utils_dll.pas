@@ -185,14 +185,14 @@ function DLL_Echo(
   ADLL_Param1:String;
   out ADLL_ResultAsString:String):String;
 type
-  TDLL_Echo= function (pParamList:PChar): PChar; cdecl;
-  TDLL_FreeProc= procedure (pParamList:pChar); cdecl;
+  TDLL_Echo= function (pParamList:PWideChar): PWideChar; cdecl;
+  TDLL_FreeProc= procedure (pParamList:PWideChar); cdecl;
 var
   myDLL_Echo: TDLL_Echo;
   myDLL_FreeProc: TDLL_FreeProc;
   myLibHandle : HMODULE; //THandle; //TLibHandle;
-  ADLL_Param1_AsPChar:PChar;
-  ADLL_Result_AsPChar:PChar;
+  ADLL_Param1_AsPChar:PWideChar;
+  ADLL_Result_AsPChar:PWideChar;
 begin
   Result:=emptyStr;
   ADLL_ResultAsString:=emptyStr;

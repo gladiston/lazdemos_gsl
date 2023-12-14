@@ -1,0 +1,90 @@
+object Form1: TForm1
+  Left = 1539
+  Height = 392
+  Top = 329
+  Width = 600
+  Caption = 'Form1'
+  ClientHeight = 392
+  ClientWidth = 600
+  LCLVersion = '3.0.0.2'
+  object edtDestino: TEdit
+    Left = 4
+    Height = 23
+    Top = 209
+    Width = 537
+    TabOrder = 0
+    Text = 'Destino'
+    OnDragDrop = edtDestinoDragDrop
+    OnDragOver = edtDestinoDragOver
+  end
+  object lblDestino: TLabel
+    Left = 4
+    Height = 15
+    Top = 189
+    Width = 43
+    Caption = 'Destino:'
+  end
+  object gb_MemoTexto: TGroupBox
+    Left = 268
+    Height = 130
+    Top = 4
+    Width = 293
+    Caption = 'Componente Memo'
+    ClientHeight = 110
+    ClientWidth = 289
+    TabOrder = 1
+    object MemoTexto: TMemo
+      Left = 0
+      Height = 85
+      Top = 0
+      Width = 289
+      Align = alClient
+      DragMode = dmAutomatic
+      Lines.Strings = (
+        'O destino só aceitará TEdit e textos que contenham asteriscos'
+      )
+      TabOrder = 0
+    end
+    object btnLigarDragAndDrop_MemoTexto: TSpeedButton
+      Left = 0
+      Height = 25
+      Top = 85
+      Width = 289
+      Align = alBottom
+      AllowAllUp = True
+      Caption = 'Ligar o Drag mode para dmAutomatic'
+      GroupIndex = 2
+      OnClick = btnLigarDragAndDrop_MemoTextoClick
+    end
+  end
+  object gb_Origem: TGroupBox
+    Left = 4
+    Height = 130
+    Top = 4
+    Width = 256
+    Caption = 'Origem:'
+    ClientHeight = 110
+    ClientWidth = 252
+    TabOrder = 2
+    object btnLigarDragAndDrop_Origem: TSpeedButton
+      Left = 0
+      Height = 25
+      Top = 85
+      Width = 252
+      Align = alBottom
+      AllowAllUp = True
+      Caption = 'Ligar o Drag mode para dmAutomatic'
+      GroupIndex = 1
+      OnClick = btnLigarDragAndDrop_OrigemClick
+    end
+    object edtOrigem: TEdit
+      Left = 0
+      Height = 23
+      Top = 0
+      Width = 252
+      Align = alTop
+      TabOrder = 0
+      Text = 'Origem'
+    end
+  end
+end

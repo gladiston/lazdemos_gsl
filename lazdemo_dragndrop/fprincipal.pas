@@ -61,8 +61,12 @@ begin
   //   edtDestino, mas você pode usá-lo para identificá-lo quando compartilhar
   //   o mesmo evento com mais componentes.
   // Source é o objeto de origem.
-  // X e Y são as coordenadas de onde começou o arrastar, há poucas
-  //   possibilidades de usá-lo na prática.
+  // X e Y são as coordenadas de tela onde o mouse está, na prática você só usará
+  //   para calcular/capturar o que está naquela posição usando métodos como
+  //   ItemAtPos, exemplo:
+  //   DropPosition := TListBox(Sender).ItemAtPos(Point(X, Y), True);
+  //   No exemplo acima eu consegui pegar qual o itemindex de um TListBox antes
+  //     mesmo de soltá-lo.
   // Alerta: Evite usar nomes literais de componentes, prefira sempre
   //   referenciá-los com Sender ou Source, para isso você vai precisar quase
   //   sempre usar tyecasting como no exemplo abaixo.
@@ -90,11 +94,12 @@ begin
   // Source é o objeto de origem, você precisará utilizá-lo quase sempre
   //   para validar o que esta vindo do componente de origem e então o Accept
   //   seja ‘true’ para prosseguir ou ‘falso’ para negar a ação.
-  // X e Y são as coordenadas de onde começou o arrastar, há poucas
-  //   possibilidades de usá-lo na prática.
-  // Alerta: Evite usar nomes literais de componentes, prefira sempre
-  //   referenciá-los com Sender ou Source, para isso você vai precisar quase
-  //   sempre usar tyecasting como no exemplo abaixo.
+  // X e Y são as coordenadas de tela onde o mouse está, na prática você só usará
+  //   para calcular/capturar o que está naquela posição usando métodos como
+  //   ItemAtPos, exemplo:
+  //   DropPosition := TListBox(Sender).ItemAtPos(Point(X, Y), True);
+  //   No exemplo acima eu consegui pegar qual o itemindex de um TListBox antes
+  //     mesmo de soltá-lo.
   Accept:=false;
   if (Source is TEdit) then
   begin

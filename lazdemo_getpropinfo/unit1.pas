@@ -60,24 +60,21 @@ var
   Component: TComponent;
 begin
   // requer unit TypInfo
- for i := 0 to Pred(aContainer.ComponentCount) do
- begin
-   Component := aContainer.Components[i];
-   if (Component is TWinControl) then
-   begin
-     PropInfo := GetPropInfo(Component.ClassInfo, 'Text');
-     if Assigned(PropInfo)  then
-     begin
-       if Assigned(PropInfo) then
-       begin
-         // agora que sabemos que tem a propriedade text,
-         // decida o que fazer
-         if Assigned(PropInfo) then // Verifica se a propriedade Text existe
-           SetStrProp(Component, PropInfo, ''); // Define a propriedade Text como uma string vazia
-       end;
-     end;
-   end;
- end;
+  for i := 0 to Pred(aContainer.ComponentCount) do
+  begin
+    Component := aContainer.Components[i];
+    if (Component is TWinControl) then
+    begin
+      PropInfo := GetPropInfo(Component.ClassInfo, 'Text');
+      if Assigned(PropInfo)  then
+      begin
+        // agora que sabemos que tem a propriedade text,
+        // decida o que fazer
+        if Assigned(PropInfo) then // Verifica se a propriedade Text existe
+          SetStrProp(Component, PropInfo, ''); // Define a propriedade Text como uma string vazia
+      end;
+    end;
+  end;
 end;
 
 procedure TForm1.SetPropertiesText(

@@ -1,8 +1,8 @@
 /*
   Nome: clientes.sql
-  Função: criar e atualizar os objetos dentro do banco de dados "lazdemos_gsl.fdb".
-          Foco na criação e atualização da tabela "CLIENTES".
-  Observação: Ao executar usando:
+  FunþÒo: criar e atualizar os objetos dentro do banco de dados "lazdemos_gsl.fdb".
+          Foco na criaþÒo e atualizaþÒo da tabela "CLIENTES".
+  ObservaþÒo: Ao executar usando:
         >isql -ch iso8859_1 -i <script.sql>
         retorna uma mensagem dizendo:
         "Rolling back work."
@@ -30,6 +30,10 @@ set transaction
   wait
   lock timeout 180;
 
+set bail on;
+set list on;
+--shell echo ***** INICIO *****
+
 CREATE or alter EXCEPTION ERR 'Erro generico, favor verificar COM ATENÇÃO';
 GRANT USAGE ON EXCEPTION ERR TO PUBLIC;
 
@@ -56,12 +60,12 @@ END
 COMMIT;^
 
 -- Comentar a tabela
-COMMENT ON TABLE CLIENTES IS 'Relação de clientes';^
+COMMENT ON TABLE CLIENTES IS 'RelaþÒo de clientes';^
 COMMENT ON COLUMN CLIENTES.ID_CLIENTE IS 'Codigo do cliente';^
 COMMENT ON COLUMN CLIENTES.NOME_COMPLETO IS 'Nome do cliente';^
-COMMENT ON COLUMN CLIENTES.STATUS IS 'Situação do cliente(A=Ativo, C=Cancelado)';^
+COMMENT ON COLUMN CLIENTES.STATUS IS 'SituaþÒo do cliente(A=Ativo, C=Cancelado)';^
 
--- Permissão a tabela
+-- PermissÒo a tabela
 grant select on clientes to PUBLIC; ^
 grant select, delete, insert, update on clientes to SYSDBA; ^
 
@@ -181,7 +185,7 @@ END
 
 COMMIT;^
 
--- CNPJ não pode ter nulos
+-- CNPJ nÒo pode ter nulos
 execute block as
 declare variable existe boolean;
 begin
@@ -203,7 +207,7 @@ END
 
 COMMIT;^
 
--- CNPJ não pode ter nulos not nulll
+-- CNPJ nÒo pode ter nulos not nulll
 execute block as
 declare variable existe boolean;
 begin
@@ -273,6 +277,26 @@ END
 
 COMMIT;^
 
+-- Inserindo dados para testes
+--
+/*
+insert into clientes (nome_completo, cnpj, status)
+values ('BANCO DO BRASIL SA 00000000000191', '', 'A');^
+
+insert into clientes (nome_completo, cnpj, status)
+values ('BANCO DO BRASIL S A MANAUS 00000000000272', '', 'A');^
+
+insert into clientes (nome_completo, cnpj, status)
+values ('presidente vargas belem (pa) 00000000000353', '', 'A');^
+
+insert into clientes (nome_completo, cnpj, status)
+values ('BANCO DO BRASIL S A SANTOS 00000000000434', '', 'A');^
+
+insert into clientes (nome_completo, cnpj, status)
+values ('Banco do Brasil SA Campos Dos Goytacazes (RJ), 00000000000515', '', 'A');^
+*/
+
+-- Video  #11
 -- Criando campo STATUS_COM (compute by) - FANTASIA
 execute block as
 declare variable existe boolean;
@@ -316,7 +340,7 @@ begin
                     CASE
                       WHEN STATUS=''A'' THEN ''Ativo''
                       WHEN STATUS=''C'' THEN ''Cancelado''
-                      WHEN STATUS=''P'' THEN ''Pàralisado''
+                      WHEN STATUS=''P'' THEN ''PÓralisado''
                       ELSE ''Indefinido''
                     END AS VARCHAR(15)
                   )
@@ -379,15 +403,119 @@ begin
   END
 END
 ^
+
 COMMIT;^
 
+-- Ajustando campos do tipo identity
+-- ALTER TABLE CLIENTES ALTER COLUMN ID_CLIENTE RESTART WITH 6
+-- 
+execute block as
+declare variable existe boolean;
+declare variable prox_id int;
+begin
+  existe=false;
+  if (EXISTS(
+       select * from rdb$relation_fields rf
+       where rf.rdb$relation_name='CLIENTES' and rdb$field_name='ID_CLIENTE'
+       )) then
+    existe=true;
+  if (existe) then
+  BEGIN
+    select max(id_cliente)+1 from clientes
+    into :prox_id;
+    if (prox_id is null) then
+      prox_id=1;
 
+    execute statement
+      '
+      ALTER TABLE
+        CLIENTES ALTER COLUMN ID_CLIENTE
+        RESTART WITH '||cast(:prox_id as varchar(8))||'
+      ';
+  END
+END
+^
+COMMIT;^
 
+--
+-- Criando um indice comum para o campo nome_completo
+--
+execute block as
+declare variable existe boolean;
+begin
+  existe=false;
+  if (EXISTS(
+       select * from rdb$relation_fields rf
+       where rf.rdb$relation_name='CLIENTES' and rdb$field_name='NOME_COMPLETO'
+       )) then
+    existe=true;
+  if (existe) then
+  BEGIN
+    existe=false;
+    if (exists(
+      select * from rdb$indices
+      where rdb$index_name = 'IDX_CLIENTES_NOME_COMPLETO'
+      )) then existe=true;
+    if (not existe) then
+    begin
+      execute statement
+        '
+        CREATE INDEX IDX_CLIENTES_NOME_COMPLETO
+        ON CLIENTES (NOME_COMPLETO)
+        ';
+    end
+  END
+END
+^
+COMMIT;^
 
+-- Criando um indice unico para CNPJ, deve verificar:
+--   existencia do campo CNPJ
+--   não existir CNPJ duplicado
+--   e então criar o indice unico
+execute block as
+declare variable existe boolean;
+begin
+  existe=false;
+  if (EXISTS(
+       select * from rdb$relation_fields rf
+       where rf.rdb$relation_name='CLIENTES' and rdb$field_name='CNPJ'
+       )) then
+    existe=true;
+  if (existe) then
+  BEGIN
+    existe=false;
+    if (exists(
+      select * from clientes c
+      where
+        ((
+        select count(*) from clientes c2
+        where c2.cnpj=c.cnpj
+        )>1)
+      )) then existe=true;
+   if (not existe) then
+   begin
+      if (exists(
+        select * from rdb$relation_constraints
+        where rdb$constraint_name = 'UNQ_CLIENTES_CNPJ'
+        )) then existe=true;
+      if (not existe) then
+      begin
+        execute statement
+          '
+          ALTER TABLE CLIENTES
+            ADD CONSTRAINT UNQ_CLIENTES_CNPJ
+            UNIQUE (CNPJ);
+          ';
+      end
+    end
+  END
+END
+^
+COMMIT;^
 
+--shell echo ***** FIM *****
 
-
-
-commit; ^
-
+-- fim do script
+--quit; ^
 SET TERM ; ^

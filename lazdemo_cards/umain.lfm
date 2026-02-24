@@ -1,0 +1,59 @@
+object FormMain: TFormMain
+  Left = 397
+  Height = 520
+  Top = 421
+  Width = 720
+  Caption = 'Demo: DBGrid para Cards (Lazarus)'
+  ClientHeight = 520
+  ClientWidth = 720
+  Position = poScreenCenter
+  LCLVersion = '4.5.0.0'
+  OnCreate = FormCreate
+  object ScrollBox1: TScrollBox
+    Left = 0
+    Height = 480
+    Top = 40
+    Width = 720
+    HorzScrollBar.Page = 16
+    VertScrollBar.Page = 16
+    Align = alClient
+    BorderStyle = bsNone
+    ClientHeight = 480
+    ClientWidth = 720
+    TabOrder = 0
+    object FlowPanel1: TFlowPanel
+      Left = 8
+      Height = 0
+      Top = 8
+      Width = 704
+      Align = alTop
+      AutoSize = True
+      BevelOuter = bvNone
+      BorderSpacing.Around = 8
+      ControlList = <>
+      FlowLayout = tlTop
+      FlowStyle = fsLeftRightTopBottom
+      TabOrder = 0
+    end
+  end
+  object Panel1: TPanel
+    Left = 0
+    Height = 40
+    Top = 0
+    Width = 720
+    Align = alTop
+    BevelOuter = bvLowered
+    ClientHeight = 40
+    ClientWidth = 720
+    TabOrder = 1
+    object btnCarregar: TButton
+      Left = 8
+      Height = 28
+      Top = 6
+      Width = 120
+      Caption = 'Recarregar Cards'
+      TabOrder = 0
+      OnClick = btnCarregarClick
+    end
+  end
+end

@@ -15,28 +15,31 @@ unit ufrItemCard;
 interface
 
 uses
-  Classes, SysUtils, Forms, Controls, StdCtrls, ExtCtrls, Dialogs, ComCtrls;
+  Classes, SysUtils, Forms, Controls, StdCtrls, ExtCtrls, Dialogs, ComCtrls, Types;
 
 type
   { TfrItemCard }
   TfrItemCard = class(TFrame)
     btnAplicar: TButton;
     Image1: TImage;
+    lblCodigo: TLabel;
     lblDescricao: TLabel;
     lblDetalhesInfo: TLabel;
-    lblCodigo: TLabel;
     lblEstoque: TLabel;
-    lblVerFoto: TLabel;
+    lblMostrarMais: TLabel;
     lblValor: TLabel;
+    lblVerFoto: TLabel;
     lblVerFotoVoltar: TLabel;
     PageControl1: TPageControl;
+    pnlCabecalho: TPanel;
+    pnlCard: TPanel;
     pnlConteudo: TPanel;
     pnlDetalhes: TPanel;
-    pnlCabecalho: TPanel;
     pnlRodape: TPanel;
-    lblMostrarMais: TLabel;
-    TabInicio: TTabSheet;
     TabFoto: TTabSheet;
+    TabInicio: TTabSheet;
+    procedure Foco_Nao(Sender: TObject);
+    procedure Foco_Sim(Sender: TObject);
     procedure FrameMouseWheel(Sender: TObject; Shift: TShiftState;
       WheelDelta: Integer; MousePos: TPoint; var Handled: Boolean);
     procedure lblDescricaoClick(Sender: TObject);
@@ -70,6 +73,9 @@ uses
 
 {$R *.lfm}
 
+const
+  clMySelectionColor = clGradientInactiveCaption;  //clGradientInactiveCaption ou clInfoBK;
+
 { TfrItemCard }
 
 procedure TfrItemCard.SetCodigo(const AValue: Integer);
@@ -98,7 +104,7 @@ begin
   if FEstoque = AValue then Exit;
   FEstoque := AValue;
   lblEstoque.Caption := 'Estoque: ' + FloatToStr(FEstoque);
-  { Regra visual: estoque zerado ou negativo em destaque }
+  // Regra visual: estoque zerado ou negativo em destaque
   if FEstoque <= 0 then
   begin
     lblEstoque.Font.Color := clRed;
@@ -114,8 +120,8 @@ end;
 
 
 procedure TfrItemCard.LabelMouseEnter(Sender: TObject);
-{ Efeito hyperlink: destaque ao passar o mouse (compartilhado por vários labels) }
 begin
+  // Efeito hyperlink: destaque ao passar o mouse (compartilhado por vários labels)
   if (Sender is TLabel) then
     with (Sender as TLabel) do
     begin
@@ -188,11 +194,11 @@ end;
 
 procedure TfrItemCard.FrameMouseWheel(Sender: TObject; Shift: TShiftState;
   WheelDelta: Integer; MousePos: TPoint; var Handled: Boolean);
-{ Repassa o scroll para o ScrollBox pai (evita foco preso nos cards) }
 var
   P: TWinControl;
   SB: TScrollBox;
 begin
+  // Repassa o scroll para o ScrollBox pai (evita foco preso nos cards)
   P := Parent;
   while Assigned(P) do
   begin
@@ -207,10 +213,26 @@ begin
   end;
 end;
 
+procedure TfrItemCard.Foco_Sim(Sender: TObject);
+begin
+  // Quando o card ganha foco, aplica a cor de seleção
+  if Self.Color <> clMySelectionColor then
+      Self.Tag := PtrInt(Self.Color);
+  pnlCard.BorderStyle:=bsSingle;
+  Self.Color := clMySelectionColor;
+end;
+
+procedure TfrItemCard.Foco_Nao(Sender: TObject);
+begin
+  // Quando o card perde o foco, restaura a cor que estava gravada na Tag
+  Self.Color := TColor(Self.Tag);
+  pnlCard.BorderStyle:=bsNone;
+end;
+
 procedure TfrItemCard.Loaded;
 begin
   inherited Loaded;
-  { Detalhes começam ocultos (revelamento progressivo) }
+  // Detalhes começam ocultos (revelamento progressivo)
   pnlDetalhes.Visible := False;
   btnAplicar.Enabled := False;
 end;
